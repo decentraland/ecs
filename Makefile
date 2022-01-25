@@ -4,7 +4,7 @@ LOCAL_ARG = --local --verbose --diagnostics
 endif
 
 test:
-	node_modules/.bin/jest --detectOpenHandles --colors --runInBand $(TESTARGS)
+	node_modules/.bin/jest --detectOpenHandles --silent=false --verbose --colors --runInBand $(TESTARGS)
 
 test-watch:
 	node_modules/.bin/jest --detectOpenHandles --colors --runInBand --watch $(TESTARGS)
