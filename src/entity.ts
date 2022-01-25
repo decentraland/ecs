@@ -25,6 +25,8 @@ export function EntityContainer() {
   }
 
   return {
+    unusedEntities,
+    usedEntities,
     generateEntity,
     removeEntity
   }
