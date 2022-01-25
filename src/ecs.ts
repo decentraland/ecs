@@ -1,3 +1,8 @@
+/**
+ * This is te first approach we discuss with @mendez
+ * Keeping here just for document purpose
+ */
+
 import { Entity } from './entity'
 type Handler<T = any> = (value: string, name: string, previousValue?: T) => T
 
