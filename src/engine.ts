@@ -1,16 +1,21 @@
 import { Entity, EntityContainer } from './entity'
 import { ComponentDefinition } from './component'
 
+type Update = (dt: number) => void
+
 export function Engine() {
   // const entities = new Map<Entity, Map<number, any>>()
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, Map<Entity, any>>()
   const dirtyIterator = new Map<Entity, Set<number>>()
   const entitiesToDestroy = new Set<Entity>()
-  // const systems = new Map<string, any>()
+  const systems = new Set<Update>()
 
-  function addSystem() {
-    // systems.set()
+  function addSystem(fn: (deltaTime: number) => void) {
+    if (systems.has(fn)) {
+      throw new Error('System already added')
+    }
+    systems.add(fn)
   }
 
   function addEntity() {
@@ -23,29 +28,33 @@ export function Engine() {
     return entityContainer.removeEntity(entity)
   }
 
-  function defineComponent<T>(componentId: number): ComponentDefinition<T> {
-    if (componentsDefinition.get(componentId)) {
-      throw new Error(`Component ${componentId} already declared`)
+  function readonly<T extends Object>(val: T): Readonly<T> {
+    return Object.freeze({ ...val })
+  }
+
+  function getComponent<T>(componentId: number): ComponentDefinition<T> {
+    if (!componentsDefinition.get(componentId)) {
+      throw new Error(`Component ${componentId} not found`)
     }
-    componentsDefinition.set(componentId, new Map())
 
     return {
       _id: componentId,
-      getOrNull: function(entity: Entity) {
-        return componentsDefinition.get(componentId)?.get(entity) ?? null
+      getOrNull: function(entity: Entity): Readonly<T> | null {
+        const component = componentsDefinition.get(componentId)?.get(entity)
+        return component ? readonly(component) : null
       },
       getFrom: function(entity: Entity): Readonly<T> {
         const component = componentsDefinition.get(componentId)?.get(entity)
         if (!component) {
           throw new Error(`Component ${componentId} for ${entity} not found`);
         }
-        return Object.freeze({ ...component })
+        return readonly(component)
        },
       create: function(entity: Entity, value: T): Readonly<T> {
         const componentMap = componentsDefinition.get(componentId)
         componentMap?.set(entity, value)
 
-        return Object.freeze({ ...value })
+        return readonly(value)
       },
       mutable: function(entity: Entity): T {
         // TODO cach the ?. case
@@ -53,6 +62,16 @@ export function Engine() {
         return componentsDefinition.get(componentId)?.get(entity)
       }
     }
+
+  }
+
+  function defineComponent<T>(componentId: number): ComponentDefinition<T> {
+    if (componentsDefinition.get(componentId)) {
+      throw new Error(`Component ${componentId} already declared`)
+    }
+    componentsDefinition.set(componentId, new Map())
+
+    return getComponent(componentId)
   }
 
   function *mutableGroupOf<T extends ComponentDefinition<any>>(component: T): Iterable<[Entity, ReturnType<T['mutable']>]> {
@@ -69,15 +88,19 @@ export function Engine() {
 
     for (const [entity, data] of entities) {
       // TODO: check if this is necessary.
-      yield [entity, Object.freeze({...data})]
+      yield [entity, readonly(data) as ReturnType<T['getFrom']>]
     }
   }
 
-  function update() {
+  function update(dt: number) {
     for (const entity of entitiesToDestroy) {
       for (const [classId, entityMap] of componentsDefinition) {
         entityMap.delete(entity)
       }
+    }
+
+    for(const system of systems) {
+      system(dt)
     }
       // const components = entities.get(entity)!
     //   for (const [classId, cmp] of components) {
@@ -98,8 +121,10 @@ export function Engine() {
 
   return {
     addEntity,
+    addSystem,
     removeEntity,
     defineComponent,
+    getComponent,
     mutableGroupOf,
     groupOf,
     update,

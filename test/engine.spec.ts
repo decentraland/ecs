@@ -174,7 +174,7 @@ describe('Engine tests', () => {
     expect(Velocity.getOrNull(entity)).toStrictEqual({ y: 20 })
 
     // entity will be distroyed on next tick
-    engine.update()
+    engine.update(1)
 
     expect(Position.getOrNull(entity)).toBe(null)
     expect(Velocity.getOrNull(entity)).toBe(null)
