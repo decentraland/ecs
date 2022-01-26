@@ -1,65 +1,15 @@
 import { Entity, EntityContainer } from "./entity"
-import { ComponentDefinition } from "./component"
+import { ComponentDefinition, defineComponent as defComponent } from "./component"
+import { readonly } from "./utils"
 
 type Update = (dt: number) => void
 
-function getComponent<T>(componentId: number): ComponentDefinition<T> {
-  const data = new Map<Entity, T>()
-  const dirtyIterator = new Set<Entity>()
-
-  return {
-    _id: componentId,
-    deleteFrom: function (entity: Entity): T | null {
-      const component = data.get(entity)
-      data.delete(entity)
-      return component || null
-    },
-    getOrNull: function (entity: Entity): Readonly<T> | null {
-      const component = data.get(entity)
-      return component ? readonly(component) : null
-    },
-    getFrom: function (entity: Entity): Readonly<T> {
-      const component = data.get(entity)
-      if (!component) {
-        throw new Error(`Component ${componentId} for ${entity} not found`)
-      }
-      return readonly(component)
-    },
-    create: function (entity: Entity, value: T): T {
-      data.set(entity, value)
-      dirtyIterator.add(entity)
-      return value
-    },
-    mutable: function (entity: Entity): T {
-      // TODO cach the ?. case
-      dirtyIterator.add(entity)
-      // TODO !
-      return data.get(entity)!
-    },
-    iterator: function* (): Iterable<[Entity, T]> {
-      for (const [entity, component] of data) {
-        yield [entity, component]
-      }
-    },
-    dirtyIterator: function* (): Iterable<Entity> {
-      for (const entity of dirtyIterator) {
-        yield entity
-      }
-    },
-  }
-}
-
-function readonly<T extends Object>(val: T): Readonly<T> {
-  return Object.freeze({ ...val })
-}
-
 export function Engine() {
-  // const entities = new Map<Entity, Map<number, any>>()
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
   const systems = new Set<Update>()
 
-  function addSystem(fn: (deltaTime: number) => void) {
+  function addSystem(fn: Update) {
     if (systems.has(fn)) {
       throw new Error("System already added")
     }
@@ -83,7 +33,7 @@ export function Engine() {
       throw new Error(`Component ${componentId} already declared`)
     }
 
-    const newComponent = getComponent<T>(componentId)
+    const newComponent = defComponent<T>(componentId)
     componentsDefinition.set(componentId, newComponent)
 
     return newComponent
@@ -112,20 +62,6 @@ export function Engine() {
     for (const system of systems) {
       system(dt)
     }
-    // const components = entities.get(entity)!
-    //   for (const [classId, cmp] of components) {
-    //     components.delete(classId)
-    //   }
-    //   entities.delete(entity)
-    //   const classesId = Array.from(entities.get(entity) || [])
-    //   classesId.forEach((classId) => {
-    //     componentsDefinition.get(classId)?.delete(entity)
-    //   })
-    // entities.delete(entity)
-    // How we iterate the entities to destroy?
-    // Do we have a new map with the entities or we iterate all the component
-    // definitions and if some of them has the entity to destroy we delete them ?
-    // }
   }
 
   return {
@@ -133,7 +69,6 @@ export function Engine() {
     addSystem,
     removeEntity,
     defineComponent,
-    getComponent,
     mutableGroupOf,
     groupOf,
     update,
