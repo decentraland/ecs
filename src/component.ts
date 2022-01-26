@@ -12,14 +12,16 @@ export type ComponentDefinition<T extends Spec> = {
   getOrNull(entity: Entity): Readonly<T> | null
 
   // adds this component to the list "to be reviewed next frame"
-  create(entity: Entity, val: T): Readonly<T>
+  create(entity: Entity, val: T): T
 
   // adds this component to the list "to be reviewed next frame"
   mutable(entity: Entity): T
 
+  deleteFrom(entity: Entity): T | null
+
   // updateFromBinary(entity: Entity, data: Uint8Array): void
   // toBinary(entity: Entity): Uint8Array
 
-  // iterator(): Iterable<[Entity, T]>
-  // dirtyIterator(): Iterable<Entity>
+  iterator(): Iterable<[Entity, T]>
+  dirtyIterator(): Iterable<Entity>
 }

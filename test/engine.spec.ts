@@ -1,6 +1,6 @@
-import { Engine } from '../src/engine'
-import { EntityContainer } from '../src/entity'
-import { addComponentsToEngine as addExternalComponents } from '../src/external-components'
+import { Engine } from "../src/engine"
+import { EntityContainer } from "../src/entity"
+import { addComponentsToEngine as addExternalComponents } from "../src/external-components"
 
 type Position = {
   x: number
@@ -10,8 +10,8 @@ type Velocity = {
   y: number
 }
 
-describe('Engine tests', () => {
-  it('generates new entities', () => {
+describe("Engine tests", () => {
+  it("generates new entities", () => {
     const engine = Engine()
     const entityA = engine.addEntity()
     const entityB = engine.addEntity()
@@ -19,7 +19,7 @@ describe('Engine tests', () => {
     expect(entityB).toBe(1)
   })
 
-  it('define component and creates new entity', () => {
+  it("define component and creates new entity", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const Position = engine.defineComponent<Position>(1)
@@ -39,7 +39,7 @@ describe('Engine tests', () => {
     expect(Position.getFrom(entity)).toStrictEqual({ x: 80 })
   })
 
-  it('iterate multiple components', () => {
+  it("iterate multiple components", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const Position = engine.defineComponent<Position>(1)
@@ -58,23 +58,18 @@ describe('Engine tests', () => {
     }
   })
 
-  it('should not update a readonly prop', () => {
+  it("should not update a readonly prop", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const Position = engine.defineComponent<Position>(1)
+    expect(Array.from(Position.dirtyIterator())).toEqual([])
     const posComponent = Position.create(entity, { x: 10 })
-    let error
-    try {
-      // @ts-ignore
-      posComponent.x = 1000000000000
-    } catch(_) {
-      error = true
-    }
-    expect(error).toBe(true)
-    expect(Position.getFrom(entity)).toStrictEqual({ x: 10 })
+    posComponent.x = 1000000000000
+    expect(Array.from(Position.dirtyIterator())).toEqual([entity])
+    expect(Position.getFrom(entity)).toStrictEqual({ x: 1000000000000 })
   })
 
-  it('should not update a readonly prop groupOf', () => {
+  it("should not update a readonly prop groupOf", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const Position = engine.defineComponent<Position>(1)
@@ -84,7 +79,7 @@ describe('Engine tests', () => {
       try {
         // @ts-ignore
         position.x = 1000000000000
-      } catch(_) {
+      } catch (_) {
         error = true
       }
     }
@@ -92,7 +87,7 @@ describe('Engine tests', () => {
     expect(Position.getFrom(entity)).toStrictEqual({ x: 10 })
   })
 
-  it('should not update a readonly prop getFrom(entity)', () => {
+  it("should not update a readonly prop getFrom(entity)", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const Position = engine.defineComponent<Position>(1)
@@ -101,14 +96,14 @@ describe('Engine tests', () => {
     try {
       // @ts-ignore
       Position.getFrom(entity).x = 1000000000000
-    } catch(_) {
+    } catch (_) {
       error = true
     }
     expect(error).toBe(true)
     expect(Position.getFrom(entity)).toStrictEqual({ x: 10 })
   })
 
-  it('should fail if we fetch a component that doesnt exists on an entity', () => {
+  it("should fail if we fetch a component that doesnt exists on an entity", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const Position = engine.defineComponent<Position>(1)
@@ -118,13 +113,13 @@ describe('Engine tests', () => {
     try {
       // @ts-ignore
       Velocity.getFrom(entity)
-    } catch(_) {
+    } catch (_) {
       error = true
     }
     expect(error).toBe(true)
   })
 
-  it('should return null if the component not exists on the entity.', () => {
+  it("should return null if the component not exists on the entity.", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const Position = engine.defineComponent<Position>(1)
@@ -133,7 +128,7 @@ describe('Engine tests', () => {
     expect(Velocity.getOrNull(entity)).toBe(null)
   })
 
-  it('should throw an error if the component class id already exists', () => {
+  it("should throw an error if the component class id already exists", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const CLASS_ID = 1
@@ -141,13 +136,13 @@ describe('Engine tests', () => {
     let error: boolean
     try {
       const Velocity = engine.defineComponent<Velocity>(CLASS_ID)
-    } catch(_) {
+    } catch (_) {
       error = true
     }
     expect(error).toBe(true)
   })
 
-  it('should return mutable obj if use component.mutable()', () => {
+  it("should return mutable obj if use component.mutable()", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const CLASS_ID = 1
@@ -157,7 +152,7 @@ describe('Engine tests', () => {
     expect(Position.getFrom(entity)).toStrictEqual({ x: 8888 })
   })
 
-  it('should destroy an entity', () => {
+  it("should destroy an entity", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const entityB = engine.addEntity() // 0
@@ -168,13 +163,10 @@ describe('Engine tests', () => {
     Position.create(entityB, { x: 20 })
     Velocity.create(entity, { y: 20 })
 
-    engine.removeEntity(entity)
-
     expect(Position.getOrNull(entity)).toStrictEqual({ x: 10 })
     expect(Velocity.getOrNull(entity)).toStrictEqual({ y: 20 })
 
-    // entity will be distroyed on next tick
-    engine.update(1)
+    engine.removeEntity(entity)
 
     expect(Position.getOrNull(entity)).toBe(null)
     expect(Velocity.getOrNull(entity)).toBe(null)
