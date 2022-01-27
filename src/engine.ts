@@ -1,5 +1,5 @@
 import { Entity, EntityContainer } from "./entity"
-import { ComponentDefinition, defineComponent as defComponent } from "./component"
+import { ComponentDefinition, defineComponent as defComponent, Result, Spec } from "./component"
 import { readonly } from "./utils"
 
 type Update = (dt: number) => void
@@ -27,13 +27,13 @@ export function Engine() {
     }
     return entityContainer.removeEntity(entity)
   }
-
-  function defineComponent<T>(componentId: number): ComponentDefinition<T> {
+  function defineComponent<T extends Spec>(componentId: number, spec: T): ComponentDefinition<T> {
     if (componentsDefinition.get(componentId)) {
       throw new Error(`Component ${componentId} already declared`)
     }
 
-    const newComponent = defComponent<T>(componentId)
+    type ComponentType = Result<T>
+    const newComponent = defComponent<T>(componentId, spec)
     componentsDefinition.set(componentId, newComponent)
 
     return newComponent
@@ -41,7 +41,7 @@ export function Engine() {
 
   function* mutableGroupOf<T extends ComponentDefinition<any>>(
     component: T
-  ): Iterable<[Entity, ReturnType<T["mutable"]>]> {
+  ): Iterable<[Entity, any]> {
     const entities = componentsDefinition.get(component._id)!
 
     for (const [entity, data] of entities.iterator()) {

@@ -2,12 +2,12 @@ import { Engine } from "../src/engine"
 import { EntityContainer } from "../src/entity"
 import { addComponentsToEngine as addExternalComponents } from "../src/external-components"
 
-type Position = {
-  x: number
+const PositionType = {
+  x: Number
 }
 
-type Velocity = {
-  y: number
+const VelocityType = {
+  y: Number
 }
 
 describe("Engine tests", () => {
@@ -22,7 +22,7 @@ describe("Engine tests", () => {
   it("define component and creates new entity", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent<Position>(1)
+    const Position = engine.defineComponent(1, PositionType)
     const posComponent = Position.create(entity, { x: 10 })
     expect(posComponent).toStrictEqual({ x: 10 })
 
@@ -42,8 +42,8 @@ describe("Engine tests", () => {
   it("iterate multiple components", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent<Position>(1)
-    const Velocity = engine.defineComponent<Velocity>(2)
+    const Position = engine.defineComponent(1, PositionType)
+    const Velocity = engine.defineComponent(2, VelocityType)
     const posComponent = Position.create(entity, { x: 10 })
     const velComponent = Velocity.create(entity, { y: 20 })
 
@@ -61,7 +61,7 @@ describe("Engine tests", () => {
   it("should not update a readonly prop", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent<Position>(1)
+    const Position = engine.defineComponent(1, PositionType)
     expect(Array.from(Position.dirtyIterator())).toEqual([])
     const posComponent = Position.create(entity, { x: 10 })
     posComponent.x = 1000000000000
@@ -72,7 +72,7 @@ describe("Engine tests", () => {
   it("should not update a readonly prop groupOf", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent<Position>(1)
+    const Position = engine.defineComponent(1, PositionType)
     const posComponent = Position.create(entity, { x: 10 })
     let error
     for (const [entity, position] of engine.groupOf(Position)) {
@@ -90,7 +90,7 @@ describe("Engine tests", () => {
   it("should not update a readonly prop getFrom(entity)", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent<Position>(1)
+    const Position = engine.defineComponent(1, PositionType)
     const posComponent = Position.create(entity, { x: 10 })
     let error
     try {
@@ -106,8 +106,8 @@ describe("Engine tests", () => {
   it("should fail if we fetch a component that doesnt exists on an entity", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent<Position>(1)
-    const Velocity = engine.defineComponent<Velocity>(2)
+    const Position = engine.defineComponent(1, PositionType)
+    const Velocity = engine.defineComponent(2, VelocityType)
     const posComponent = Position.create(entity, { x: 10 })
     let error
     try {
@@ -122,8 +122,8 @@ describe("Engine tests", () => {
   it("should return null if the component not exists on the entity.", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent<Position>(1)
-    const Velocity = engine.defineComponent<Velocity>(2)
+    const Position = engine.defineComponent(1, PositionType)
+    const Velocity = engine.defineComponent(2, VelocityType)
     const posComponent = Position.create(entity, { x: 10 })
     expect(Velocity.getOrNull(entity)).toBe(null)
   })
@@ -132,10 +132,10 @@ describe("Engine tests", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const CLASS_ID = 1
-    const Position = engine.defineComponent<Position>(CLASS_ID)
+    const Position = engine.defineComponent(CLASS_ID, PositionType)
     let error: boolean
     try {
-      const Velocity = engine.defineComponent<Velocity>(CLASS_ID)
+      const Velocity = engine.defineComponent(CLASS_ID, VelocityType)
     } catch (_) {
       error = true
     }
@@ -146,7 +146,7 @@ describe("Engine tests", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const CLASS_ID = 1
-    const Position = engine.defineComponent<Position>(CLASS_ID)
+    const Position = engine.defineComponent(CLASS_ID, PositionType)
     Position.create(entity, { x: 10 })
     Position.mutable(entity).x = 8888
     expect(Position.getFrom(entity)).toStrictEqual({ x: 8888 })
@@ -157,8 +157,8 @@ describe("Engine tests", () => {
     const entity = engine.addEntity() // 0
     const entityB = engine.addEntity() // 0
     const CLASS_ID = 1
-    const Position = engine.defineComponent<Position>(CLASS_ID)
-    const Velocity = engine.defineComponent<Velocity>(CLASS_ID + 1)
+    const Position = engine.defineComponent(CLASS_ID, PositionType)
+    const Velocity = engine.defineComponent(CLASS_ID + 1, VelocityType)
     Position.create(entity, { x: 10 })
     Position.create(entityB, { x: 20 })
     Velocity.create(entity, { y: 20 })
@@ -171,5 +171,51 @@ describe("Engine tests", () => {
     expect(Position.getOrNull(entity)).toBe(null)
     expect(Velocity.getOrNull(entity)).toBe(null)
     expect(Position.getOrNull(entityB)).toStrictEqual({ x: 20 })
+  })
+
+  it("test serializaation", () => {
+    const engine = Engine()
+    const entity = engine.addEntity() // 0
+
+    const Position = engine.defineComponent(1,
+      {
+        'x': Number,
+        'y': Number,
+        'z': Number
+      }
+    )
+    const myPosition = Position.create(1, { x: 11, y: 22, z: 33 })
+
+    expect(myPosition.x).toBe(11)
+    expect(myPosition.y).toBe(22)
+    expect(myPosition.z).toBe(33)
+  })
+
+  it("test serializaation 2", () => {
+    const engine = Engine()
+    const entity = engine.addEntity() // 0
+
+    const Position = engine.defineComponent(1,
+      {
+        'position': {
+          'x': Number,
+          'y': Number,
+          'z': Number
+        },
+      }
+    )
+    const myPosition = Position.create(1, {
+      position: {
+        x: 1,
+        y: 2,
+        z: 3
+      }
+    })
+
+    Position.toBinary(1)
+
+    expect(myPosition.position.x).toBe(1)
+    expect(myPosition.position.y).toBe(2)
+    expect(myPosition.position.z).toBe(3)
   })
 })
