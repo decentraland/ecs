@@ -74,16 +74,10 @@ describe("Engine tests", () => {
     const entity = engine.addEntity() // 0
     const Position = engine.defineComponent<Position>(1)
     const posComponent = Position.create(entity, { x: 10 })
-    let error
     for (const [entity, position] of engine.groupOf(Position)) {
-      try {
-        // @ts-ignore
-        position.x = 1000000000000
-      } catch (_) {
-        error = true
-      }
+      // @ts-ignore
+      expect(() => position.x = 1000000000000).toThrowError()
     }
-    expect(error).toBe(true)
     expect(Position.getFrom(entity)).toStrictEqual({ x: 10 })
   })
 
@@ -91,15 +85,10 @@ describe("Engine tests", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const Position = engine.defineComponent<Position>(1)
-    const posComponent = Position.create(entity, { x: 10 })
-    let error
-    try {
-      // @ts-ignore
-      Position.getFrom(entity).x = 1000000000000
-    } catch (_) {
-      error = true
-    }
-    expect(error).toBe(true)
+    Position.create(entity, { x: 10 })
+    // @ts-ignore
+    const assignError = () => Position.getFrom(entity).x = 1000000000000
+    expect(assignError).toThrowError()
     expect(Position.getFrom(entity)).toStrictEqual({ x: 10 })
   })
 
@@ -108,15 +97,8 @@ describe("Engine tests", () => {
     const entity = engine.addEntity() // 0
     const Position = engine.defineComponent<Position>(1)
     const Velocity = engine.defineComponent<Velocity>(2)
-    const posComponent = Position.create(entity, { x: 10 })
-    let error
-    try {
-      // @ts-ignore
-      Velocity.getFrom(entity)
-    } catch (_) {
-      error = true
-    }
-    expect(error).toBe(true)
+    Position.create(entity, { x: 10 })
+    expect(() => Velocity.getFrom(entity)).toThrowError()
   })
 
   it("should return null if the component not exists on the entity.", () => {
@@ -124,22 +106,16 @@ describe("Engine tests", () => {
     const entity = engine.addEntity() // 0
     const Position = engine.defineComponent<Position>(1)
     const Velocity = engine.defineComponent<Velocity>(2)
-    const posComponent = Position.create(entity, { x: 10 })
+    Position.create(entity, { x: 10 })
     expect(Velocity.getOrNull(entity)).toBe(null)
   })
 
   it("should throw an error if the component class id already exists", () => {
     const engine = Engine()
-    const entity = engine.addEntity() // 0
     const CLASS_ID = 1
-    const Position = engine.defineComponent<Position>(CLASS_ID)
-    let error: boolean
-    try {
-      const Velocity = engine.defineComponent<Velocity>(CLASS_ID)
-    } catch (_) {
-      error = true
-    }
-    expect(error).toBe(true)
+    engine.defineComponent<Position>(CLASS_ID)
+    const Velocity = () => engine.defineComponent<Velocity>(CLASS_ID)
+    expect(Velocity).toThrowError()
   })
 
   it("should return mutable obj if use component.mutable()", () => {
