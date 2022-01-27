@@ -17,20 +17,21 @@ describe('Entity container', () => {
     expect(entityContainer.unusedEntities.has(entityA)).toBe(true)
   })
 
-  it('rate limit', () => {
+  it('generates entities and reuse unused', () => {
     const entityContainer = EntityContainer()
-    const { unusedEntities } = entityContainer
+    const entityA = entityContainer.generateEntity()
+    const entityB = entityContainer.generateEntity()
+    expect(entityA).toBe(0)
+    expect(entityB).toBe(1)
+    entityContainer.removeEntity(entityA)
+    expect(entityContainer.generateEntity()).toBe(entityA)
+    expect(entityContainer.usedEntities.has(entityA)).toBe(true)
+    expect(entityContainer.unusedEntities.has(entityA)).toBe(false)
+  })
 
-    for (const _ of unusedEntities) {
-      entityContainer.generateEntity()
-    }
-    let error
-    try {
-      entityContainer.generateEntity()
-    } catch(e) {
-      error = true
-    }
-
-    expect(error).toBe(true)
+  it('rate limit', () => {
+    const entityContainer = EntityContainer({ start: 0, finish: 1 })
+    entityContainer.generateEntity()
+    expect(entityContainer.generateEntity).toThrowError()
   })
 })
