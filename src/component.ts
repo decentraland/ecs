@@ -1,28 +1,6 @@
+import { AllAcceptedTypes, Integer } from './built-in-types'
 import { Entity } from './entity'
 import { readonly } from './utils'
-
-const Integer = Number
-const BigInteger = Number
-const Float = Number
-const Vector2 = {
-  'x': Float,
-  'y': Float
-}
-const Vector3 = {
-  'x': Float,
-  'y': Float,
-  'z': Float
-}
-const Quaternion = {
-  'x': Float,
-  'y': Float,
-  'z': Float,
-  'w': Float
-}
-
-const AllAcceptedTypes = [
-  BigInteger, Integer, Float, String, Vector2, Vector3, Quaternion
-]
 
 export type Handler<T = any> = (value: string, name: string, previousValue?: T) => T
 
@@ -70,18 +48,29 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
   const data = new Map<Entity, ComponentType>()
   const dirtyIterator = new Set<Entity>()
 
+  type TreeValue = {
+    key: string
+    valueType: any
+    getValue: (obj: ComponentType) => any
+    setValue: (obj: ComponentType, value: any) => void
+  }
+
+  const tree: TreeValue[] = []
+
   function generateTree(values: any, keyPrefix: string[], tree: any[], deepIndex: number, topLevelValue: any) {
     for (const key of Object.keys(values)) {
+      const typeConstructor = values[key]
+
       if (AllAcceptedTypes.includes(values[key])) {
         tree.push({
           key: ['this', ...keyPrefix, key].join('.'),
           valueType: values[key],
-          getValue: (obj: any) => {
+          getValue: (obj: ComponentType) => {
             let objRef: any = obj
             keyPrefix.forEach(key => objRef = objRef[key])
             return objRef[key]
           },
-          setValue: (obj: any, value: any) => {
+          setValue: (obj: ComponentType, value: typeof typeConstructor) => {
             let objRef: any = obj
             keyPrefix.forEach(key => objRef = objRef[key])
             objRef[key] = value
@@ -95,7 +84,6 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
     }
   }
 
-  const tree: any[] = []
   generateTree(spec, [], tree, 0, spec)
 
   return {
@@ -165,9 +153,19 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
         return
       }
 
+      let newValue: any = {}
       for (const value of tree) {
-        console.log(`${value.key} = ${value.getValue(component)}`)
+        const newFieldValue = null
+
+        if (value.valueType === Integer) {
+          // newFieldValue = getInt32(dataArray, offset)
+        } else {
+
+        }
+
+        value.setValue(newValue, newFieldValue)
       }
+      data.set(entity, newValue as ComponentType)
 
     }
   }

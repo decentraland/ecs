@@ -1,6 +1,6 @@
+
+import { createVector3, Quaternion, Vector3 } from "../src/built-in-types"
 import { Engine } from "../src/engine"
-import { EntityContainer } from "../src/entity"
-import { addComponentsToEngine as addExternalComponents } from "../src/external-components"
 
 const PositionType = {
   x: Number
@@ -194,28 +194,30 @@ describe("Engine tests", () => {
   it("test serializaation 2", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
+    const CLASS_ID = 1
 
-    const Position = engine.defineComponent(1,
+    const Transform = engine.defineComponent(CLASS_ID,
       {
-        'position': {
-          'x': Number,
-          'y': Number,
-          'z': Number
-        },
+        position: Vector3,
+        scale: Vector3,
+        rotation: Quaternion
       }
     )
-    const myPosition = Position.create(1, {
-      position: {
-        x: 1,
-        y: 2,
-        z: 3
-      }
+    const myTransform = Transform.create(entity, {
+      position: createVector3(1, 2, 3),
+      scale: createVector3(4, 5, 6),
+      rotation: { ...createVector3(7, 8, 9), w: 10 }
     })
-
-    Position.toBinary(1)
-
-    expect(myPosition.position.x).toBe(1)
-    expect(myPosition.position.y).toBe(2)
-    expect(myPosition.position.z).toBe(3)
+    
+    expect(myTransform.position.x).toBe(1)
+    expect(myTransform.position.y).toBe(2)
+    expect(myTransform.position.z).toBe(3)
+    expect(myTransform.scale.x).toBe(4)
+    expect(myTransform.scale.y).toBe(5)
+    expect(myTransform.scale.z).toBe(6)
+    expect(myTransform.rotation.x).toBe(7)
+    expect(myTransform.rotation.y).toBe(8)
+    expect(myTransform.rotation.z).toBe(9)
+    expect(myTransform.rotation.w).toBe(10)
   })
 })
