@@ -1,6 +1,4 @@
 import { Engine } from "../src/engine"
-import { EntityContainer } from "../src/entity"
-import { addComponentsToEngine as addExternalComponents } from "../src/external-components"
 
 type Position = {
   x: number
@@ -147,5 +145,99 @@ describe("Engine tests", () => {
     expect(Position.getOrNull(entity)).toBe(null)
     expect(Velocity.getOrNull(entity)).toBe(null)
     expect(Position.getOrNull(entityB)).toStrictEqual({ x: 20 })
+  })
+
+  it('should return mutableGroupOf multiples components', () => {
+    const engine = Engine()
+    const entityA = engine.addEntity()
+    const entityB = engine.addEntity()
+    const CLASS_ID = Math.random() | 0
+    const Position = engine.defineComponent<Position>(CLASS_ID)
+    const Position2 = engine.defineComponent<Position>(CLASS_ID + 1)
+    const Velocity = engine.defineComponent<Velocity>(CLASS_ID + 2)
+    Position.create(entityA, { x: 0 })
+    Position2.create(entityA, { x: 8 })
+    Velocity.create(entityA, { y: 1 })
+    Velocity.create(entityB, { y: 1 })
+
+    for (const [entity, velocity, position, position2] of engine.mutableGroupOf(Velocity, Position, Position2)) {
+      expect(entity).toBe(entityA)
+      expect(velocity).toStrictEqual({ y: 1 })
+      expect(position).toStrictEqual({ x: 0 })
+      expect(position2).toStrictEqual({ x: 8 })
+    }
+  })
+
+  it('should return mutableGroupOf single component', () => {
+    const engine = Engine()
+    const entityA = engine.addEntity()
+    const entityB = engine.addEntity()
+    const CLASS_ID = Math.random() | 0
+    const Position = engine.defineComponent<Position>(CLASS_ID)
+    const Velocity = engine.defineComponent<Velocity>(CLASS_ID + 2)
+    Position.create(entityA, { x: 0 })
+    Velocity.create(entityA, { y: 1 })
+    Velocity.create(entityB, { y: 10 })
+
+    // avoid dirty iterators
+    engine.update(0)
+
+    for (const [entity, position] of engine.mutableGroupOf(Position)) {
+      expect(entity).toBe(entityA)
+      expect(position).toStrictEqual({ x: 0 })
+      expect(Velocity.getFrom(entity)).toStrictEqual({ y: 1 })
+    }
+    expect(Array.from(Velocity.dirtyIterator())).toEqual([])
+    expect(Array.from(Position.dirtyIterator())).toEqual([entityA])
+  })
+
+  it('should return mutableGroupOf multi component & entities', () => {
+    const engine = Engine()
+    const entityA = engine.addEntity()
+    const entityB = engine.addEntity()
+    const entityC = engine.addEntity()
+    const CLASS_ID = Math.random() | 0
+    const Position = engine.defineComponent<Position>(CLASS_ID)
+    const Velocity = engine.defineComponent<Velocity>(CLASS_ID + 2)
+    Position.create(entityA, { x: 0 })
+    Position.create(entityB, { x: 1 })
+    Position.create(entityC, { x: 2 })
+    Velocity.create(entityA, { y: 0 })
+    Velocity.create(entityB, { y: 1 })
+
+    // avoid dirty iterators
+    engine.update(0)
+
+    const [component1, component2, component3] = Array.from(engine.mutableGroupOf(Position, Velocity))
+    expect(component1).toStrictEqual([entityA, { x: 0 }, { y: 0 }])
+    expect(component2).toStrictEqual([entityB, { x: 1 }, { y: 1 }])
+    expect(component3).toBe(undefined)
+    expect(Array.from(Velocity.dirtyIterator())).toEqual([entityA, entityB])
+    expect(Array.from(Position.dirtyIterator())).toEqual([entityA, entityB])
+  })
+
+  it('should return groupOf multi component & entities', () => {
+    const engine = Engine()
+    const entityA = engine.addEntity()
+    const entityB = engine.addEntity()
+    const entityC = engine.addEntity()
+    const CLASS_ID = Math.random() | 0
+    const Position = engine.defineComponent<Position>(CLASS_ID)
+    const Velocity = engine.defineComponent<Velocity>(CLASS_ID + 2)
+    Position.create(entityA, { x: 0 })
+    Position.create(entityB, { x: 1 })
+    Position.create(entityC, { x: 2 })
+    Velocity.create(entityA, { y: 0 })
+    Velocity.create(entityB, { y: 1 })
+
+    // avoid dirty iterators
+    engine.update(0)
+
+    const [component1, component2, component3] = Array.from(engine.groupOf(Position, Velocity))
+    expect(component1).toStrictEqual([entityA, { x: 0 }, { y: 0 }])
+    expect(component2).toStrictEqual([entityB, { x: 1 }, { y: 1 }])
+    expect(component3).toBe(undefined)
+    expect(Array.from(Velocity.dirtyIterator())).toEqual([])
+    expect(Array.from(Position.dirtyIterator())).toEqual([])
   })
 })
