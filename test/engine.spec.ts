@@ -1,4 +1,3 @@
-
 import { createVector3, Quaternion, Vector3 } from "../src/built-in-types"
 import { Engine } from "../src/engine"
 
@@ -219,5 +218,24 @@ describe("Engine tests", () => {
     expect(myTransform.rotation.y).toBe(8)
     expect(myTransform.rotation.z).toBe(9)
     expect(myTransform.rotation.w).toBe(10)
+  })
+
+  it("test flex buffers", () => {
+    const engine = Engine()
+    const entity = engine.addEntity() // 0
+    const CLASS_ID = 1
+
+    const Transform = engine.defineComponent(CLASS_ID,
+      {
+        test: Vector3
+      }
+    )
+    const myTransform = Transform.create(entity, {
+      test: createVector3(1, 2, 3)
+    })
+
+
+    
+
   })
 })

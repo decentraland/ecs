@@ -1,6 +1,7 @@
-import { AllAcceptedTypes, Integer } from './built-in-types'
+import { AllAcceptedTypes, Float, Integer } from './built-in-types'
 import { Entity } from './entity'
 import { readonly } from './utils'
+import flexbuffers from 'flatbuffers/js/flexbuffers'
 
 export type Handler<T = any> = (value: string, name: string, previousValue?: T) => T
 
@@ -135,8 +136,18 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
         return customBridge.toBinary(component)
       }
 
+      const b = flexbuffers.builder()
+      
       for (const value of tree) {
-        console.log(`${value.key} = ${value.getValue(component)}`)
+        if (value.valueType === Integer) {
+          b.finish()
+        } else if (value.valueType === String) { 
+
+        } else if (value.valueType === Float) {
+
+        } else {
+          throw new Error(`Invalid value type in key ${value.key}`)
+        }
       }
 
       return new Uint8Array()
