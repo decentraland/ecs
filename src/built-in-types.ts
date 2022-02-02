@@ -2,6 +2,7 @@
 export const Integer = Number
 export const BigInteger = Number
 export const Float = Number
+
 export const Vector2 = {
   'x': Float,
   'y': Float

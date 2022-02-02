@@ -61,8 +61,12 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
   function generateTree(values: any, keyPrefix: string[], tree: any[], deepIndex: number, topLevelValue: any) {
     for (const key of Object.keys(values)) {
       const typeConstructor = values[key]
+      const isAcceptedType = AllAcceptedTypes.includes(values[key]) ||
+        (Array.isArray(values[key]) && AllAcceptedTypes.includes(values[key][0]))
 
-      if (AllAcceptedTypes.includes(values[key])) {
+      if (typeof values[key] === 'object') {
+        generateTree(values[key], [...keyPrefix, key], tree, deepIndex + 1, topLevelValue)
+      } else if (isAcceptedType) {
         tree.push({
           key: ['this', ...keyPrefix, key].join('.'),
           valueType: values[key],
@@ -77,8 +81,6 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
             objRef[key] = value
           }
         })
-      } else if (typeof values[key] === 'object') {
-        generateTree(values[key], [...keyPrefix, key], tree, deepIndex + 1, topLevelValue)
       } else {
         throw new Error(`unidentified type '${key}' ${typeof values[key]} = ${values[key]}`)
       }
@@ -137,25 +139,17 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
       }
 
       const builder = flexbuffers.builder()
-      
+
       builder.startVector()
 
-      for (const value of tree) {
-        if (value.valueType === Integer) {
-          console.log(`Adding a int ${value.getValue(component)}`)
-          builder.addInt(value.getValue(component))
-        } else if (value.valueType === String) { 
-          builder.add(value.getValue(component))
-        } else if (value.valueType === Float) {
-          console.log(`Adding a float ${value.getValue(component)}`)
-          builder.addFloat(value.getValue(component))
-        } else {
-          throw new Error(`Invalid value type in key ${value.key}`)
-        }
-      }
+      builder.add(component)
+      
+      // for (const value of tree) {
+      //   builder.add(value.getValue(component))
+      // }
 
       builder.end()
-      
+
       return builder.finish()
     },
     updateFromBinary(entity: Entity, dataArray: Uint8Array, offset: number = 0) {
@@ -176,10 +170,12 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
 
       for (const value of tree) {
         const currentRef = ref.get(index)
-        
-        if (value.valueType === Integer && currentRef.isInt()) {
+
+        if (Array.isArray(value.valueType)) {
+          // currentRef.
+        }else if (value.valueType === Integer && currentRef.isInt()) {
           value.setValue(newValue, currentRef.numericValue())
-        } else if (value.valueType === String && currentRef.isString()) { 
+        } else if (value.valueType === String && currentRef.isString()) {
           value.setValue(newValue, currentRef.stringValue())
         } else if (value.valueType === Float && currentRef.isFloat()) {
           value.setValue(newValue, currentRef.floatValue())
