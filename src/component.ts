@@ -1,7 +1,7 @@
 import { AllAcceptedTypes, Float, Integer } from './built-in-types'
 import { Entity } from './entity'
 import { readonly } from './utils'
-import flexbuffers from 'flatbuffers/js/flexbuffers'
+import * as flexbuffers from 'flatbuffers/js/flexbuffers'
 
 export type Handler<T = any> = (value: string, name: string, previousValue?: T) => T
 
@@ -136,21 +136,27 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
         return customBridge.toBinary(component)
       }
 
-      const b = flexbuffers.builder()
+      const builder = flexbuffers.builder()
       
+      builder.startVector()
+
       for (const value of tree) {
         if (value.valueType === Integer) {
-          b.finish()
+          console.log(`Adding a int ${value.getValue(component)}`)
+          builder.addInt(value.getValue(component))
         } else if (value.valueType === String) { 
-
+          builder.add(value.getValue(component))
         } else if (value.valueType === Float) {
-
+          console.log(`Adding a float ${value.getValue(component)}`)
+          builder.addFloat(value.getValue(component))
         } else {
           throw new Error(`Invalid value type in key ${value.key}`)
         }
       }
 
-      return new Uint8Array()
+      builder.end()
+      
+      return builder.finish()
     },
     updateFromBinary(entity: Entity, dataArray: Uint8Array, offset: number = 0) {
       const component = data.get(entity)
@@ -165,19 +171,25 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
       }
 
       let newValue: any = {}
+      const ref = flexbuffers.toReference(dataArray.subarray(offset).buffer)
+      let index = 0
+
       for (const value of tree) {
-        const newFieldValue = null
-
-        if (value.valueType === Integer) {
-          // newFieldValue = getInt32(dataArray, offset)
+        const currentRef = ref.get(index)
+        
+        if (value.valueType === Integer && currentRef.isInt()) {
+          value.setValue(newValue, currentRef.numericValue())
+        } else if (value.valueType === String && currentRef.isString()) { 
+          value.setValue(newValue, currentRef.stringValue())
+        } else if (value.valueType === Float && currentRef.isFloat()) {
+          value.setValue(newValue, currentRef.floatValue())
         } else {
-
+          throw new Error(`Invalid value reading type in key ${value.key} - ${ref.toObject()}`)
         }
-
-        value.setValue(newValue, newFieldValue)
+        index++
       }
-      data.set(entity, newValue as ComponentType)
 
+      data.set(entity, newValue as ComponentType)
     }
   }
 }

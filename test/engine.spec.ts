@@ -1,5 +1,7 @@
-import { createVector3, Quaternion, Vector3 } from "../src/built-in-types"
+import { createVector3, Float, Integer, Quaternion, Vector3 } from "../src/built-in-types"
 import { Engine } from "../src/engine"
+import * as flexbuffers from "flatbuffers/js/flexbuffers";
+import { BitWidth } from "flatbuffers/js/flexbuffers/bit-width";
 
 const PositionType = {
   x: Number
@@ -220,22 +222,38 @@ describe("Engine tests", () => {
     expect(myTransform.rotation.w).toBe(10)
   })
 
-  it("test flex buffers", () => {
+  it("copy component from binary deco/encode", () => {
     const engine = Engine()
-    const entity = engine.addEntity() // 0
+    const entityFilled = engine.addEntity() // 0
+    const entityEmpty = engine.addEntity() // 1
     const CLASS_ID = 1
 
-    const Transform = engine.defineComponent(CLASS_ID,
+    const TestComponentType = engine.defineComponent(CLASS_ID,
       {
-        test: Vector3
+        a: Integer,
+        b: Float,
+        pilot: Integer
       }
     )
-    const myTransform = Transform.create(entity, {
-      test: createVector3(1, 2, 3)
+    const myComponent = TestComponentType.create(entityFilled, {
+      a: 2331,
+      b: 3.14159,
+      pilot: 21
     })
 
-
+    const zeroComponent = TestComponentType.create(entityEmpty, {
+      a: 0,
+      b: 0.0,
+      pilot: 0
+    })
     
+    const buffer = TestComponentType.toBinary(entityFilled)
+    TestComponentType.updateFromBinary(entityEmpty, buffer, 0)
 
+    const modifiedComponent = TestComponentType.getFrom(entityEmpty)
+
+    expect(modifiedComponent.a).toBe(myComponent.a)
+    expect(modifiedComponent.b).toBe(myComponent.b)
+    expect(modifiedComponent.pilot).toBe(myComponent.pilot)
   })
 })
