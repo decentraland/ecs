@@ -1,18 +1,18 @@
-import { AllAcceptedTypes, Float, Integer } from './built-in-types'
+import { EcsType } from './built-in-types'
 import { Entity } from './entity'
 import { readonly } from './utils'
 import * as flexbuffers from 'flatbuffers/js/flexbuffers'
 
-export type Handler<T = any> = (value: string, name: string, previousValue?: T) => T
+// export type Handler<T = any> = (value: string, name: string, previousValue?: T) => T
 
 export interface Spec {
-  [key: string]: string | Handler | [Handler] | any
+  [key: string]: EcsType
 }
 
 export type Result<T extends Spec> = {
   [K in keyof T]:
-  T[K] extends Handler ? ReturnType<T[K]>
-  : T[K] extends [Handler] ? Array<ReturnType<T[K][0]>>
+  T[K] extends EcsType ? ReturnType<T[K]['coerce']>
+  // : T[K] extends [EcsType] ? Array<ReturnType<T[K][0]['coerce']>>
   : T[K] extends Spec ? Result<T[K]>
   : never
 }
@@ -39,7 +39,7 @@ export type ComponentDefinition<T extends Spec> = {
   dirtyIterator(): Iterable<Entity>
 }
 
-export type CustomSerializerParser<T> = {
+export type CustomSerializerParser<T extends Spec> = {
   toBinary: (data: Result<T>) => Uint8Array,
   fromBinary: (data: Uint8Array, offset: number) => Result<T>
 }
@@ -49,45 +49,46 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
   const data = new Map<Entity, ComponentType>()
   const dirtyIterator = new Set<Entity>()
 
-  type TreeValue = {
-    key: string
-    valueType: any
-    getValue: (obj: ComponentType) => any
-    setValue: (obj: ComponentType, value: any) => void
-  }
 
-  const tree: TreeValue[] = []
+  // type TreeValue = {
+  //   key: string
+  //   valueType: any
+  //   getValue: (obj: ComponentType) => any
+  //   setValue: (obj: ComponentType, value: any) => void
+  // }
 
-  function generateTree(values: any, keyPrefix: string[], tree: any[], deepIndex: number, topLevelValue: any) {
-    for (const key of Object.keys(values)) {
-      const typeConstructor = values[key]
-      const isAcceptedType = AllAcceptedTypes.includes(values[key]) ||
-        (Array.isArray(values[key]) && AllAcceptedTypes.includes(values[key][0]))
+  // const tree: TreeValue[] = []
 
-      if (typeof values[key] === 'object') {
-        generateTree(values[key], [...keyPrefix, key], tree, deepIndex + 1, topLevelValue)
-      } else if (isAcceptedType) {
-        tree.push({
-          key: ['this', ...keyPrefix, key].join('.'),
-          valueType: values[key],
-          getValue: (obj: ComponentType) => {
-            let objRef: any = obj
-            keyPrefix.forEach(key => objRef = objRef[key])
-            return objRef[key]
-          },
-          setValue: (obj: ComponentType, value: typeof typeConstructor) => {
-            let objRef: any = obj
-            keyPrefix.forEach(key => objRef = objRef[key])
-            objRef[key] = value
-          }
-        })
-      } else {
-        throw new Error(`unidentified type '${key}' ${typeof values[key]} = ${values[key]}`)
-      }
-    }
-  }
+  // function generateTree(values: any, keyPrefix: string[], tree: any[], deepIndex: number, topLevelValue: any) {
+  //   for (const key of Object.keys(values)) {
+  //     const typeConstructor = values[key]
+  //     const isAcceptedType = AllAcceptedTypes.includes(values[key]) ||
+  //       (Array.isArray(values[key]) && AllAcceptedTypes.includes(values[key][0]))
 
-  generateTree(spec, [], tree, 0, spec)
+  //     if (typeof values[key] === 'object') {
+  //       generateTree(values[key], [...keyPrefix, key], tree, deepIndex + 1, topLevelValue)
+  //     } else if (isAcceptedType) {
+  //       tree.push({
+  //         key: ['this', ...keyPrefix, key].join('.'),
+  //         valueType: values[key],
+  //         getValue: (obj: ComponentType) => {
+  //           let objRef: any = obj
+  //           keyPrefix.forEach(key => objRef = objRef[key])
+  //           return objRef[key]
+  //         },
+  //         setValue: (obj: ComponentType, value: typeof typeConstructor) => {
+  //           let objRef: any = obj
+  //           keyPrefix.forEach(key => objRef = objRef[key])
+  //           objRef[key] = value
+  //         }
+  //       })
+  //     } else {
+  //       throw new Error(`unidentified type '${key}' ${typeof values[key]} = ${values[key]}`)
+  //     }
+  //   }
+  // }
+
+  // generateTree(spec, [], tree, 0, spec)
 
   return {
     _id: componentId,
@@ -134,19 +135,14 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
         throw new Error(`Component ${componentId} for ${entity} not found`)
       }
 
-      if (customBridge) {
-        return customBridge.toBinary(component)
-      }
-
       const builder = flexbuffers.builder()
 
       builder.startVector()
 
-      builder.add(component)
-      
-      // for (const value of tree) {
-      //   builder.add(value.getValue(component))
-      // }
+      for (const key in spec) {
+        const type = spec[key]
+        type.serialize(type.coerce(component[key]), builder)
+      }
 
       builder.end()
 
@@ -164,28 +160,33 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
         return
       }
 
-      let newValue: any = {}
       const ref = flexbuffers.toReference(dataArray.subarray(offset).buffer)
       let index = 0
 
-      for (const value of tree) {
+      for (const key in spec) {
+        const type = spec[key]
         const currentRef = ref.get(index)
-
-        if (Array.isArray(value.valueType)) {
-          // currentRef.
-        }else if (value.valueType === Integer && currentRef.isInt()) {
-          value.setValue(newValue, currentRef.numericValue())
-        } else if (value.valueType === String && currentRef.isString()) {
-          value.setValue(newValue, currentRef.stringValue())
-        } else if (value.valueType === Float && currentRef.isFloat()) {
-          value.setValue(newValue, currentRef.floatValue())
-        } else {
-          throw new Error(`Invalid value reading type in key ${value.key} - ${ref.toObject()}`)
-        }
-        index++
+        component[key] = type.deserialize(currentRef)
+        index += 1
       }
 
-      data.set(entity, newValue as ComponentType)
+      // let newValue: any = {}
+      // for (const value of tree) {
+      //   const currentRef = ref.get(index)
+      //   if (Array.isArray(value.valueType)) {
+      //     // currentRef.
+      //   }else if (value.valueType === Integer && currentRef.isInt()) {
+      //     value.setValue(newValue, currentRef.numericValue())
+      //   } else if (value.valueType === String && currentRef.isString()) {
+      //     value.setValue(newValue, currentRef.stringValue())
+      //   } else if (value.valueType === Float && currentRef.isFloat()) {
+      //     value.setValue(newValue, currentRef.floatValue())
+      //   } else {
+      //     throw new Error(`Invalid value reading type in key ${value.key} - ${ref.toObject()}`)
+      //   }
+      //   index++
+      // }
+      // data.set(entity, newValue as ComponentType)
     }
   }
 }

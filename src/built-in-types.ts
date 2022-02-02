@@ -1,26 +1,47 @@
 
-export const Integer = Number
-export const BigInteger = Number
-export const Float = Number
+import { Builder } from 'flatbuffers/js/flexbuffers/builder'
+import { Reference } from 'flatbuffers/js/flexbuffers/reference'
 
-export const Vector2 = {
-  'x': Float,
-  'y': Float
+export type EcsType<T=any> = {
+  serialize(value: T, builder: Builder): void,
+  deserialize(reader: Reference): T
+  coerce(value: any): T
 }
-export const Vector3 = {
-  'x': Float,
-  'y': Float,
-  'z': Float
+
+export const Int32: EcsType<number> = {
+  serialize(value: number, builder: Builder): void {
+    builder.addInt(value)
+  },
+  deserialize(reader: Reference): number {
+    return reader.numericValue()! as number
+  },
+  coerce(value: any): number {
+    if (typeof value == 'number') {
+      return value
+    } else {
+      throw new Error("invalid type")
+    }
+  }
 }
-export const Quaternion = {
-  'x': Float,
-  'y': Float,
-  'z': Float,
-  'w': Float
+
+export const Float: EcsType<number> = {
+  serialize(value: number, builder: Builder): void {
+    builder.addFloat(value)
+  },
+  deserialize(reader: Reference): number {
+    return reader.floatValue()!
+  },
+  coerce(value: any): number {
+    if (typeof value == 'number') {
+      return value
+    } else {
+      throw new Error("invalid type")
+    }
+  }
 }
 
 export const createVector3 = (x: number, y: number, z: number) => ({ x, y, z })
 
 export const AllAcceptedTypes = [
-  BigInteger, Integer, Float, String, Vector2, Vector3, Quaternion
+  Int32, Float
 ]
