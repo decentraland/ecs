@@ -2,93 +2,45 @@ import { EcsType } from './built-in-types'
 import { Entity } from './entity'
 import { readonly } from './utils'
 import * as flexbuffers from 'flatbuffers/js/flexbuffers'
+import { Reference } from 'flatbuffers/js/flexbuffers/reference'
 
 // export type Handler<T = any> = (value: string, name: string, previousValue?: T) => T
 
-export interface Spec {
-  [key: string]: EcsType
-}
-
-export type Result<T extends Spec> = {
-  [K in keyof T]:
-  T[K] extends EcsType ? ReturnType<T[K]['coerce']>
-  // : T[K] extends [EcsType] ? Array<ReturnType<T[K][0]['coerce']>>
-  : T[K] extends Spec ? Result<T[K]>
+export type EcsResult<T extends EcsType> =
+  T extends EcsType ? ReturnType<T['deserialize']>
   : never
-}
 
-export type ComponentDefinition<T extends Spec> = {
+export type ComponentDefinition<T extends EcsType> = {
   _id: number
   // removeFrom(entity: Entity): void
-  getFrom(entity: Entity): Readonly<Result<T>>
+  getFrom(entity: Entity): Readonly<EcsResult<T>>
 
-  getOrNull(entity: Entity): Readonly<Result<T>> | null
-
-  // adds this component to the list "to be reviewed next frame"
-  create(entity: Entity, val: Result<T>): Result<T>
+  getOrNull(entity: Entity): Readonly<EcsResult<T>> | null
 
   // adds this component to the list "to be reviewed next frame"
-  mutable(entity: Entity): Result<T>
+  create(entity: Entity, val: EcsResult<T>): EcsResult<T>
 
-  deleteFrom(entity: Entity): Result<T> | null
+  // adds this component to the list "to be reviewed next frame"
+  mutable(entity: Entity): EcsResult<T>
+
+  deleteFrom(entity: Entity): EcsResult<T> | null
 
   updateFromBinary(entity: Entity, data: Uint8Array, offset: number): void
   toBinary(entity: Entity): Uint8Array
 
-  iterator(): Iterable<[Entity, Result<T>]>
+  iterator(): Iterable<[Entity, EcsResult<T>]>
   dirtyIterator(): Iterable<Entity>
 }
 
-export type CustomSerializerParser<T extends Spec> = {
-  toBinary: (data: Result<T>) => Uint8Array,
-  fromBinary: (data: Uint8Array, offset: number) => Result<T>
+export type CustomSerializerParser<T extends EcsType> = {
+  toBinary: (data: EcsResult<T>) => Uint8Array,
+  fromBinary: (data: Uint8Array, offset: number) => EcsResult<T>
 }
 
-export function defineComponent<T extends Spec>(componentId: number, spec: T, customBridge?: CustomSerializerParser<T>) {
-  type ComponentType = Result<T>
+export function defineComponent<T extends EcsType>(componentId: number, spec: T, customBridge?: CustomSerializerParser<T>) {
+  type ComponentType = EcsResult<T>
   const data = new Map<Entity, ComponentType>()
   const dirtyIterator = new Set<Entity>()
-
-
-  // type TreeValue = {
-  //   key: string
-  //   valueType: any
-  //   getValue: (obj: ComponentType) => any
-  //   setValue: (obj: ComponentType, value: any) => void
-  // }
-
-  // const tree: TreeValue[] = []
-
-  // function generateTree(values: any, keyPrefix: string[], tree: any[], deepIndex: number, topLevelValue: any) {
-  //   for (const key of Object.keys(values)) {
-  //     const typeConstructor = values[key]
-  //     const isAcceptedType = AllAcceptedTypes.includes(values[key]) ||
-  //       (Array.isArray(values[key]) && AllAcceptedTypes.includes(values[key][0]))
-
-  //     if (typeof values[key] === 'object') {
-  //       generateTree(values[key], [...keyPrefix, key], tree, deepIndex + 1, topLevelValue)
-  //     } else if (isAcceptedType) {
-  //       tree.push({
-  //         key: ['this', ...keyPrefix, key].join('.'),
-  //         valueType: values[key],
-  //         getValue: (obj: ComponentType) => {
-  //           let objRef: any = obj
-  //           keyPrefix.forEach(key => objRef = objRef[key])
-  //           return objRef[key]
-  //         },
-  //         setValue: (obj: ComponentType, value: typeof typeConstructor) => {
-  //           let objRef: any = obj
-  //           keyPrefix.forEach(key => objRef = objRef[key])
-  //           objRef[key] = value
-  //         }
-  //       })
-  //     } else {
-  //       throw new Error(`unidentified type '${key}' ${typeof values[key]} = ${values[key]}`)
-  //     }
-  //   }
-  // }
-
-  // generateTree(spec, [], tree, 0, spec)
 
   return {
     _id: componentId,
@@ -136,15 +88,7 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
       }
 
       const builder = flexbuffers.builder()
-
-      builder.startVector()
-
-      for (const key in spec) {
-        const type = spec[key]
-        type.serialize(type.coerce(component[key]), builder)
-      }
-
-      builder.end()
+      spec.serialize(component, builder)
 
       return builder.finish()
     },
@@ -161,32 +105,8 @@ export function defineComponent<T extends Spec>(componentId: number, spec: T, cu
       }
 
       const ref = flexbuffers.toReference(dataArray.subarray(offset).buffer)
-      let index = 0
-
-      for (const key in spec) {
-        const type = spec[key]
-        const currentRef = ref.get(index)
-        component[key] = type.deserialize(currentRef)
-        index += 1
-      }
-
-      // let newValue: any = {}
-      // for (const value of tree) {
-      //   const currentRef = ref.get(index)
-      //   if (Array.isArray(value.valueType)) {
-      //     // currentRef.
-      //   }else if (value.valueType === Integer && currentRef.isInt()) {
-      //     value.setValue(newValue, currentRef.numericValue())
-      //   } else if (value.valueType === String && currentRef.isString()) {
-      //     value.setValue(newValue, currentRef.stringValue())
-      //   } else if (value.valueType === Float && currentRef.isFloat()) {
-      //     value.setValue(newValue, currentRef.floatValue())
-      //   } else {
-      //     throw new Error(`Invalid value reading type in key ${value.key} - ${ref.toObject()}`)
-      //   }
-      //   index++
-      // }
-      // data.set(entity, newValue as ComponentType)
+      const newValue = spec.deserialize(ref)
+      data.set(entity, newValue)
     }
   }
 }

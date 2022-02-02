@@ -1,13 +1,13 @@
-import { Float, Int32 } from "../src/built-in-types"
+import { ArrayType, Float, Int32, MapType } from "../src/built-in-types"
 import { Engine } from "../src/engine"
 
-const PositionType = {
+const PositionType = MapType({
   x: Float
-}
+})
 
-const VelocityType = {
+const VelocityType = MapType({
   y: Float
-}
+})
 
 describe("Engine tests", () => {
   it("generates new entities", () => {
@@ -177,11 +177,11 @@ describe("Engine tests", () => {
     const entity = engine.addEntity() // 0
 
     const Position = engine.defineComponent(1,
-      {
+      MapType({
         'x': Float,
         'y': Float,
         'z': Float
-      }
+      })
     )
     const myPosition = Position.create(1, { x: 11, y: 22, z: 33 })
 
@@ -280,22 +280,22 @@ describe("Engine tests", () => {
     const CLASS_ID = 1
 
     const TestComponentType = engine.defineComponent(CLASS_ID,
-      {
+      MapType({
         a: Int32,
         b: Int32,
-        c: Int32
-      }
+        c: ArrayType(Int32)
+      })
     )
     const myComponent = TestComponentType.create(entityFilled, {
       a: 2331,
       b: 10,
-      c: 2
+      c: [2,3,4,5]
     })
 
     TestComponentType.create(entityEmpty, {
       a: 0,
       b: 0,
-      c: 0
+      c: []
     })
 
     console.log(TestComponentType.toBinary(entityFilled))
@@ -306,6 +306,6 @@ describe("Engine tests", () => {
     const modifiedComponent = TestComponentType.getFrom(entityEmpty)
     expect(modifiedComponent.a).toBe(myComponent.a)
     expect(modifiedComponent.b).toBe(myComponent.b)
-    expect(modifiedComponent.c).toBe(myComponent.c)
+    expect(modifiedComponent.c).toEqual(myComponent.c)
   })
 })
