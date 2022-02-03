@@ -1,13 +1,14 @@
-import { ArrayType, Float, Int32, MapType } from "../src/built-in-types"
+import { builder, toReference } from "../../flatbuffers/js/flexbuffers"
+import { ArrayType, Float, Int32, MapType, Quaternion, Vector3, String, EcsType } from "../src/built-in-types"
 import { Engine } from "../src/engine"
 
-const PositionType = MapType({
+const PositionType = {
   x: Float
-})
+}
 
-const VelocityType = MapType({
+const VelocityType = {
   y: Float
-})
+}
 
 describe("Engine tests", () => {
   it("generates new entities", () => {
@@ -177,11 +178,11 @@ describe("Engine tests", () => {
     const entity = engine.addEntity() // 0
 
     const Position = engine.defineComponent(1,
-      MapType({
+      {
         'x': Float,
         'y': Float,
         'z': Float
-      })
+      }
     )
     const myPosition = Position.create(1, { x: 11, y: 22, z: 33 })
 
@@ -190,76 +191,76 @@ describe("Engine tests", () => {
     expect(myPosition.z).toBe(33)
   })
 
-  // it("component with complex data", () => {
-  //   const engine = Engine()
-  //   const entity = engine.addEntity() // 0
-  //   const CLASS_ID = 1
+  it("component with complex data", () => {
+    const engine = Engine()
+    const entity = engine.addEntity() // 0
+    const CLASS_ID = 1
 
-  //   const Transform = engine.defineComponent(CLASS_ID,
-  //     {
-  //       position: Vector3,
-  //       scale: Vector3,
-  //       rotation: Quaternion
-  //     }
-  //   )
-  //   const myTransform = Transform.create(entity, {
-  //     position: { x: 1, y: 1, z: 1 },
-  //     scale: createVector3(4, 5, 6),
-  //     rotation: { ...createVector3(7, 8, 9), w: 10 }
-  //   })
+    const Transform = engine.defineComponent(CLASS_ID,
+      {
+        position: Vector3,
+        scale: Vector3,
+        rotation: Quaternion
+      }
+    )
+    const myTransform = Transform.create(entity, {
+      position: { x: 1, y: 2, z: 3 },
+      scale: { x: 4, y: 5, z: 6 },
+      rotation: { x: 7, y: 8, z: 9, w: 10 },
+    })
 
-  //   expect(myTransform.position.x).toBe(1)
-  //   expect(myTransform.position.y).toBe(2)
-  //   expect(myTransform.position.z).toBe(3)
-  //   expect(myTransform.scale.x).toBe(4)
-  //   expect(myTransform.scale.y).toBe(5)
-  //   expect(myTransform.scale.z).toBe(6)
-  //   expect(myTransform.rotation.x).toBe(7)
-  //   expect(myTransform.rotation.y).toBe(8)
-  //   expect(myTransform.rotation.z).toBe(9)
-  //   expect(myTransform.rotation.w).toBe(10)
-  // })
+    expect(myTransform.position.x).toBe(1)
+    expect(myTransform.position.y).toBe(2)
+    expect(myTransform.position.z).toBe(3)
+    expect(myTransform.scale.x).toBe(4)
+    expect(myTransform.scale.y).toBe(5)
+    expect(myTransform.scale.z).toBe(6)
+    expect(myTransform.rotation.x).toBe(7)
+    expect(myTransform.rotation.y).toBe(8)
+    expect(myTransform.rotation.z).toBe(9)
+    expect(myTransform.rotation.w).toBe(10)
+  })
 
   // it("component with very complex data", () => {
   //   const engine = Engine()
-  //   const entity = engine.addEntity() // 0
+  //   const myEntity = engine.addEntity()
   //   const CLASS_ID = 1
 
   //   const ItemType =
-  //   {
-  //     itemId: Integer,
-  //     name: String,
-  //     enchantingIds: [{
-  //       itemId: Integer,
-  //       itemAmount: Integer
-  //     }]
-  //   }
+  //     MapType({
+  //       itemId: Int32,
+  //       name: String,
+  //       enchantingIds: ArrayType(MapType({
+  //         itemId: Int32,
+  //         itemAmount: Int32
+  //       }))
+  //     })
 
   //   const PlayerComponent = engine.defineComponent(CLASS_ID,
   //     {
   //       name: String,
-  //       level: Integer,
+  //       level: Int32,
   //       hp: Float,
   //       position: Vector3,
-  //       targets: [Vector3],
-  //       items: [ItemType]
+  //       targets: ArrayType(Vector3),
+  //       items: ArrayType((ItemType))
   //     }
   //   )
 
-
-  //   const myPlayer = PlayerComponent.create(entity, {
+  //   const defaultPlayer = {
   //     name: '',
   //     level: 1,
   //     hp: 0.0,
-  //     position: createVector3(1, 50, 50),
+  //     position: { x: 1, y: 50, z: 50 },
   //     targets: [],
   //     items: []
-  //   })
+  //   }
 
-  //   PlayerComponent.getFrom(entity).items[0]?.enchantingIds
+  //   const myPlayer = PlayerComponent.create(myEntity, defaultPlayer)
+  //   expect(PlayerComponent.getFrom(myEntity)).toStrictEqual(defaultPlayer)
 
   //   myPlayer.position.x += 1
-  //   myPlayer.targets.push(createVector3(1, 53, 82))
+  //   myPlayer.targets.push({ x: 1, y: 53, z: 82 },)
   //   myPlayer.targets[0].y += 1
   //   myPlayer.items.push({
   //     itemId: 1,
@@ -271,6 +272,18 @@ describe("Engine tests", () => {
   //     itemAmount: 10
   //   })
 
+
+  //   const buffer = PlayerComponent.toBinary(myEntity)
+  //   console.log({ playerBinary: buffer })
+
+  //   const otherEntity = engine.addEntity()
+
+  //   PlayerComponent.create(otherEntity, defaultPlayer)
+  //   PlayerComponent.updateFromBinary(otherEntity, buffer, 0)
+
+  //   const originalPlayer = PlayerComponent.getFrom(myEntity)
+  //   const modifiedFromBinaryPlayer = PlayerComponent.getFrom(otherEntity)
+  //   expect(modifiedFromBinaryPlayer).toStrictEqual(originalPlayer)
   // })
 
   it("copy component from binary deco/encode", () => {
@@ -280,16 +293,16 @@ describe("Engine tests", () => {
     const CLASS_ID = 1
 
     const TestComponentType = engine.defineComponent(CLASS_ID,
-      MapType({
+      {
         a: Int32,
         b: Int32,
         c: ArrayType(Int32)
-      })
+      }
     )
     const myComponent = TestComponentType.create(entityFilled, {
       a: 2331,
       b: 10,
-      c: [2,3,4,5]
+      c: [2, 3, 4, 5]
     })
 
     TestComponentType.create(entityEmpty, {
@@ -308,4 +321,58 @@ describe("Engine tests", () => {
     expect(modifiedComponent.b).toBe(myComponent.b)
     expect(modifiedComponent.c).toEqual(myComponent.c)
   })
+
+  it("copy component from binary deco/encode", () => {
+    const engine = Engine()
+    const entity = engine.addEntity()
+    const entityCopied = engine.addEntity()
+
+    let i = 0
+    const A = 'abcdefghijkl'
+    const vectorType: Record<string, EcsType<number>> = {}
+    const objectValues: Record<string, number> = {}
+    const zeroObjectValues: Record<string, number> = {}
+
+    for (i = 0; i < A.length; i++) {
+      const CLASS_ID = i + 1
+      const key = A[i]
+      vectorType[key] = Int32
+      objectValues[key] = 50 + i
+      zeroObjectValues[key] = 0
+      const TestComponentType = engine.defineComponent(CLASS_ID, vectorType)
+
+      TestComponentType.create(entity, objectValues)
+      TestComponentType.create(entityCopied, zeroObjectValues)
+      const buffer = TestComponentType.toBinary(entity)
+      console.log({
+        elements: i + 1,
+        buffer
+      })
+
+      TestComponentType.updateFromBinary(entityCopied, buffer, 0)
+      expect(TestComponentType.getFrom(entity)).toStrictEqual(TestComponentType.getFrom(entityCopied))
+    }
+
+  })
+
+  it("test flexbuffer", () => {
+    const fbb = builder()
+    fbb.startVector()
+    fbb.addInt(50)
+    fbb.addInt(51)
+    fbb.addInt(52)
+    fbb.addInt(53)
+    fbb.end()
+
+    const serializedBuffer = fbb.finish()
+    expect(serializedBuffer).toStrictEqual(new Uint8Array([50, 51, 52, 53, 4, 88, 1]))
+
+    const ref = toReference(serializedBuffer.buffer)
+    expect(ref.length()).toBe(4)
+    expect(ref.get(0).intValue()).toBe(50)
+    expect(ref.get(1).intValue()).toBe(51)
+    expect(ref.get(2).intValue()).toBe(52)
+    expect(ref.get(3).intValue()).toBe(53)
+  })
+
 })

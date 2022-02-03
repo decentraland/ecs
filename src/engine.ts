@@ -1,7 +1,7 @@
 import { Entity, EntityContainer } from "./entity"
 import { ComponentDefinition, defineComponent as defComponent, EcsResult } from "./component"
 import { readonly } from "./utils"
-import { EcsType } from "./built-in-types"
+import { EcsType, Result, Spec } from "./built-in-types"
 
 type Update = (dt: number) => void
 
@@ -28,12 +28,11 @@ export function Engine() {
     }
     return entityContainer.removeEntity(entity)
   }
-  function defineComponent<T extends EcsType>(componentId: number, spec: T): ComponentDefinition<T> {
+  function defineComponent<T extends Spec>(componentId: number, spec: T): ComponentDefinition<EcsType<Result<T>>> {
     if (componentsDefinition.get(componentId)) {
       throw new Error(`Component ${componentId} already declared`)
     }
 
-    type ComponentType = EcsResult<T>
     const newComponent = defComponent<T>(componentId, spec)
     componentsDefinition.set(componentId, newComponent)
 

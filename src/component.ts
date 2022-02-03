@@ -1,10 +1,7 @@
-import { EcsType } from './built-in-types'
+import { EcsType, MapType, Result, Spec } from './built-in-types'
 import { Entity } from './entity'
 import { readonly } from './utils'
 import * as flexbuffers from 'flatbuffers/js/flexbuffers'
-import { Reference } from 'flatbuffers/js/flexbuffers/reference'
-
-// export type Handler<T = any> = (value: string, name: string, previousValue?: T) => T
 
 export type EcsResult<T extends EcsType> =
   T extends EcsType ? ReturnType<T['deserialize']>
@@ -37,8 +34,9 @@ export type CustomSerializerParser<T extends EcsType> = {
   fromBinary: (data: Uint8Array, offset: number) => EcsResult<T>
 }
 
-export function defineComponent<T extends EcsType>(componentId: number, spec: T, customBridge?: CustomSerializerParser<T>) {
-  type ComponentType = EcsResult<T>
+export function defineComponent<T extends Spec>(componentId: number, specObject: T, customBridge?: CustomSerializerParser<EcsType<Result<T>>>) {
+  const spec = MapType(specObject)
+  type ComponentType = EcsResult<EcsType<Result<T>>>
   const data = new Map<Entity, ComponentType>()
   const dirtyIterator = new Set<Entity>()
 
