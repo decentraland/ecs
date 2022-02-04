@@ -221,70 +221,68 @@ describe("Engine tests", () => {
     expect(myTransform.rotation.w).toBe(10)
   })
 
-  // it("component with very complex data", () => {
-  //   const engine = Engine()
-  //   const myEntity = engine.addEntity()
-  //   const CLASS_ID = 1
+  it("component with very complex data", () => {
+    const engine = Engine()
+    const myEntity = engine.addEntity()
+    const CLASS_ID = 1
 
-  //   const ItemType =
-  //     MapType({
-  //       itemId: Int32,
-  //       name: String,
-  //       enchantingIds: ArrayType(MapType({
-  //         itemId: Int32,
-  //         itemAmount: Int32
-  //       }))
-  //     })
+    const ItemType =
+      MapType({
+        itemId: Int32,
+        name: String,
+        enchantingIds: ArrayType(MapType({
+          itemId: Int32,
+          itemAmount: Int32
+        }))
+      })
 
-  //   const PlayerComponent = engine.defineComponent(CLASS_ID,
-  //     {
-  //       name: String,
-  //       level: Int32,
-  //       hp: Float,
-  //       position: Vector3,
-  //       targets: ArrayType(Vector3),
-  //       items: ArrayType((ItemType))
-  //     }
-  //   )
+    const PlayerComponent = engine.defineComponent(CLASS_ID,
+      {
+        name: String,
+        level: Int32,
+        hp: Float,
+        position: Vector3,
+        targets: ArrayType(Vector3),
+        items: ArrayType((ItemType))
+      }
+    )
 
-  //   const defaultPlayer = {
-  //     name: '',
-  //     level: 1,
-  //     hp: 0.0,
-  //     position: { x: 1, y: 50, z: 50 },
-  //     targets: [],
-  //     items: []
-  //   }
+    const defaultPlayer = {
+      name: '',
+      level: 1,
+      hp: 0.0,
+      position: { x: 1, y: 50, z: 50 },
+      targets: [],
+      items: []
+    }
 
-  //   const myPlayer = PlayerComponent.create(myEntity, defaultPlayer)
-  //   expect(PlayerComponent.getFrom(myEntity)).toStrictEqual(defaultPlayer)
+    const myPlayer = PlayerComponent.create(myEntity, defaultPlayer)
+    expect(PlayerComponent.getFrom(myEntity)).toStrictEqual(defaultPlayer)
 
-  //   myPlayer.position.x += 1
-  //   myPlayer.targets.push({ x: 1, y: 53, z: 82 },)
-  //   myPlayer.targets[0].y += 1
-  //   myPlayer.items.push({
-  //     itemId: 1,
-  //     name: 'Manzana roja',
-  //     enchantingIds: []
-  //   })
-  //   myPlayer.items[0]?.enchantingIds.push({
-  //     itemId: 2,
-  //     itemAmount: 10
-  //   })
+    myPlayer.position.x += 1.0
+    myPlayer.items.push({
+      itemId: 1,
+      name: 'Manzana roja',
+      enchantingIds: []
+    })
+    myPlayer.items[0]?.enchantingIds.push({
+      itemId: 2,
+      itemAmount: 10
+    })
 
 
-  //   const buffer = PlayerComponent.toBinary(myEntity)
-  //   console.log({ playerBinary: buffer })
+    const buffer = PlayerComponent.toBinary(myEntity)
+    console.log({ playerBinary: buffer })
 
-  //   const otherEntity = engine.addEntity()
+    const otherEntity = engine.addEntity()
 
-  //   PlayerComponent.create(otherEntity, defaultPlayer)
-  //   PlayerComponent.updateFromBinary(otherEntity, buffer, 0)
+    PlayerComponent.create(otherEntity, defaultPlayer)
+    PlayerComponent.updateFromBinary(otherEntity, buffer, 0)
 
-  //   const originalPlayer = PlayerComponent.getFrom(myEntity)
-  //   const modifiedFromBinaryPlayer = PlayerComponent.getFrom(otherEntity)
-  //   expect(modifiedFromBinaryPlayer).toStrictEqual(originalPlayer)
-  // })
+    const originalPlayer = PlayerComponent.getFrom(myEntity)
+    const modifiedFromBinaryPlayer = PlayerComponent.getFrom(otherEntity)
+    expect(modifiedFromBinaryPlayer).toStrictEqual(originalPlayer)
+  })
 
   it("copy component from binary deco/encode", () => {
     const engine = Engine()
@@ -311,7 +309,7 @@ describe("Engine tests", () => {
       c: []
     })
 
-    console.log(TestComponentType.toBinary(entityFilled))
+    // console.log(TestComponentType.toBinary(entityFilled))
 
     const buffer = TestComponentType.toBinary(entityFilled)
     TestComponentType.updateFromBinary(entityEmpty, buffer, 0)
@@ -344,10 +342,10 @@ describe("Engine tests", () => {
       TestComponentType.create(entity, objectValues)
       TestComponentType.create(entityCopied, zeroObjectValues)
       const buffer = TestComponentType.toBinary(entity)
-      console.log({
-        elements: i + 1,
-        buffer
-      })
+      // console.log({
+      //   elements: i + 1,
+      //   buffer
+      // })
 
       TestComponentType.updateFromBinary(entityCopied, buffer, 0)
       expect(TestComponentType.getFrom(entity)).toStrictEqual(TestComponentType.getFrom(entityCopied))
@@ -355,24 +353,25 @@ describe("Engine tests", () => {
 
   })
 
-  it("test flexbuffer", () => {
-    const fbb = builder()
-    fbb.startVector()
-    fbb.addInt(50)
-    fbb.addInt(51)
-    fbb.addInt(52)
-    fbb.addInt(53)
-    fbb.end()
+  // it("test flexbuffer", () => {
+  //   const fbb = builder()
+  //   fbb.startVector()
+  //   fbb.add
+  //   fbb.addInt(50)
+  //   fbb.addInt(51)
+  //   fbb.addInt(52)
+  //   fbb.addInt(53)
+  //   fbb.end()
 
-    const serializedBuffer = fbb.finish()
-    expect(serializedBuffer).toStrictEqual(new Uint8Array([50, 51, 52, 53, 4, 88, 1]))
+  //   const serializedBuffer = fbb.finish()
+  //   expect(serializedBuffer).toStrictEqual(new Uint8Array([50, 51, 52, 53, 4, 88, 1]))
 
-    const ref = toReference(serializedBuffer.buffer)
-    expect(ref.length()).toBe(4)
-    expect(ref.get(0).intValue()).toBe(50)
-    expect(ref.get(1).intValue()).toBe(51)
-    expect(ref.get(2).intValue()).toBe(52)
-    expect(ref.get(3).intValue()).toBe(53)
-  })
+  //   const ref = toReference(serializedBuffer.buffer)
+  //   expect(ref.length()).toBe(4)
+  //   expect(ref.get(0).intValue()).toBe(50)
+  //   expect(ref.get(1).intValue()).toBe(51)
+  //   expect(ref.get(2).intValue()).toBe(52)
+  //   expect(ref.get(3).intValue()).toBe(53)
+  // })
 
 })

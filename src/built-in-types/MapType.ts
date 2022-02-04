@@ -12,27 +12,18 @@ export type Result<T extends Spec> = {
 
 export function MapType<T extends Spec>(spec: T): EcsType<Result<T>> {
   return {
-    serialize(value: Result<T>, builder: Builder): void {
-      builder.startVector()
-
+    serialize(value: Result<T>, builder: ByteBuffer): void {
       for (const key in spec) {
         const type = spec[key]
         type.serialize(value[key], builder)
       }
-
-      builder.end()
     },
-    deserialize(reader: Reference): Result<T> {
+    deserialize(reader: ByteBuffer): Result<T> {
       const newValue: Result<T> = {} as any
-      let index = 0
-
       for (const key in spec) {
         const type = spec[key]
-        const ref = reader.get(index)
-        newValue[key] = type.deserialize(ref)
-        index += 1
+        newValue[key] = type.deserialize(reader)
       }
-
       return newValue
     }
   }

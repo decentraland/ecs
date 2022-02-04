@@ -2,6 +2,7 @@ import { EcsType, MapType, Result, Spec } from './built-in-types'
 import { Entity } from './entity'
 import { readonly } from './utils'
 import * as flexbuffers from 'flatbuffers/js/flexbuffers'
+import ByteBuffer from 'bytebuffer'
 
 export type EcsResult<T extends EcsType> =
   T extends EcsType ? ReturnType<T['deserialize']>
@@ -31,10 +32,10 @@ export type ComponentDefinition<T extends EcsType> = {
 
 export type CustomSerializerParser<T extends EcsType> = {
   toBinary: (data: EcsResult<T>) => Uint8Array,
-  fromBinary: (data: Uint8Array, offset: number) => EcsResult<T>
+  fromBinary: (data: Uint8Array) => EcsResult<T>
 }
 
-export function defineComponent<T extends Spec>(componentId: number, specObject: T, customBridge?: CustomSerializerParser<EcsType<Result<T>>>) {
+export function defineComponent<T extends Spec>(componentId: number, specObject: T, customSerializerParser?: CustomSerializerParser<EcsType<Result<T>>>) {
   const spec = MapType(specObject)
   type ComponentType = EcsResult<EcsType<Result<T>>>
   const data = new Map<Entity, ComponentType>()
@@ -85,25 +86,28 @@ export function defineComponent<T extends Spec>(componentId: number, specObject:
         throw new Error(`Component ${componentId} for ${entity} not found`)
       }
 
-      const builder = flexbuffers.builder()
-      spec.serialize(component, builder)
+      if (customSerializerParser) {
+        return customSerializerParser.toBinary(component)
+      }
 
-      return builder.finish()
+      const buffer = ByteBuffer.allocate(2048, false, false)
+      spec.serialize(component, buffer)
+      return new Uint8Array(buffer.buffer.subarray(0, buffer.offset))
     },
-    updateFromBinary(entity: Entity, dataArray: Uint8Array, offset: number = 0) {
+    updateFromBinary(entity: Entity, dataArray: Uint8Array) {
       const component = data.get(entity)
       if (!component) {
         throw new Error(`Component ${componentId} for ${entity} not found`)
       }
 
-      if (customBridge) {
-        const newValue = customBridge.fromBinary(dataArray, offset)
+      if (customSerializerParser) {
+        const newValue = customSerializerParser.fromBinary(dataArray)
         data.set(entity, newValue)
         return
       }
 
-      const ref = flexbuffers.toReference(dataArray.subarray(offset).buffer)
-      const newValue = spec.deserialize(ref)
+      const buffer = ByteBuffer.fromBinary(new TextDecoder().decode(dataArray))
+      const newValue = spec.deserialize(buffer)
       data.set(entity, newValue)
     }
   }

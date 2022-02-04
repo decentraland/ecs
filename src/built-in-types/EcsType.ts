@@ -1,7 +1,6 @@
-import { Builder } from 'flatbuffers/js/flexbuffers/builder'
-import { Reference } from 'flatbuffers/js/flexbuffers/reference'
+import ByteBuffer from "bytebuffer";
 
 export type EcsType<T = any> = {
-  serialize(value: T, builder: Builder): void,
-  deserialize(reader: Reference): T
+  serialize(value: T, builder: ByteBuffer): void,
+  deserialize(reader: ByteBuffer): T
 }

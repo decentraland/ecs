@@ -1,12 +1,11 @@
-import { Builder } from "flatbuffers/js/flexbuffers/builder"
-import { Reference } from "flatbuffers/js/flexbuffers/reference"
+
 import { EcsType } from "../EcsType"
 
 export const Float: EcsType<number> = {
-    serialize(value: number, builder: Builder): void {
-        builder.addFloat(value)
+    serialize(value: number, builder: ByteBuffer): void {
+        builder.writeFloat32(value)
     },
-    deserialize(reader: Reference): number {
-        return reader.floatValue()!
+    deserialize(reader: ByteBuffer): number {
+        return reader.readFloat32()
     }
 }

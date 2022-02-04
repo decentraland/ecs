@@ -4,18 +4,17 @@ import { EcsType } from "./EcsType"
 
 export function ArrayType<T>(type: EcsType<T>): EcsType<Array<T>> {
     return {
-        serialize(value: Array<T>, builder: Builder): void {
-            builder.startVector()
+        serialize(value: Array<T>, builder: ByteBuffer): void {
+            builder.writeUint32(value.length)
             for (const item of value) {
                 type.serialize(item, builder)
             }
-            builder.end()
         },
-        deserialize(reader: Reference): Array<T> {
+        deserialize(reader: ByteBuffer): Array<T> {
             const newArray: Array<T> = []
-            for (let index = 0; index < reader.length(); index++) {
-                const ref = reader.get(index)
-                newArray.push(type.deserialize(ref))
+            const length = reader.readUint32()
+            for (let index = 0; index < length; index++) {
+                newArray.push(type.deserialize(reader))
             }
             return newArray
         },

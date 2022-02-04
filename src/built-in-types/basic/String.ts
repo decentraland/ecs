@@ -1,12 +1,13 @@
-import { Builder } from "flatbuffers/js/flexbuffers/builder"
-import { Reference } from "flatbuffers/js/flexbuffers/reference"
+
 import { EcsType } from "../EcsType"
 
 export const String: EcsType<string> = {
-    serialize(value: string, builder: Builder): void {
-        builder.add(value)
+    serialize(value: string, builder: ByteBuffer): void {
+        builder.writeUint32(value.length)
+        builder.writeString(value)
     },
-    deserialize(reader: Reference): string {
-        return reader.stringValue()!
+    deserialize(reader: ByteBuffer): string {
+        const length = reader.readUint32()
+        return reader.readString(length)
     }
 }
