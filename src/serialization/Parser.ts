@@ -5,7 +5,14 @@ export type Parser = {
 }
 
 export function createParser(dataArray: Uint8Array): Parser {
-    const buffer = ByteBuffer.fromBinary(new TextDecoder().decode(dataArray))
+
+    // TODO: implement better way (replacing Bytebuffer approach)
+    const buffer = ByteBuffer.allocate(dataArray.length, false, false)
+    for (const byte of dataArray){
+        buffer.writeByte(byte)
+    }
+    buffer.reset()
+
     return {
         bb: buffer
     }

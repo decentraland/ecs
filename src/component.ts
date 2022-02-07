@@ -28,7 +28,7 @@ export type ComponentDefinition<T extends Spec> = {
 
   deleteFrom(entity: Entity): ComponentType<T> | null
 
-  updateFromBinary(entity: Entity, data: Uint8Array, offset: number): void
+  updateFromBinary(entity: Entity, data: Uint8Array): ComponentType<T> | null
   toBinary(entity: Entity): Uint8Array
 
   iterator(): Iterable<[Entity, ComponentType<T>]>
@@ -114,7 +114,7 @@ export function defineComponent<T extends Spec>(componentId: number, specObject:
       spec.serialize(component, buffer)
       return buffer.getData()
     },
-    updateFromBinary(entity: Entity, dataArray: Uint8Array) {
+    updateFromBinary(entity: Entity, dataArray: Uint8Array): ComponentType<T> | null {
       const component = data.get(entity)
       if (!component) {
         throw new Error(`Component ${componentId} for ${entity} not found`)
@@ -129,6 +129,7 @@ export function defineComponent<T extends Spec>(componentId: number, specObject:
       const buffer = createParser(dataArray)
       const newValue = spec.deserialize(buffer)
       data.set(entity, newValue)
+      return newValue
     },
     clearDirty: function () {
       dirtyIterator = new Set<Entity>()

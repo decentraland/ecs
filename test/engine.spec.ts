@@ -1,12 +1,12 @@
-import { ArrayType, Float, Int32, MapType, Quaternion, Vector3, String, EcsType } from "../src/built-in-types"
+import { ArrayType, Float32, Int32, MapType, Quaternion, Vector3, String, EcsType, Transform } from "../src/built-in-types"
 import { Engine } from "../src/engine"
 
 const PositionType = {
-  x: Float
+  x: Float32
 }
 
 const VelocityType = {
-  y: Float
+  y: Float32
 }
 
 describe("Engine tests", () => {
@@ -242,186 +242,32 @@ describe("Engine tests", () => {
     expect(Array.from(Position.dirtyIterator())).toEqual([])
   })
 
-
-  it("component with simple data", () => {
-    const engine = Engine()
-    const entity = engine.addEntity() // 0
-
-    const Position = engine.defineComponent(1,
-      {
-        'x': Float,
-        'y': Float,
-        'z': Float
-      }
-    )
-    const myPosition = Position.create(1, { x: 11, y: 22, z: 33 })
-
-    expect(myPosition.x).toBe(11)
-    expect(myPosition.y).toBe(22)
-    expect(myPosition.z).toBe(33)
-  })
-
   it("component with complex data", () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const CLASS_ID = 1
 
-    const Transform = engine.defineComponent(CLASS_ID,
-      {
-        position: Vector3,
-        scale: Vector3,
-        rotation: Quaternion
+    const TransformComponent = engine.defineComponent(CLASS_ID, { transform: Transform })
+    const myTransform = TransformComponent.create(entity, {
+      transform: {
+        position: { x: 1, y: 2, z: 3 },
+        scale: { x: 4, y: 5, z: 6 },
+        rotation: { x: 7, y: 8, z: 9, w: 10 },
       }
-    )
-    const myTransform = Transform.create(entity, {
-      position: { x: 1, y: 2, z: 3 },
-      scale: { x: 4, y: 5, z: 6 },
-      rotation: { x: 7, y: 8, z: 9, w: 10 },
     })
 
-    expect(myTransform.position.x).toBe(1)
-    expect(myTransform.position.y).toBe(2)
-    expect(myTransform.position.z).toBe(3)
-    expect(myTransform.scale.x).toBe(4)
-    expect(myTransform.scale.y).toBe(5)
-    expect(myTransform.scale.z).toBe(6)
-    expect(myTransform.rotation.x).toBe(7)
-    expect(myTransform.rotation.y).toBe(8)
-    expect(myTransform.rotation.z).toBe(9)
-    expect(myTransform.rotation.w).toBe(10)
+    expect(myTransform.transform.position.x).toBe(1)
+    expect(myTransform.transform.position.y).toBe(2)
+    expect(myTransform.transform.position.z).toBe(3)
+    expect(myTransform.transform.scale.x).toBe(4)
+    expect(myTransform.transform.scale.y).toBe(5)
+    expect(myTransform.transform.scale.z).toBe(6)
+    expect(myTransform.transform.rotation.x).toBe(7)
+    expect(myTransform.transform.rotation.y).toBe(8)
+    expect(myTransform.transform.rotation.z).toBe(9)
+    expect(myTransform.transform.rotation.w).toBe(10)
   })
 
-  it("component with very complex data", () => {
-    const engine = Engine()
-    const myEntity = engine.addEntity()
-    const CLASS_ID = 1
-
-    const ItemType =
-      MapType({
-        itemId: Int32,
-        name: String,
-        enchantingIds: ArrayType(MapType({
-          itemId: Int32,
-          itemAmount: Int32
-        }))
-      })
-
-    const PlayerComponent = engine.defineComponent(CLASS_ID,
-      {
-        name: String,
-        level: Int32,
-        hp: Float,
-        position: Vector3,
-        targets: ArrayType(Vector3),
-        items: ArrayType((ItemType))
-      }
-    )
-
-    const defaultPlayer = {
-      name: '',
-      level: 1,
-      hp: 0.0,
-      position: { x: 1, y: 50, z: 50 },
-      targets: [],
-      items: []
-    }
-
-    const myPlayer = PlayerComponent.create(myEntity, defaultPlayer)
-    expect(PlayerComponent.getFrom(myEntity)).toStrictEqual(defaultPlayer)
-
-    myPlayer.position.x += 1.0
-    myPlayer.items.push({
-      itemId: 1,
-      name: 'Manzana roja',
-      enchantingIds: []
-    })
-    myPlayer.items[0]?.enchantingIds.push({
-      itemId: 2,
-      itemAmount: 10
-    })
-
-
-    const buffer = PlayerComponent.toBinary(myEntity)
-    console.log({ playerBinary: buffer })
-
-    const otherEntity = engine.addEntity()
-
-    PlayerComponent.create(otherEntity, defaultPlayer)
-    PlayerComponent.updateFromBinary(otherEntity, buffer, 0)
-
-    const originalPlayer = PlayerComponent.getFrom(myEntity)
-    const modifiedFromBinaryPlayer = PlayerComponent.getFrom(otherEntity)
-    expect(modifiedFromBinaryPlayer).toStrictEqual(originalPlayer)
-  })
-
-  it("copy component from binary deco/encode", () => {
-    const engine = Engine()
-    const entityFilled = engine.addEntity() // 0
-    const entityEmpty = engine.addEntity() // 1
-    const CLASS_ID = 1
-
-    const TestComponentType = engine.defineComponent(CLASS_ID,
-      {
-        a: Int32,
-        b: Int32,
-        c: ArrayType(Int32)
-      }
-    )
-    const myComponent = TestComponentType.create(entityFilled, {
-      a: 2331,
-      b: 10,
-      c: [2, 3, 4, 5]
-    })
-
-    TestComponentType.create(entityEmpty, {
-      a: 0,
-      b: 0,
-      c: []
-    })
-
-    // console.log(TestComponentType.toBinary(entityFilled))
-
-    const buffer = TestComponentType.toBinary(entityFilled)
-    TestComponentType.updateFromBinary(entityEmpty, buffer, 0)
-
-    const modifiedComponent = TestComponentType.getFrom(entityEmpty)
-    expect(modifiedComponent.a).toBe(myComponent.a)
-    expect(modifiedComponent.b).toBe(myComponent.b)
-    expect(modifiedComponent.c).toEqual(myComponent.c)
-  })
-
-  it("copy component from binary deco/encode", () => {
-    const engine = Engine()
-    const entity = engine.addEntity()
-    const entityCopied = engine.addEntity()
-
-    let i = 0
-    const A = 'abcdefghijkl'
-    const vectorType: Record<string, EcsType<number>> = {}
-    const objectValues: Record<string, number> = {}
-    const zeroObjectValues: Record<string, number> = {}
-
-    for (i = 0; i < A.length; i++) {
-      const CLASS_ID = i + 1
-      const key = A[i]
-      vectorType[key] = Int32
-      objectValues[key] = 50 + i
-      zeroObjectValues[key] = 0
-      const TestComponentType = engine.defineComponent(CLASS_ID, vectorType)
-
-      TestComponentType.create(entity, objectValues)
-      TestComponentType.create(entityCopied, zeroObjectValues)
-      const buffer = TestComponentType.toBinary(entity)
-      // console.log({
-      //   elements: i + 1,
-      //   buffer
-      // })
-
-      TestComponentType.updateFromBinary(entityCopied, buffer, 0)
-      expect(TestComponentType.getFrom(entity)).toStrictEqual(TestComponentType.getFrom(entityCopied))
-    }
-
-  })
 
   // it("test flexbuffer", () => {
   //   const fbb = builder()
