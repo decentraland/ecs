@@ -41,8 +41,7 @@ export type ComponentDefinition<T extends Spec> = {
 //   fromBinary: (data: Uint8Array) => ComponentType<T>
 // }
 
-export function defineComponent<T extends Spec>(componentId: number, specObject: T)
-: ComponentDefinition<T>{
+export function defineComponent<T extends Spec>(componentId: number, specObject: T): ComponentDefinition<T> {
   const data = new Map<Entity, ComponentType<T>>()
   const spec = MapType(specObject)
   let dirtyIterator = new Set<Entity>()

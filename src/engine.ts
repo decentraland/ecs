@@ -50,7 +50,8 @@ export function Engine() {
   function mutableGroupOf<T extends ComponentDefinition<any>[]>(...componentDefnition: T): Iterable<[Entity, ...Array<ReturnType<Unpacked<T>['mutable']>>]>
   function* mutableGroupOf<T extends ComponentDefinition<any>[]>(...componentDefnition: T): Iterable<[Entity, ...Array<ReturnType<Unpacked<T>['mutable']>>]> {
     for (const [entity, ...components] of getComponentDefGroup(...componentDefnition)) {
-      yield [entity, ...components.map(c => c.mutable(entity))]
+      // TODO: see as any                                   =>
+      yield [entity, ...components.map(c => c.mutable(entity)) as any]
     }
   }
 
@@ -60,7 +61,8 @@ export function Engine() {
   function groupOf<T extends ComponentDefinition<any>[]>(...componentDefnition: T): Iterable<[Entity, ...Array<Readonly<ReturnType<Unpacked<T>['getFrom']>>>]>
   function* groupOf<T extends ComponentDefinition<any>[]>(...componentDefnition: T): Iterable<[Entity, ...Array<Readonly<ReturnType<Unpacked<T>['getFrom']>>>]> {
     for (const [entity, ...components] of getComponentDefGroup(...componentDefnition)) {
-      yield [entity, ...components.map(c => c.getFrom(entity))]
+      // TODO: see as any                                   =>
+      yield [entity, ...components.map(c => c.getFrom(entity)) as any]
     }
   }
 
