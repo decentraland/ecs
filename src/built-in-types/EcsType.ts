@@ -1,6 +1,7 @@
-import ByteBuffer from "bytebuffer";
+import { Parser } from "../serialization/Parser";
+import { Serializer } from "./../serialization/Serializer";
 
 export type EcsType<T = any> = {
-  serialize(value: T, builder: ByteBuffer): void,
-  deserialize(reader: ByteBuffer): T
+  serialize(value: T, builder: Serializer): void,
+  deserialize(reader: Parser): T
 }

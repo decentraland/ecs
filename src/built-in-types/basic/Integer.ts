@@ -1,11 +1,13 @@
 
+import { Parser } from "../../serialization/Parser"
+import { Serializer } from "../../serialization/Serializer"
 import { EcsType } from "../EcsType"
 
 export const Int32: EcsType<number> = {
-    serialize(value: number, builder: ByteBuffer): void {
-        builder.writeInt32(value)
+    serialize(value: number, builder: Serializer): void {
+        builder.bb.writeInt32(value)
     },
-    deserialize(reader: ByteBuffer): number {
-        return reader.readInt32()
+    deserialize(reader: Parser): number {
+        return reader.bb.readInt32()
     }
 }

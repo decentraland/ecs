@@ -3,6 +3,8 @@ import { Entity } from './entity'
 import { readonly } from './utils'
 import * as flexbuffers from 'flatbuffers/js/flexbuffers'
 import ByteBuffer from 'bytebuffer'
+import { createSerializer } from './serialization/Serializer'
+import { createParser } from './serialization/Parser'
 
 export type EcsResult<T extends EcsType> =
   T extends EcsType ? ReturnType<T['deserialize']>
@@ -90,9 +92,9 @@ export function defineComponent<T extends Spec>(componentId: number, specObject:
         return customSerializerParser.toBinary(component)
       }
 
-      const buffer = ByteBuffer.allocate(2048, false, false)
+      const buffer = createSerializer()
       spec.serialize(component, buffer)
-      return new Uint8Array(buffer.buffer.subarray(0, buffer.offset))
+      return buffer.getData()
     },
     updateFromBinary(entity: Entity, dataArray: Uint8Array) {
       const component = data.get(entity)
@@ -106,7 +108,7 @@ export function defineComponent<T extends Spec>(componentId: number, specObject:
         return
       }
 
-      const buffer = ByteBuffer.fromBinary(new TextDecoder().decode(dataArray))
+      const buffer = createParser(dataArray)
       const newValue = spec.deserialize(buffer)
       data.set(entity, newValue)
     }

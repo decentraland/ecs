@@ -1,5 +1,5 @@
-import { Builder } from "flatbuffers/js/flexbuffers/builder"
-import { Reference } from "flatbuffers/js/flexbuffers/reference"
+import { Parser } from "../serialization/Parser"
+import { Serializer } from "../serialization/Serializer"
 import { EcsType } from "./EcsType"
 
 export interface Spec {
@@ -12,13 +12,13 @@ export type Result<T extends Spec> = {
 
 export function MapType<T extends Spec>(spec: T): EcsType<Result<T>> {
   return {
-    serialize(value: Result<T>, builder: ByteBuffer): void {
+    serialize(value: Result<T>, builder: Serializer): void {
       for (const key in spec) {
         const type = spec[key]
         type.serialize(value[key], builder)
       }
     },
-    deserialize(reader: ByteBuffer): Result<T> {
+    deserialize(reader: Parser): Result<T> {
       const newValue: Result<T> = {} as any
       for (const key in spec) {
         const type = spec[key]

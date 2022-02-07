@@ -1,3 +1,4 @@
+import * as flatbuffers from "flatbuffers/js/flatbuffers"
 import { builder, toReference } from "../../flatbuffers/js/flexbuffers"
 import { ArrayType, Float, Int32, MapType, Quaternion, Vector3, String, EcsType } from "../src/built-in-types"
 import { Engine } from "../src/engine"
