@@ -1,7 +1,7 @@
 import { Entity, EntityContainer } from "./entity"
-import { ComponentDefinition, defineComponent as defComponent, EcsResult } from "./component"
-import { readonly } from "./utils"
+import { ComponentDefinition, ComponentType, defineComponent as defComponent, EcsResult } from "./component"
 import { EcsType, Result, Spec } from "./built-in-types"
+import { Unpacked } from "./utils"
 
 type Update = (dt: number) => void
 
@@ -28,33 +28,56 @@ export function Engine() {
     }
     return entityContainer.removeEntity(entity)
   }
-  function defineComponent<T extends Spec>(componentId: number, spec: T): ComponentDefinition<EcsType<Result<T>>> {
+  function defineComponent<T extends Spec>(componentId: number, spec: T): ComponentDefinition<T> {
     if (componentsDefinition.get(componentId)) {
       throw new Error(`Component ${componentId} already declared`)
     }
 
     const newComponent = defComponent<T>(componentId, spec)
     componentsDefinition.set(componentId, newComponent)
-
     return newComponent
   }
 
-  function* mutableGroupOf<T extends ComponentDefinition<any>>(
-    component: T
-  ): Iterable<[Entity, any]> {
-    const entities = componentsDefinition.get(component._id)!
+  // function* mutableGroupOf<T extends ComponentDefinition<any>>(
+  //   component: T
+  // ): Iterable<[Entity, any]> {
+  //   const entities = componentsDefinition.get(component._id)!
 
-    for (const [entity, data] of entities.iterator()) {
-      yield [entity, component.mutable(entity)]
+  
+  function mutableGroupOf<T1 extends ComponentDefinition<any>>(componentDefnition: T1): Iterable<[Entity, ReturnType<T1['mutable']>]>
+  function mutableGroupOf<T1 extends ComponentDefinition<any>, T2 extends ComponentDefinition<any>>(componentDefnition: T1, componentDefnition2: T2): Iterable<[Entity, ReturnType<T1['mutable']>, ReturnType<T2['mutable']>]>
+  function mutableGroupOf<T1 extends ComponentDefinition<any>, T2 extends ComponentDefinition<any>, T3 extends ComponentDefinition<any>>(componentDefnition: T1, componentDefnition2: T2, componentDefnition3: T3): Iterable<[Entity, ReturnType<T1['mutable']>, ReturnType<T2['mutable']>, ReturnType<T3['mutable']>]>
+  function mutableGroupOf<T extends ComponentDefinition<any>[]>(...componentDefnition: T): Iterable<[Entity, ...Array<ReturnType<Unpacked<T>['mutable']>>]>
+  function* mutableGroupOf<T extends ComponentDefinition<any>[]>(...componentDefnition: T): Iterable<[Entity, ...Array<ReturnType<Unpacked<T>['mutable']>>]> {
+    for (const [entity, ...components] of getComponentDefGroup(...componentDefnition)) {
+      yield [entity, ...components.map(c => c.mutable(entity))]
     }
   }
 
-  function* groupOf<T extends ComponentDefinition<any>>(component: T): Iterable<[Entity, ReturnType<T["getFrom"]>]> {
-    const entities = componentsDefinition.get(component._id)!
+  function groupOf<T1 extends ComponentDefinition<any>>(componentDefnition: T1): Iterable<[Entity, ReturnType<T1['getFrom']>]>
+  function groupOf<T1 extends ComponentDefinition<any>, T2 extends ComponentDefinition<any>>(componentDefnition: T1, componentDefnition2: T2): Iterable<[Entity, ReturnType<T1['getFrom']>, ReturnType<T2['getFrom']>]>
+  function groupOf<T1 extends ComponentDefinition<any>, T2 extends ComponentDefinition<any>, T3 extends ComponentDefinition<any>>(componentDefnition: T1, componentDefnition2: T2, componentDefnition3: T3): Iterable<[Entity, ReturnType<T1['getFrom']>, ReturnType<T2['getFrom']>, ReturnType<T3['getFrom']>]>
+  function groupOf<T extends ComponentDefinition<any>[]>(...componentDefnition: T): Iterable<[Entity, ...Array<Readonly<ReturnType<Unpacked<T>['getFrom']>>>]>
+  function* groupOf<T extends ComponentDefinition<any>[]>(...componentDefnition: T): Iterable<[Entity, ...Array<Readonly<ReturnType<Unpacked<T>['getFrom']>>>]> {
+    for (const [entity, ...components] of getComponentDefGroup(...componentDefnition)) {
+      yield [entity, ...components.map(c => c.getFrom(entity))]
+    }
+  }
 
-    for (const [entity, data] of entities.iterator()) {
-      // TODO: check if this is necessary.
-      yield [entity, readonly(data) as ReturnType<T["getFrom"]>]
+  function* getComponentDefGroup<T extends ComponentDefinition<any>[]>(...args: T): Iterable<[Entity, ...T]> {
+    const [firstComponentDef, ...componentDefinitions] = args
+    for (const [entity] of firstComponentDef.iterator()) {
+      let matches = true
+      for (const componentDef of componentDefinitions) {
+        if (!componentDef.has(entity)) {
+          matches = false
+          break
+        }
+      }
+
+      if (matches) {
+        yield [entity, ...args]
+      }
     }
   }
 
@@ -62,12 +85,16 @@ export function Engine() {
     for (const system of systems) {
       system(dt)
     }
+
+    for (const [_, definition] of componentsDefinition) {
+      definition.clearDirty()
+    }
   }
 
   return {
     addEntity,
-    addSystem,
     removeEntity,
+    addSystem,
     defineComponent,
     mutableGroupOf,
     groupOf,

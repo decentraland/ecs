@@ -1,16 +1,33 @@
 export type Entity = number
+function Entity(entity: number): Entity {
+  return entity
+}
 
-export function EntityContainer() {
+type Config = { start: number, finish: number }
+export function EntityContainer(configParam?: Config) {
+  const config: Config = configParam || { start: 0, finish: 1000 }
   const usedEntities: Set<Entity> = new Set()
-  const unusedEntities: Set<Entity> = new Set(Array.from({ length: 1000 }, (v, index) => index))
+  const unusedEntities: Set<Entity> = new Set()
 
   function generateEntity(): Entity {
+    if (!unusedEntities.size && !usedEntities.size) {
+      const entity = Entity(config.start)
+      usedEntities.add(entity)
+      return entity
+    }
+
     const iterator = unusedEntities[Symbol.iterator]()
     const result = iterator.next()
 
     if (result.done) {
-      throw new Error('Entity rate limit')
+      const entity = Entity(Math.max(...usedEntities.values()) + 1)
+      if (entity >= config.finish) {
+        throw new Error('Entity rate limit exceed')
+      }
+      usedEntities.add(entity)
+      return entity
     }
+
 
     const entity = result.value
     unusedEntities.delete(entity)
