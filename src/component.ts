@@ -34,16 +34,6 @@ export type ComponentDefinition<T extends EcsType> = {
   dirtyIterator(): Iterable<Entity>
   clearDirty(): void
 }
-//
-// export type CustomSerializerParser<T extends Spec> = {
-//   toBinary: (data: ComponentType<T>) => Uint8Array,
-//   fromBinary: (data: Uint8Array) => ComponentType<T>
-// }
-
-//   ComponentDefinition<EcsType<Result<T>>> {
-//   const spec = MapType(specObject)
-//   return defineComponent(componentId, spec)
-// }
 
 export function defineComponent<T extends EcsType>(componentId: number, spec: T): ComponentDefinition<T> {
   const data = new Map<Entity, ComponentType<T>>()
@@ -109,10 +99,6 @@ export function defineComponent<T extends EcsType>(componentId: number, spec: T)
         throw new Error(`Component ${componentId} for ${entity} not found`)
       }
 
-      // if (customSerializerParser) {
-      //   return customSerializerParser.toBinary(component)
-      // }
-
       const buffer = createSerializer()
       spec.serialize(component, buffer)
       return buffer.getData()
@@ -123,16 +109,10 @@ export function defineComponent<T extends EcsType>(componentId: number, spec: T)
         throw new Error(`Component ${componentId} for ${entity} not found`)
       }
 
-      // if (customSerializerParser) {
-      //   const newValue = customSerializerParser.fromBinary(dataArray)
-      //   data.set(entity, newValue)
-      //   return
-      // }
-
       const buffer = createParser(dataArray)
       const newValue = spec.deserialize(buffer)
-      data.set(entity, newValue as any)
-      return newValue as any
+      data.set(entity, newValue)
+      return newValue
     },
     clearDirty: function () {
       dirtyIterator = new Set<Entity>()
