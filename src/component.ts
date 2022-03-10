@@ -8,10 +8,9 @@ export type EcsResult<T extends EcsType> =
   T extends EcsType ? ReturnType<T['deserialize']>
   : never
 
+export type ComponentType<T extends EcsType> = EcsResult<T>
 
-export type ComponentType<T extends Spec> = EcsResult<EcsType<Result<T>>>
-
-export type ComponentDefinition<T extends Spec> = {
+export type ComponentDefinition<T extends EcsType> = {
   _id: number
   has(entity: Entity): boolean
   // removeFrom(entity: Entity): void
@@ -41,9 +40,13 @@ export type ComponentDefinition<T extends Spec> = {
 //   fromBinary: (data: Uint8Array) => ComponentType<T>
 // }
 
-export function defineComponent<T extends Spec>(componentId: number, specObject: T): ComponentDefinition<T> {
+//   ComponentDefinition<EcsType<Result<T>>> {
+//   const spec = MapType(specObject)
+//   return defineComponent(componentId, spec)
+// }
+
+export function defineComponent<T extends EcsType>(componentId: number, spec: T): ComponentDefinition<T> {
   const data = new Map<Entity, ComponentType<T>>()
-  const spec = MapType(specObject)
   let dirtyIterator = new Set<Entity>()
 
   return {
@@ -128,8 +131,8 @@ export function defineComponent<T extends Spec>(componentId: number, specObject:
 
       const buffer = createParser(dataArray)
       const newValue = spec.deserialize(buffer)
-      data.set(entity, newValue)
-      return newValue
+      data.set(entity, newValue as any)
+      return newValue as any
     },
     clearDirty: function () {
       dirtyIterator = new Set<Entity>()

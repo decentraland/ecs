@@ -1,5 +1,5 @@
 {
-  "name": "@well-known-components/base-component",
+  "name": "@dcl/ecs",
   "version": "1.0.0",
   "description": "base component",
   "main": "dist/index.js",
@@ -33,6 +33,7 @@
     "dist"
   ],
   "dependencies": {
+    "@dcl/ecs-math": "^1.0.1",
     "@types/bytebuffer": "^5.0.43",
     "bytebuffer": "^5.0.1",
     "flatbuffers": "^2.0.4"

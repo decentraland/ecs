@@ -1,13 +1,13 @@
-import { ArrayType, Float32, Int32, MapType, Quaternion, Vector3, String, EcsType, Transform } from "../src/built-in-types"
+import { Float32, MapType } from "../src/built-in-types"
 import { Engine } from "../src/engine"
 
-const PositionType = {
+const PositionType = MapType({
   x: Float32
-}
+})
 
-const VelocityType = {
+const VelocityType = MapType({
   y: Float32
-}
+})
 
 describe("Engine tests", () => {
   it("generates new entities", () => {
@@ -241,33 +241,6 @@ describe("Engine tests", () => {
     expect(Array.from(Velocity.dirtyIterator())).toEqual([])
     expect(Array.from(Position.dirtyIterator())).toEqual([])
   })
-
-  it("component with complex data", () => {
-    const engine = Engine()
-    const entity = engine.addEntity() // 0
-    const CLASS_ID = 1
-
-    const TransformComponent = engine.defineComponent(CLASS_ID, { transform: Transform })
-    const myTransform = TransformComponent.create(entity, {
-      transform: {
-        position: { x: 1, y: 2, z: 3 },
-        scale: { x: 4, y: 5, z: 6 },
-        rotation: { x: 7, y: 8, z: 9, w: 10 },
-      }
-    })
-
-    expect(myTransform.transform.position.x).toBe(1)
-    expect(myTransform.transform.position.y).toBe(2)
-    expect(myTransform.transform.position.z).toBe(3)
-    expect(myTransform.transform.scale.x).toBe(4)
-    expect(myTransform.transform.scale.y).toBe(5)
-    expect(myTransform.transform.scale.z).toBe(6)
-    expect(myTransform.transform.rotation.x).toBe(7)
-    expect(myTransform.transform.rotation.y).toBe(8)
-    expect(myTransform.transform.rotation.z).toBe(9)
-    expect(myTransform.transform.rotation.w).toBe(10)
-  })
-
 
   // it("test flexbuffer", () => {
   //   const fbb = builder()
