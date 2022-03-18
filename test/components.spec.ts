@@ -1,6 +1,8 @@
 import { Engine } from "../src/engine"
 import { defineLegacyComponents } from '../src/legacy-components'
 import { Quaternion, Vector3 } from "@dcl/ecs-math"
+import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
+expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 
 describe("Legacy component tests", () => {
   it("cube example scene", () => {
@@ -12,17 +14,17 @@ describe("Legacy component tests", () => {
     const spawnCube = (x: number, y: number, z: number) => {
       const newCubeEntity = newEngine.addEntity()
 
-      sdk.BoxShape.create(newCubeEntity, {
+      const boxShape = sdk.BoxShape.create(newCubeEntity, {
         isPointerBlocker: true,
         visible: true,
         withCollisions: true,
-        uvs: []
+        uvs: [0, 0, 0, 0]
       })
 
-      sdk.Transform.create(newCubeEntity, {
-        position: new Vector3(x, y, z),
+      const transform = sdk.Transform.create(newCubeEntity, {
+        position: Vector3.create(x, y, z),
         scale: Vector3.One(),
-        rotation: Quaternion.Identity
+        rotation: Quaternion.Identity()
       })
 
       return newCubeEntity
@@ -31,12 +33,31 @@ describe("Legacy component tests", () => {
     function RotatorSystem(dt: number) {
       const group = newEngine.mutableGroupOf(sdk.Transform)
       for (const [entity, component] of group) {
-        component.rotation = component.rotation.multiplyInPlace(this.rotation.angleAxis(dt * 10, Vector3.Up()))
+        Quaternion.multiplyToRef(
+          component.rotation,
+          Quaternion.angleAxis(dt * 10, Vector3.Up()),
+          component.rotation
+        )
+
+        const transformData = sdk.Transform.toBinary(entity)
+        const transformOriginal = { ...component }
+        const transformReceveid = sdk.Transform.updateFromBinary(entity, transformData)
+        expect(transformReceveid).toBeDeepCloseTo(transformOriginal)
+      }
+
+      const groupBoxShape = newEngine.mutableGroupOf(sdk.BoxShape)
+      for (const [entity, component] of groupBoxShape) {
+        const boxShapeData = sdk.BoxShape.toBinary(entity)
+        const boxShapeOriginal = { ...component }
+        const boxShapeReceveid = sdk.BoxShape.updateFromBinary(entity, boxShapeData)
+        expect(boxShapeReceveid).toBeDeepCloseTo(boxShapeOriginal)
       }
     }
 
     const baseCube = spawnCube(4, 2, 4)
     newEngine.addSystem(RotatorSystem)
+
+    newEngine.update(1 / 60)
   })
 
 

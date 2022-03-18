@@ -24,6 +24,7 @@ export const BoxShape: EcsType<BoxShape> = {
     newValue.isPointerBlocker = reader.bb.readByte() === 1
     newValue.withCollisions = reader.bb.readByte() === 1
     const length = reader.bb.readUint16()
+    newValue.uvs = []
     for (let index = 0; index < length; index++) {
       newValue.uvs.push(reader.bb.readFloat32())
     }

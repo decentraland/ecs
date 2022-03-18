@@ -114,6 +114,7 @@ describe("Engine tests", () => {
     }
 
     const myPlayer = PlayerComponent.create(myEntity, defaultPlayer)
+
     expect(PlayerComponent.getFrom(myEntity)).toStrictEqual(defaultPlayer)
 
     myPlayer.hp = 8349.2
