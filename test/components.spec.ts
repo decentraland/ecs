@@ -1,6 +1,6 @@
 import { Engine } from "../src/engine"
 import { defineLegacyComponents } from '../src/legacy-components'
-import { Quaternion, Vector3 } from "@dcl/ecs-math"
+import { Quaternion, Vector3 } from "@dcl/ecs-math/dist/next"
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 

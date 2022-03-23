@@ -1,5 +1,5 @@
 
-import { Quaternion, Vector3 } from "@dcl/ecs-math"
+import { Quaternion, Vector3 } from "@dcl/ecs-math/dist/next"
 import { Parser } from "../serialization/Parser"
 import { Serializer } from "../serialization/Serializer"
 import { EcsType } from "../built-in-types/EcsType"
