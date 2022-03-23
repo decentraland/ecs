@@ -16,5 +16,9 @@
   },
   "include": [
     "src"
+  ],
+  "exclude": [
+    "src/ecs.ts",
+    "src/external-components.ts"
   ]
 }

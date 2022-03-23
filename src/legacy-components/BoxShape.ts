@@ -19,14 +19,11 @@ export const BoxShape: EcsType<BoxShape> = {
     }
   },
   deserialize(reader: Parser): BoxShape {
-    const newValue: BoxShape = {} as any
-    newValue.visible = reader.bb.readByte() === 1
-    newValue.isPointerBlocker = reader.bb.readByte() === 1
-    newValue.withCollisions = reader.bb.readByte() === 1
-    const length = reader.bb.readUint16()
-    newValue.uvs = []
-    for (let index = 0; index < length; index++) {
-      newValue.uvs.push(reader.bb.readFloat32())
+    const newValue: BoxShape = {
+      visible: reader.bb.readByte() === 1,
+      isPointerBlocker: reader.bb.readByte() === 1,
+      withCollisions: reader.bb.readByte() === 1,
+      uvs: Array.from({ length: reader.bb.readUint16() }, () => reader.bb.readFloat32())
     }
     return newValue
   }

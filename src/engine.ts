@@ -5,6 +5,9 @@ import { EcsType } from "./built-in-types"
 
 type Update = (dt: number) => void
 
+/**
+ * @alpha 
+ */
 export function Engine() {
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
