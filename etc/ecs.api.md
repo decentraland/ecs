@@ -27,7 +27,7 @@ export function Engine(): {
     update: (dt: number) => void;
 };
 
-// @public (undocumented)
+// @alpha (undocumented)
 export type Engine = ReturnType<typeof Engine>;
 
 // Warnings were encountered during analysis:
