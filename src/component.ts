@@ -8,10 +8,9 @@ export type EcsResult<T extends EcsType> =
   T extends EcsType ? ReturnType<T['deserialize']>
   : never
 
+export type ComponentType<T extends EcsType> = EcsResult<T>
 
-export type ComponentType<T extends Spec> = EcsResult<EcsType<Result<T>>>
-
-export type ComponentDefinition<T extends Spec> = {
+export type ComponentDefinition<T extends EcsType> = {
   _id: number
   has(entity: Entity): boolean
   // removeFrom(entity: Entity): void
@@ -35,15 +34,9 @@ export type ComponentDefinition<T extends Spec> = {
   dirtyIterator(): Iterable<Entity>
   clearDirty(): void
 }
-//
-// export type CustomSerializerParser<T extends Spec> = {
-//   toBinary: (data: ComponentType<T>) => Uint8Array,
-//   fromBinary: (data: Uint8Array) => ComponentType<T>
-// }
 
-export function defineComponent<T extends Spec>(componentId: number, specObject: T): ComponentDefinition<T> {
+export function defineComponent<T extends EcsType>(componentId: number, spec: T): ComponentDefinition<T> {
   const data = new Map<Entity, ComponentType<T>>()
-  const spec = MapType(specObject)
   let dirtyIterator = new Set<Entity>()
 
   return {
@@ -106,10 +99,6 @@ export function defineComponent<T extends Spec>(componentId: number, specObject:
         throw new Error(`Component ${componentId} for ${entity} not found`)
       }
 
-      // if (customSerializerParser) {
-      //   return customSerializerParser.toBinary(component)
-      // }
-
       const buffer = createSerializer()
       spec.serialize(component, buffer)
       return buffer.getData()
@@ -119,12 +108,6 @@ export function defineComponent<T extends Spec>(componentId: number, specObject:
       if (!component) {
         throw new Error(`Component ${componentId} for ${entity} not found`)
       }
-
-      // if (customSerializerParser) {
-      //   const newValue = customSerializerParser.fromBinary(dataArray)
-      //   data.set(entity, newValue)
-      //   return
-      // }
 
       const buffer = createParser(dataArray)
       const newValue = spec.deserialize(buffer)

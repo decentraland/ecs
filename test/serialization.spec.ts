@@ -1,7 +1,11 @@
-import { ArrayType, EcsType, Float32, Float64, Int16, Int32, Int8, MapType, String, Transform, Vector3 } from "../src/built-in-types"
+import { ArrayType, EcsType, Float32, Float64, Int16, Int32, Int8, MapType, String } from "../src/built-in-types"
 import { Engine } from "../src/engine"
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
+
+const Vector3 = MapType({ x: Float32, y: Float32, z: Float32 })
+const Quaternion = MapType({ x: Float32, y: Float32, z: Float32, w: Float32 })
+const Transform = MapType({ position: Vector3, rotation: Quaternion, scale: Vector3 })
 
 describe("Engine tests", () => {
   it("should serialize and parse ints and be equal", () => {
@@ -12,7 +16,7 @@ describe("Engine tests", () => {
     let CLASS_ID = 0
 
     for (const t of toTest) {
-      const IntegerComponent = engine.defineComponent(CLASS_ID++, { value: t })
+      const IntegerComponent = engine.defineComponent(CLASS_ID++, MapType({ value: t }))
       const myInteger = IntegerComponent.create(entity, { value: 33 })
       expect(myInteger.value).toBe(33)
 
@@ -33,7 +37,7 @@ describe("Engine tests", () => {
     const testValue = 2.0
 
     for (const t of toTest) {
-      const FloatComponent = engine.defineComponent(CLASS_ID++, { value: t })
+      const FloatComponent = engine.defineComponent(CLASS_ID++, MapType({ value: t }))
       const myFloat = FloatComponent.create(entity, { value: testValue })
       expect(myFloat.value).toBe(testValue)
 
@@ -53,7 +57,7 @@ describe("Engine tests", () => {
     let CLASS_ID = 0
     const testValue = "testing an string"
 
-    const FloatComponent = engine.defineComponent(CLASS_ID++, { value: String })
+    const FloatComponent = engine.defineComponent(CLASS_ID++, MapType({ value: String }))
     const myFloat = FloatComponent.create(entity, { value: testValue })
     expect(myFloat.value).toBe(testValue)
 
@@ -82,7 +86,7 @@ describe("Engine tests", () => {
       })
 
     const PlayerComponent = engine.defineComponent(CLASS_ID,
-      {
+      MapType({
         name: String,
         description: String,
         level: Int32,
@@ -91,7 +95,7 @@ describe("Engine tests", () => {
         transform: Transform,
         targets: ArrayType(Vector3),
         items: ArrayType((ItemType))
-      }
+      })
     )
 
     const defaultPlayer = {
@@ -110,6 +114,7 @@ describe("Engine tests", () => {
     }
 
     const myPlayer = PlayerComponent.create(myEntity, defaultPlayer)
+
     expect(PlayerComponent.getFrom(myEntity)).toStrictEqual(defaultPlayer)
 
     myPlayer.hp = 8349.2
@@ -146,11 +151,11 @@ describe("Engine tests", () => {
     const CLASS_ID = 1
 
     const TestComponentType = engine.defineComponent(CLASS_ID,
-      {
+      MapType({
         a: Int32,
         b: Int32,
         c: ArrayType(Int32)
-      }
+      })
     )
     const myComponent = TestComponentType.create(entityFilled, {
       a: 2331,
@@ -190,7 +195,7 @@ describe("Engine tests", () => {
       vectorType[key] = Int32
       objectValues[key] = 50 + i
       zeroObjectValues[key] = 0
-      const TestComponentType = engine.defineComponent(CLASS_ID, vectorType)
+      const TestComponentType = engine.defineComponent(CLASS_ID, MapType(vectorType))
 
       TestComponentType.create(entity, objectValues)
       TestComponentType.create(entityCopied, zeroObjectValues)
@@ -205,13 +210,11 @@ describe("Engine tests", () => {
     const entity = engine.addEntity() // 0
     const CLASS_ID = 1
 
-    const TransformComponent = engine.defineComponent(CLASS_ID, { transform: Transform })
+    const TransformComponent = engine.defineComponent(CLASS_ID, Transform)
     const myTransform = TransformComponent.create(entity, {
-      transform: {
-        position: { x: 111.1, y: 222.22, z: 333.33 },
-        scale: { x: 41213.2, y: 5.214, z: 6112.1 },
-        rotation: { x: 711.1, y: 8121.2, z: 9.21, w: 10.221 },
-      }
+      position: { x: 111.1, y: 222.22, z: 333.33 },
+      scale: { x: 41213.2, y: 5.214, z: 6112.1 },
+      rotation: { x: 711.1, y: 8121.2, z: 9.21, w: 10.221 },
     })
 
     const buffer = TransformComponent.toBinary(entity)

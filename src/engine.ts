@@ -1,10 +1,13 @@
 import { Entity, EntityContainer } from "./entity"
-import { ComponentDefinition, ComponentType, defineComponent as defComponent, EcsResult } from "./component"
-import { EcsType, Result, Spec } from "./built-in-types"
+import { ComponentDefinition, defineComponent as defComponent } from "./component"
 import { Unpacked } from "./utils"
+import { EcsType } from "./built-in-types"
 
 type Update = (dt: number) => void
 
+/**
+ * @alpha 
+ */
 export function Engine() {
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
@@ -28,11 +31,11 @@ export function Engine() {
     }
     return entityContainer.removeEntity(entity)
   }
-  function defineComponent<T extends Spec>(componentId: number, spec: T): ComponentDefinition<T> {
+
+  function defineComponent<T extends EcsType>(componentId: number, spec: T): ComponentDefinition<T> {
     if (componentsDefinition.get(componentId)) {
       throw new Error(`Component ${componentId} already declared`)
     }
-
     const newComponent = defComponent<T>(componentId, spec)
     componentsDefinition.set(componentId, newComponent)
     return newComponent
@@ -43,7 +46,6 @@ export function Engine() {
   // ): Iterable<[Entity, any]> {
   //   const entities = componentsDefinition.get(component._id)!
 
-  
   function mutableGroupOf<T1 extends ComponentDefinition<any>>(componentDefnition: T1): Iterable<[Entity, ReturnType<T1['mutable']>]>
   function mutableGroupOf<T1 extends ComponentDefinition<any>, T2 extends ComponentDefinition<any>>(componentDefnition: T1, componentDefnition2: T2): Iterable<[Entity, ReturnType<T1['mutable']>, ReturnType<T2['mutable']>]>
   function mutableGroupOf<T1 extends ComponentDefinition<any>, T2 extends ComponentDefinition<any>, T3 extends ComponentDefinition<any>>(componentDefnition: T1, componentDefnition2: T2, componentDefnition3: T3): Iterable<[Entity, ReturnType<T1['mutable']>, ReturnType<T2['mutable']>, ReturnType<T3['mutable']>]>
@@ -103,3 +105,8 @@ export function Engine() {
     update,
   }
 }
+
+/**
+ * @alpha 
+ */
+export type Engine = ReturnType<typeof Engine>
