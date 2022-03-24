@@ -18,6 +18,46 @@ describe('Engine tests', () => {
     expect(entityB).toBe(1)
   })
 
+  it('should not allow u to create same component to an existing entitiy', () => {
+    const engine = Engine()
+    const Position = engine.defineComponent(1, PositionType)
+    Position.create(1, { x: 1 })
+    expect(() => Position.create(1, { x: 10 })).toThrowError()
+  })
+
+  it('should throw an error if the component doesnt exist', () => {
+    const engine = Engine()
+    const Position = engine.defineComponent(1, PositionType)
+    expect(() => Position.mutable(1)).toThrowError()
+    expect(() => Position.toBinary(1)).toThrowError()
+    Position.create(2, { x: 10 })
+    const binary = Position.toBinary(2)
+    expect(() => Position.updateFromBinary(1, binary)).toThrowError()
+  })
+
+  it('should delete component if exists or not', () => {
+    const engine = Engine()
+    const Position = engine.defineComponent(1, PositionType)
+    Position.create(1, { x: 10 })
+    expect(Position.deleteFrom(1)).toStrictEqual({ x: 10 })
+    expect(Position.deleteFrom(2)).toStrictEqual(null)
+  })
+
+  it('should fail when trying to add the same system twice', () => {
+    const engine = Engine()
+    const system = () => {}
+    engine.addSystem(system)
+    expect(() => engine.addSystem(system)).toThrowError()
+  })
+
+  it('should replace existing component with the new one', () => {
+    const engine = Engine()
+    const Position = engine.defineComponent(1, PositionType)
+    Position.create(1, { x: 1 })
+    Position.createOrReplace(1, { x: 10 })
+    expect(Position.getFrom(1)).toStrictEqual({ x: 10 })
+  })
+
   it('define component and creates new entity', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0

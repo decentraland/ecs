@@ -75,7 +75,6 @@ export function defineComponent<T extends EcsType>(
       dirtyIterator.add(entity)
       return value
     },
-    // TODO cach the ?. case
     createOrReplace: function (
       entity: Entity,
       value: ComponentType<T>
