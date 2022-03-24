@@ -1,7 +1,7 @@
-import { Parser } from "../serialization/Parser"
-import { Serializer } from "../serialization/Serializer"
-import { EcsType } from "../built-in-types/EcsType"
-import { BaseShape } from "./Shape"
+import { Parser } from '../serialization/Parser'
+import { Serializer } from '../serialization/Serializer'
+import { EcsType } from '../built-in-types/EcsType'
+import { BaseShape } from './Shape'
 
 type BoxShape = BaseShape & {
   uvs: number[]
@@ -23,7 +23,9 @@ export const BoxShape: EcsType<BoxShape> = {
       visible: reader.bb.readByte() === 1,
       isPointerBlocker: reader.bb.readByte() === 1,
       withCollisions: reader.bb.readByte() === 1,
-      uvs: Array.from({ length: reader.bb.readUint16() }, () => reader.bb.readFloat32())
+      uvs: Array.from({ length: reader.bb.readUint16() }, () =>
+        reader.bb.readFloat32()
+      )
     }
     return newValue
   }

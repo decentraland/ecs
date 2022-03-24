@@ -1,12 +1,11 @@
-
-import { Quaternion, Vector3 } from "@dcl/ecs-math/dist/next"
-import { Parser } from "../serialization/Parser"
-import { Serializer } from "../serialization/Serializer"
-import { EcsType } from "../built-in-types/EcsType"
+import { Quaternion, Vector3 } from '@dcl/ecs-math/dist/next'
+import { Parser } from '../serialization/Parser'
+import { Serializer } from '../serialization/Serializer'
+import { EcsType } from '../built-in-types/EcsType'
 
 type Transform = {
-  position: Vector3.MutableVector3,
-  rotation: Quaternion.MutableQuaternion,
+  position: Vector3.MutableVector3
+  rotation: Quaternion.MutableQuaternion
   scale: Vector3.MutableVector3
 }
 
@@ -26,9 +25,22 @@ export const Transform: EcsType<Transform> = {
   },
   deserialize(reader: Parser): Transform {
     return {
-      position: Vector3.create(reader.bb.readFloat32(), reader.bb.readFloat32(), reader.bb.readFloat32()),
-      rotation: Quaternion.create(reader.bb.readFloat32(), reader.bb.readFloat32(), reader.bb.readFloat32(), reader.bb.readFloat32()),
-      scale: Vector3.create(reader.bb.readFloat32(), reader.bb.readFloat32(), reader.bb.readFloat32())
+      position: Vector3.create(
+        reader.bb.readFloat32(),
+        reader.bb.readFloat32(),
+        reader.bb.readFloat32()
+      ),
+      rotation: Quaternion.create(
+        reader.bb.readFloat32(),
+        reader.bb.readFloat32(),
+        reader.bb.readFloat32(),
+        reader.bb.readFloat32()
+      ),
+      scale: Vector3.create(
+        reader.bb.readFloat32(),
+        reader.bb.readFloat32(),
+        reader.bb.readFloat32()
+      )
     }
   }
 }

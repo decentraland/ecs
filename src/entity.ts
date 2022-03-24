@@ -3,7 +3,7 @@ function Entity(entity: number): Entity {
   return entity
 }
 
-type Config = { start: number, finish: number }
+type Config = { start: number; finish: number }
 export function EntityContainer(configParam?: Config) {
   const config: Config = configParam || { start: 0, finish: 1000 }
   const usedEntities: Set<Entity> = new Set()
@@ -27,7 +27,6 @@ export function EntityContainer(configParam?: Config) {
       usedEntities.add(entity)
       return entity
     }
-
 
     const entity = result.value
     unusedEntities.delete(entity)
