@@ -1,11 +1,11 @@
-import { EcsType, MapType, Result, Spec } from './built-in-types'
+import { EcsType } from './built-in-types'
 import { Entity } from './entity'
 import { readonly } from './utils'
 import { createSerializer } from './serialization/Serializer'
 import { createParser } from './serialization/Parser'
 
-export type EcsResult<T extends EcsType> =
-  T extends EcsType ? ReturnType<T['deserialize']>
+export type EcsResult<T extends EcsType> = T extends EcsType
+  ? ReturnType<T['deserialize']>
   : never
 
 export type ComponentType<T extends EcsType> = EcsResult<T>
@@ -35,7 +35,10 @@ export type ComponentDefinition<T extends EcsType> = {
   clearDirty(): void
 }
 
-export function defineComponent<T extends EcsType>(componentId: number, spec: T): ComponentDefinition<T> {
+export function defineComponent<T extends EcsType>(
+  componentId: number,
+  spec: T
+): ComponentDefinition<T> {
   const data = new Map<Entity, ComponentType<T>>()
   let dirtyIterator = new Set<Entity>()
 
@@ -60,7 +63,10 @@ export function defineComponent<T extends EcsType>(componentId: number, spec: T)
       }
       return readonly(component)
     },
-    create: function (entity: Entity, value: ComponentType<T>): ComponentType<T> {
+    create: function (
+      entity: Entity,
+      value: ComponentType<T>
+    ): ComponentType<T> {
       const component = data.get(entity)
       if (component) {
         throw new Error(`Component ${componentId} for ${entity} already exists`)
@@ -69,8 +75,10 @@ export function defineComponent<T extends EcsType>(componentId: number, spec: T)
       dirtyIterator.add(entity)
       return value
     },
-    // TODO cach the ?. case
-    createOrReplace: function (entity: Entity, value: ComponentType<T>): ComponentType<T> {
+    createOrReplace: function (
+      entity: Entity,
+      value: ComponentType<T>
+    ): ComponentType<T> {
       data.set(entity, value)
       dirtyIterator.add(entity)
       return value
@@ -103,7 +111,10 @@ export function defineComponent<T extends EcsType>(componentId: number, spec: T)
       spec.serialize(component, buffer)
       return buffer.getData()
     },
-    updateFromBinary(entity: Entity, dataArray: Uint8Array): ComponentType<T> | null {
+    updateFromBinary(
+      entity: Entity,
+      dataArray: Uint8Array
+    ): ComponentType<T> | null {
       const component = data.get(entity)
       if (!component) {
         throw new Error(`Component ${componentId} for ${entity} not found`)

@@ -1,3 +1,4 @@
+```ts
 /**
  * This is te first approach we discuss with @mendez
  * Keeping here just for document purpose
@@ -149,3 +150,4 @@ function sendChangesToRenderer() {
     }
   }
 }
+```

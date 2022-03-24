@@ -1,13 +1,17 @@
-import { Parser } from "../serialization/Parser"
-import { Serializer } from "../serialization/Serializer"
-import { EcsType } from "./EcsType"
+import { Parser } from '../serialization/Parser'
+import { Serializer } from '../serialization/Serializer'
+import { EcsType } from './EcsType'
 
 export interface Spec {
   [key: string]: EcsType
 }
 
 export type Result<T extends Spec> = {
-  [K in keyof T]: T[K] extends EcsType ? ReturnType<T[K]['deserialize']> : T[K] extends Spec ? Result<T[K]> : never
+  [K in keyof T]: T[K] extends EcsType
+    ? ReturnType<T[K]['deserialize']>
+    : T[K] extends Spec
+    ? Result<T[K]>
+    : never
 }
 
 export function MapType<T extends Spec>(spec: T): EcsType<Result<T>> {

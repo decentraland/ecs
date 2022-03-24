@@ -1,4 +1,3 @@
-
 export * from './EcsType'
 
 export * from './MapType'
