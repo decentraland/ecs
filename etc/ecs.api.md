@@ -32,11 +32,11 @@ export type Engine = ReturnType<typeof Engine>;
 
 // Warnings were encountered during analysis:
 //
-// src/engine.ts:11:23 - (ae-forgotten-export) The symbol "Entity" needs to be exported by the entry point index.d.ts
-// src/engine.ts:17:10 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
-// src/engine.ts:17:10 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
-// src/engine.ts:29:10 - (ae-forgotten-export) The symbol "Update" needs to be exported by the entry point index.d.ts
-// src/engine.ts:40:9 - (ae-forgotten-export) The symbol "Unpacked" needs to be exported by the entry point index.d.ts
+// src/engine.ts:14:23 - (ae-forgotten-export) The symbol "Entity" needs to be exported by the entry point index.d.ts
+// src/engine.ts:20:10 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
+// src/engine.ts:20:10 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
+// src/engine.ts:32:10 - (ae-forgotten-export) The symbol "Update" needs to be exported by the entry point index.d.ts
+// src/engine.ts:39:24 - (ae-forgotten-export) The symbol "Unpacked" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
