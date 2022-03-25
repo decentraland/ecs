@@ -10,7 +10,7 @@ export type EcsResult<T extends EcsType> = T extends EcsType
 
 export type ComponentType<T extends EcsType> = EcsResult<T>
 
-export type ComponentDefinition<T extends EcsType> = {
+export type ComponentDefinition<T extends EcsType = EcsType<any>> = {
   _id: number
   has(entity: Entity): boolean
   // removeFrom(entity: Entity): void

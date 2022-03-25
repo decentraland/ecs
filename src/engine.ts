@@ -3,7 +3,7 @@ import {
   ComponentDefinition,
   defineComponent as defComponent
 } from './component'
-import { Unpacked } from './utils'
+import { ComponentEcsType } from './utils'
 import { EcsType } from './built-in-types'
 
 type Update = (dt: number) => void
@@ -47,94 +47,27 @@ export function Engine() {
     return newComponent
   }
 
-  // function* mutableGroupOf<T extends ComponentDefinition<any>>(
-  //   component: T
-  // ): Iterable<[Entity, any]> {
-  //   const entities = componentsDefinition.get(component._id)!
-
-  function mutableGroupOf<T1 extends ComponentDefinition<any>>(
-    componentDefnition: T1
-  ): Iterable<[Entity, ReturnType<T1['mutable']>]>
-  function mutableGroupOf<
-    T1 extends ComponentDefinition<any>,
-    T2 extends ComponentDefinition<any>
-  >(
-    componentDefnition: T1,
-    componentDefnition2: T2
-  ): Iterable<[Entity, ReturnType<T1['mutable']>, ReturnType<T2['mutable']>]>
-  function mutableGroupOf<
-    T1 extends ComponentDefinition<any>,
-    T2 extends ComponentDefinition<any>,
-    T3 extends ComponentDefinition<any>
-  >(
-    componentDefnition: T1,
-    componentDefnition2: T2,
-    componentDefnition3: T3
-  ): Iterable<
-    [
-      Entity,
-      ReturnType<T1['mutable']>,
-      ReturnType<T2['mutable']>,
-      ReturnType<T3['mutable']>
-    ]
-  >
-  function mutableGroupOf<T extends ComponentDefinition<any>[]>(
-    ...componentDefnition: T
-  ): Iterable<[Entity, ...Array<ReturnType<Unpacked<T>['mutable']>>]>
-  function* mutableGroupOf<T extends ComponentDefinition<any>[]>(
-    ...componentDefnition: T
-  ): Iterable<[Entity, ...Array<ReturnType<Unpacked<T>['mutable']>>]> {
+  function* mutableGroupOf<
+    T extends [ComponentDefinition, ...ComponentDefinition[]]
+  >(...componentDefnition: T): Iterable<[Entity, ...ComponentEcsType<T>]> {
     for (const [entity, ...components] of getComponentDefGroup(
       ...componentDefnition
     )) {
-      // TODO: see as any                                   =>
-      yield [entity, ...(components.map((c) => c.mutable(entity)) as any)]
+      yield [entity, ...components.map((c) => c.mutable(entity))] as any
     }
   }
 
-  function groupOf<T1 extends ComponentDefinition<any>>(
-    componentDefnition: T1
-  ): Iterable<[Entity, ReturnType<T1['getFrom']>]>
-  function groupOf<
-    T1 extends ComponentDefinition<any>,
-    T2 extends ComponentDefinition<any>
-  >(
-    componentDefnition: T1,
-    componentDefnition2: T2
-  ): Iterable<[Entity, ReturnType<T1['getFrom']>, ReturnType<T2['getFrom']>]>
-  function groupOf<
-    T1 extends ComponentDefinition<any>,
-    T2 extends ComponentDefinition<any>,
-    T3 extends ComponentDefinition<any>
-  >(
-    componentDefnition: T1,
-    componentDefnition2: T2,
-    componentDefnition3: T3
-  ): Iterable<
-    [
-      Entity,
-      ReturnType<T1['getFrom']>,
-      ReturnType<T2['getFrom']>,
-      ReturnType<T3['getFrom']>
-    ]
-  >
-  function groupOf<T extends ComponentDefinition<any>[]>(
+  function* groupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(
     ...componentDefnition: T
-  ): Iterable<[Entity, ...Array<Readonly<ReturnType<Unpacked<T>['getFrom']>>>]>
-  function* groupOf<T extends ComponentDefinition<any>[]>(
-    ...componentDefnition: T
-  ): Iterable<
-    [Entity, ...Array<Readonly<ReturnType<Unpacked<T>['getFrom']>>>]
-  > {
+  ): Iterable<[Entity, ...Readonly<ComponentEcsType<T>>]> {
     for (const [entity, ...components] of getComponentDefGroup(
       ...componentDefnition
     )) {
-      // TODO: see as any                                   =>
-      yield [entity, ...(components.map((c) => c.getFrom(entity)) as any)]
+      yield [entity, ...components.map((c) => c.getFrom(entity))] as any
     }
   }
 
-  function* getComponentDefGroup<T extends ComponentDefinition<any>[]>(
+  function* getComponentDefGroup<T extends ComponentDefinition[]>(
     ...args: T
   ): Iterable<[Entity, ...T]> {
     const [firstComponentDef, ...componentDefinitions] = args
