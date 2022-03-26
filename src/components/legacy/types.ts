@@ -1,7 +1,3 @@
-import type { Engine } from '../engine'
-import { BoxShape as LegacyBoxShape } from './BoxShape'
-import { Transform as LegacyTransform } from './Transform'
-
 /**
  * @public
  */
@@ -64,20 +60,4 @@ export enum LEGACY_CLASS_ID {
   NAME = 300,
   LOCKED_ON_EDIT = 301,
   VISIBLE_ON_EDIT = 302
-}
-
-export function defineLegacyComponents(engine: Engine) {
-  const Transform = engine.defineComponent(
-    LEGACY_CLASS_ID.TRANSFORM,
-    LegacyTransform
-  )
-  const BoxShape = engine.defineComponent(
-    LEGACY_CLASS_ID.BOX_SHAPE,
-    LegacyBoxShape
-  )
-
-  return {
-    Transform,
-    BoxShape
-  }
 }

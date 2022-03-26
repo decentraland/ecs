@@ -5,6 +5,8 @@
 ```ts
 
 import { default as ByteBuffer_2 } from 'bytebuffer';
+import { Quaternion } from '@dcl/ecs-math/dist/next';
+import { Vector3 } from '@dcl/ecs-math/dist/next';
 
 // @alpha (undocumented)
 export function Engine(): {
@@ -12,31 +14,44 @@ export function Engine(): {
     removeEntity: (entity: Entity) => void;
     addSystem: (fn: Update) => void;
     defineComponent: <T extends EcsType<any>>(componentId: number, spec: T) => ComponentDefinition<T>;
-    mutableGroupOf: {
-        <T1 extends ComponentDefinition<any>>(componentDefnition: T1): Iterable<[number, ReturnType<T1["mutable"]>]>;
-        <T1_1 extends ComponentDefinition<any>, T2 extends ComponentDefinition<any>>(componentDefnition: T1_1, componentDefnition2: T2): Iterable<[number, ReturnType<T1_1["mutable"]>, ReturnType<T2["mutable"]>]>;
-        <T1_2 extends ComponentDefinition<any>, T2_1 extends ComponentDefinition<any>, T3 extends ComponentDefinition<any>>(componentDefnition: T1_2, componentDefnition2: T2_1, componentDefnition3: T3): Iterable<[number, ReturnType<T1_2["mutable"]>, ReturnType<T2_1["mutable"]>, ReturnType<T3["mutable"]>]>;
-        <T_1 extends ComponentDefinition<any>[]>(...componentDefnition: T_1): Iterable<[number, ...ReturnType<Unpacked<T_1>["mutable"]>[]]>;
-    };
-    groupOf: {
-        <T1_3 extends ComponentDefinition<any>>(componentDefnition: T1_3): Iterable<[number, ReturnType<T1_3["getFrom"]>]>;
-        <T1_4 extends ComponentDefinition<any>, T2_2 extends ComponentDefinition<any>>(componentDefnition: T1_4, componentDefnition2: T2_2): Iterable<[number, ReturnType<T1_4["getFrom"]>, ReturnType<T2_2["getFrom"]>]>;
-        <T1_5 extends ComponentDefinition<any>, T2_3 extends ComponentDefinition<any>, T3_1 extends ComponentDefinition<any>>(componentDefnition: T1_5, componentDefnition2: T2_3, componentDefnition3: T3_1): Iterable<[number, ReturnType<T1_5["getFrom"]>, ReturnType<T2_3["getFrom"]>, ReturnType<T3_1["getFrom"]>]>;
-        <T_2 extends ComponentDefinition<any>[]>(...componentDefnition: T_2): Iterable<[number, ...Readonly<ReturnType<Unpacked<T_2>["getFrom"]>>[]]>;
-    };
+    mutableGroupOf: <T_1 extends [ComponentDefinition<EcsType<any>>, ...ComponentDefinition<EcsType<any>>[]]>(...components: T_1) => Iterable<[number, ...ComponentEcsType<T_1>]>;
+    groupOf: <T_2 extends [ComponentDefinition<EcsType<any>>, ...ComponentDefinition<EcsType<any>>[]]>(...components: T_2) => Iterable<[number, ...Readonly<ComponentEcsType<T_2>>]>;
     update: (dt: number) => void;
 };
 
 // @alpha (undocumented)
 export type Engine = ReturnType<typeof Engine>;
 
+// @alpha (undocumented)
+export function EngineWithComponents(): {
+    components: {
+        Sync: ComponentDefinition<EcsType<void>>;
+        Transform: ComponentDefinition<EcsType<{
+            position: Vector3.MutableVector3;
+            rotation: Quaternion.MutableQuaternion;
+            scale: Vector3.MutableVector3;
+        }>>;
+        BoxShape: ComponentDefinition<EcsType<BaseShape & {
+            uvs: number[];
+        }>>;
+    };
+    addEntity: () => number;
+    removeEntity: (entity: number) => void;
+    addSystem: (fn: Update) => void;
+    defineComponent: <T extends EcsType<any>>(componentId: number, spec: T) => ComponentDefinition<T>;
+    mutableGroupOf: <T_1 extends [ComponentDefinition<EcsType<any>>, ...ComponentDefinition<EcsType<any>>[]]>(...components: T_1) => Iterable<[number, ...ComponentEcsType<T_1>]>;
+    groupOf: <T_2 extends [ComponentDefinition<EcsType<any>>, ...ComponentDefinition<EcsType<any>>[]]>(...components: T_2) => Iterable<[number, ...Readonly<ComponentEcsType<T_2>>]>;
+    update: (dt: number) => void;
+};
+
 // Warnings were encountered during analysis:
 //
-// src/engine.ts:14:23 - (ae-forgotten-export) The symbol "Entity" needs to be exported by the entry point index.d.ts
-// src/engine.ts:20:10 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
-// src/engine.ts:20:10 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
-// src/engine.ts:32:10 - (ae-forgotten-export) The symbol "Update" needs to be exported by the entry point index.d.ts
-// src/engine.ts:39:24 - (ae-forgotten-export) The symbol "Unpacked" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:13:23 - (ae-forgotten-export) The symbol "Entity" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:19:10 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:19:10 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:31:10 - (ae-forgotten-export) The symbol "Update" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:38:24 - (ae-forgotten-export) The symbol "ComponentEcsType" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:121:1 - (ae-forgotten-export) The symbol "BaseShape" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

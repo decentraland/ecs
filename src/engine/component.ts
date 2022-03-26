@@ -1,8 +1,8 @@
-import { EcsType } from './built-in-types'
+import { EcsType } from '../built-in-types'
 import { Entity } from './entity'
 import { readonly } from './utils'
-import { createSerializer } from './serialization/Serializer'
-import { createParser } from './serialization/Parser'
+import { createSerializer } from '../serialization/Serializer'
+import { createParser } from '../serialization/Parser'
 
 export type EcsResult<T extends EcsType> = T extends EcsType
   ? ReturnType<T['deserialize']>

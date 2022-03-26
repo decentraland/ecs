@@ -3,10 +3,9 @@ import {
   ComponentDefinition,
   defineComponent as defComponent
 } from './component'
-import { ComponentEcsType } from './utils'
-import { EcsType } from './built-in-types'
-
-type Update = (dt: number) => void
+import { ComponentEcsType, Update } from './types'
+import { EcsType } from '../built-in-types'
+import { defineSdkComponents } from '../components'
 
 /**
  * @alpha
@@ -49,21 +48,17 @@ export function Engine() {
 
   function* mutableGroupOf<
     T extends [ComponentDefinition, ...ComponentDefinition[]]
-  >(...componentDefnition: T): Iterable<[Entity, ...ComponentEcsType<T>]> {
-    for (const [entity, ...components] of getComponentDefGroup(
-      ...componentDefnition
-    )) {
-      yield [entity, ...components.map((c) => c.mutable(entity))] as any
+  >(...components: T): Iterable<[Entity, ...ComponentEcsType<T>]> {
+    for (const [entity, ...groupComp] of getComponentDefGroup(...components)) {
+      yield [entity, ...groupComp.map((c) => c.mutable(entity))] as any
     }
   }
 
   function* groupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(
-    ...componentDefnition: T
+    ...components: T
   ): Iterable<[Entity, ...Readonly<ComponentEcsType<T>>]> {
-    for (const [entity, ...components] of getComponentDefGroup(
-      ...componentDefnition
-    )) {
-      yield [entity, ...components.map((c) => c.getFrom(entity))] as any
+    for (const [entity, ...groupComp] of getComponentDefGroup(...components)) {
+      yield [entity, ...groupComp.map((c) => c.getFrom(entity))] as any
     }
   }
 
@@ -111,3 +106,15 @@ export function Engine() {
  * @alpha
  */
 export type Engine = ReturnType<typeof Engine>
+
+/**
+ * @alpha
+ */
+export function EngineWithComponents() {
+  const engine = Engine()
+  const components = defineSdkComponents(engine)
+  return {
+    ...engine,
+    components
+  }
+}
