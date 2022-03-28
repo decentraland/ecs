@@ -6,13 +6,15 @@ import {
 import { ComponentEcsType, Update } from './types'
 import { EcsType } from '../built-in-types'
 import { defineSdkComponents } from '../components'
+import { isNotUndefined } from './utils'
 
 /**
  * @alpha
  */
-export function preEngine() {
+function preEngine() {
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
+  const entities = new Map<number, Set<number>>()
   const systems = new Set<Update>()
 
   function addSystem(fn: Update) {
@@ -24,13 +26,21 @@ export function preEngine() {
 
   function addEntity() {
     const entity = entityContainer.generateEntity()
+    entities.set(entity, new Set())
     return entity
+  }
+
+  function getEntityComponents(entity: Entity) {
+    return Array.from(entities.get(entity) || [])
+      .map((classId) => componentsDefinition.get(classId))
+      .filter(isNotUndefined)
   }
 
   function removeEntity(entity: Entity) {
     for (const [, component] of componentsDefinition) {
       component.deleteFrom(entity)
     }
+    entities.delete(entity)
     return entityContainer.removeEntity(entity)
   }
 
@@ -92,7 +102,17 @@ export function preEngine() {
       system(dt)
     }
 
-    for (const [, definition] of componentsDefinition) {
+    for (const [classId, definition] of componentsDefinition) {
+      for (const entity of definition.dirtyIterator()) {
+        const entityContainer = entities.get(entity)
+        const isDelete = !definition.getOrNull(entity)
+        isDelete
+          ? entityContainer?.delete(classId)
+          : entityContainer?.add(classId)
+      }
+    }
+
+    for (const [_classId, definition] of componentsDefinition) {
       definition.clearDirty()
     }
   }
@@ -104,7 +124,8 @@ export function preEngine() {
     defineComponent,
     mutableGroupOf,
     groupOf,
-    update
+    update,
+    getEntityComponents
   }
 }
 

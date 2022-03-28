@@ -15,6 +15,9 @@ build:
 	rm -rf node_modules/@microsoft/api-extractor/node_modules/typescript || true
 	./node_modules/.bin/api-extractor run $(LOCAL_ARG) --typescript-compiler-folder ./node_modules/typescript
 
+watch:
+	./node_modules/.bin/tsc -p tsconfig.json -w
+
 lint:
 	./node_modules/.bin/eslint . --ext .ts
 

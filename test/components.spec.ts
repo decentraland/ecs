@@ -8,7 +8,6 @@ describe('Legacy component tests', () => {
   it('cube example scene', () => {
     const newEngine = Engine()
     const sdk = newEngine.baseComponents
-
     // Scene part
     const spawnCube = (x: number, y: number, z: number) => {
       const newCubeEntity = newEngine.addEntity()
