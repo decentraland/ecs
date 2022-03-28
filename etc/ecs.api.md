@@ -10,21 +10,7 @@ import { Vector3 } from '@dcl/ecs-math/dist/next';
 
 // @alpha (undocumented)
 export function Engine(): {
-    addEntity: () => number;
-    removeEntity: (entity: Entity) => void;
-    addSystem: (fn: Update) => void;
-    defineComponent: <T extends EcsType<any>>(componentId: number, spec: T) => ComponentDefinition<T>;
-    mutableGroupOf: <T_1 extends [ComponentDefinition<EcsType<any>>, ...ComponentDefinition<EcsType<any>>[]]>(...components: T_1) => Iterable<[number, ...ComponentEcsType<T_1>]>;
-    groupOf: <T_2 extends [ComponentDefinition<EcsType<any>>, ...ComponentDefinition<EcsType<any>>[]]>(...components: T_2) => Iterable<[number, ...Readonly<ComponentEcsType<T_2>>]>;
-    update: (dt: number) => void;
-};
-
-// @alpha (undocumented)
-export type Engine = ReturnType<typeof Engine>;
-
-// @alpha (undocumented)
-export function EngineWithComponents(): {
-    components: {
+    baseComponents: {
         Sync: ComponentDefinition<EcsType<void>>;
         Transform: ComponentDefinition<EcsType<{
             position: Vector3.MutableVector3;
@@ -44,14 +30,31 @@ export function EngineWithComponents(): {
     update: (dt: number) => void;
 };
 
+// @alpha (undocumented)
+export type Engine = ReturnType<typeof preEngine> & {
+    baseComponents: ReturnType<typeof defineSdkComponents>;
+};
+
+// @alpha (undocumented)
+export function preEngine(): {
+    addEntity: () => number;
+    removeEntity: (entity: Entity) => void;
+    addSystem: (fn: Update) => void;
+    defineComponent: <T extends EcsType<any>>(componentId: number, spec: T) => ComponentDefinition<T>;
+    mutableGroupOf: <T_1 extends [ComponentDefinition<EcsType<any>>, ...ComponentDefinition<EcsType<any>>[]]>(...components: T_1) => Iterable<[number, ...ComponentEcsType<T_1>]>;
+    groupOf: <T_2 extends [ComponentDefinition<EcsType<any>>, ...ComponentDefinition<EcsType<any>>[]]>(...components: T_2) => Iterable<[number, ...Readonly<ComponentEcsType<T_2>>]>;
+    update: (dt: number) => void;
+};
+
 // Warnings were encountered during analysis:
 //
-// src/engine/index.ts:13:23 - (ae-forgotten-export) The symbol "Entity" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:19:10 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:19:10 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:31:10 - (ae-forgotten-export) The symbol "Update" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:38:24 - (ae-forgotten-export) The symbol "ComponentEcsType" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:121:1 - (ae-forgotten-export) The symbol "BaseShape" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:13:26 - (ae-forgotten-export) The symbol "Entity" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:115:3 - (ae-forgotten-export) The symbol "defineSdkComponents" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:121:23 - (ae-forgotten-export) The symbol "Update" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:121:23 - (ae-forgotten-export) The symbol "ComponentEcsType" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:123:1 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:123:1 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:129:1 - (ae-forgotten-export) The symbol "BaseShape" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -27,7 +27,7 @@ describe('Engine tests', () => {
     const entity = engine.addEntity()
     const entityCopied = engine.addEntity()
     const toTest = [Int16, Int32, Int8]
-    let CLASS_ID = 0
+    let CLASS_ID = 888
 
     for (const t of toTest) {
       const IntegerComponent = engine.defineComponent(
@@ -53,7 +53,7 @@ describe('Engine tests', () => {
     const entity = engine.addEntity()
     const entityCopied = engine.addEntity()
     const toTest = [Float32, Float64]
-    let CLASS_ID = 0
+    let CLASS_ID = 888
     const testValue = 2.0
 
     for (const t of toTest) {
@@ -77,7 +77,7 @@ describe('Engine tests', () => {
     const entity = engine.addEntity()
     const entityCopied = engine.addEntity()
 
-    let CLASS_ID = 0
+    let CLASS_ID = 888
     const testValue = 'testing an string'
 
     const FloatComponent = engine.defineComponent(
@@ -97,7 +97,7 @@ describe('Engine tests', () => {
   it('should serialize and parse a complex object, modify and be equal', () => {
     const engine = Engine()
     const myEntity = engine.addEntity()
-    const CLASS_ID = 1
+    const CLASS_ID = 888
 
     const ItemType = MapType({
       itemId: Int32,
@@ -178,7 +178,7 @@ describe('Engine tests', () => {
     const engine = Engine()
     const entityFilled = engine.addEntity() // 0
     const entityEmpty = engine.addEntity() // 1
-    const CLASS_ID = 1
+    const CLASS_ID = 888
 
     const TestComponentType = engine.defineComponent(
       CLASS_ID,
@@ -221,7 +221,7 @@ describe('Engine tests', () => {
     const zeroObjectValues: Record<string, number> = {}
 
     for (i = 0; i < A.length; i++) {
-      const CLASS_ID = i + 1
+      const CLASS_ID = 888 + i + 1
       const key = A[i]
       vectorType[key] = Int32
       objectValues[key] = 50 + i
@@ -244,7 +244,7 @@ describe('Engine tests', () => {
   it('force encode float struct of transform', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const CLASS_ID = 1
+    const CLASS_ID = 888
 
     const TransformComponent = engine.defineComponent(CLASS_ID, Transform)
     const _myTransform = TransformComponent.create(entity, {

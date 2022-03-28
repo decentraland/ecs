@@ -20,14 +20,14 @@ describe('Engine tests', () => {
 
   it('should not allow u to create same component to an existing entitiy', () => {
     const engine = Engine()
-    const Position = engine.defineComponent(1, PositionType)
+    const Position = engine.defineComponent(888, PositionType)
     Position.create(1, { x: 1 })
     expect(() => Position.create(1, { x: 10 })).toThrowError()
   })
 
   it('should throw an error if the component doesnt exist', () => {
     const engine = Engine()
-    const Position = engine.defineComponent(1, PositionType)
+    const Position = engine.defineComponent(888, PositionType)
     expect(() => Position.mutable(1)).toThrowError()
     expect(() => Position.toBinary(1)).toThrowError()
     Position.create(2, { x: 10 })
@@ -37,7 +37,7 @@ describe('Engine tests', () => {
 
   it('should delete component if exists or not', () => {
     const engine = Engine()
-    const Position = engine.defineComponent(1, PositionType)
+    const Position = engine.defineComponent(888, PositionType)
     Position.create(1, { x: 10 })
     expect(Position.deleteFrom(1)).toStrictEqual({ x: 10 })
     expect(Position.deleteFrom(2)).toStrictEqual(null)
@@ -52,7 +52,7 @@ describe('Engine tests', () => {
 
   it('should replace existing component with the new one', () => {
     const engine = Engine()
-    const Position = engine.defineComponent(1, PositionType)
+    const Position = engine.defineComponent(888, PositionType)
     Position.create(1, { x: 1 })
     Position.createOrReplace(1, { x: 10 })
     expect(Position.getFrom(1)).toStrictEqual({ x: 10 })
@@ -61,7 +61,7 @@ describe('Engine tests', () => {
   it('define component and creates new entity', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent(1, PositionType)
+    const Position = engine.defineComponent(888, PositionType)
     const posComponent = Position.create(entity, { x: 10 })
     expect(posComponent).toStrictEqual({ x: 10 })
 
@@ -81,8 +81,8 @@ describe('Engine tests', () => {
   it('iterate multiple components', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent(1, PositionType)
-    const Velocity = engine.defineComponent(2, VelocityType)
+    const Position = engine.defineComponent(888, PositionType)
+    const Velocity = engine.defineComponent(222, VelocityType)
     const posComponent = Position.create(entity, { x: 10 })
     const velComponent = Velocity.create(entity, { y: 20 })
 
@@ -100,7 +100,7 @@ describe('Engine tests', () => {
   it('should not update a readonly prop', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent(1, PositionType)
+    const Position = engine.defineComponent(888, PositionType)
     expect(Array.from(Position.dirtyIterator())).toEqual([])
     const posComponent = Position.create(entity, { x: 10 })
     posComponent.x = 1000000000000
@@ -111,7 +111,7 @@ describe('Engine tests', () => {
   it('should not update a readonly prop groupOf', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent(1, PositionType)
+    const Position = engine.defineComponent(888, PositionType)
     const _posComponent = Position.create(entity, { x: 10 })
     for (const [_entity, position] of engine.groupOf(Position)) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -124,7 +124,7 @@ describe('Engine tests', () => {
   it('should not update a readonly prop getFrom(entity)', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent(1, PositionType)
+    const Position = engine.defineComponent(888, PositionType)
     Position.create(entity, { x: 10 })
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -136,8 +136,8 @@ describe('Engine tests', () => {
   it('should fail if we fetch a component that doesnt exists on an entity', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent(1, PositionType)
-    const Velocity = engine.defineComponent(2, VelocityType)
+    const Position = engine.defineComponent(888, PositionType)
+    const Velocity = engine.defineComponent(222, VelocityType)
     Position.create(entity, { x: 10 })
     expect(() => Velocity.getFrom(entity)).toThrowError()
   })
@@ -145,15 +145,15 @@ describe('Engine tests', () => {
   it('should return null if the component not exists on the entity.', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const Position = engine.defineComponent(1, PositionType)
-    const Velocity = engine.defineComponent(2, VelocityType)
+    const Position = engine.defineComponent(888, PositionType)
+    const Velocity = engine.defineComponent(222, VelocityType)
     Position.create(entity, { x: 10 })
     expect(Velocity.getOrNull(entity)).toBe(null)
   })
 
   it('should throw an error if the component class id already exists', () => {
     const engine = Engine()
-    const CLASS_ID = 1
+    const CLASS_ID = 888
     engine.defineComponent(CLASS_ID, PositionType)
     const Velocity = () => engine.defineComponent(CLASS_ID, VelocityType)
     expect(Velocity).toThrowError()
@@ -162,7 +162,7 @@ describe('Engine tests', () => {
   it('should return mutable obj if use component.mutable()', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const CLASS_ID = 1
+    const CLASS_ID = 888
     const Position = engine.defineComponent(CLASS_ID, PositionType)
     Position.create(entity, { x: 10 })
     Position.mutable(entity).x = 8888
@@ -173,7 +173,7 @@ describe('Engine tests', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const entityB = engine.addEntity() // 0
-    const CLASS_ID = 1
+    const CLASS_ID = 888
     const Position = engine.defineComponent(CLASS_ID, PositionType)
     const Velocity = engine.defineComponent(CLASS_ID + 1, VelocityType)
     Position.create(entity, { x: 10 })
@@ -194,7 +194,7 @@ describe('Engine tests', () => {
     const engine = Engine()
     const entityA = engine.addEntity()
     const entityB = engine.addEntity()
-    const CLASS_ID = Math.random() | 0
+    const CLASS_ID = 888
     const Position = engine.defineComponent(CLASS_ID, PositionType)
     const Position2 = engine.defineComponent(CLASS_ID + 1, PositionType)
     const Velocity = engine.defineComponent(CLASS_ID + 2, VelocityType)

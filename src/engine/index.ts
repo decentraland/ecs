@@ -10,7 +10,7 @@ import { defineSdkComponents } from '../components'
 /**
  * @alpha
  */
-export function Engine() {
+export function preEngine() {
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
   const systems = new Set<Update>()
@@ -50,7 +50,10 @@ export function Engine() {
     T extends [ComponentDefinition, ...ComponentDefinition[]]
   >(...components: T): Iterable<[Entity, ...ComponentEcsType<T>]> {
     for (const [entity, ...groupComp] of getComponentDefGroup(...components)) {
-      yield [entity, ...groupComp.map((c) => c.mutable(entity))] as any
+      yield [entity, ...groupComp.map((c) => c.mutable(entity))] as [
+        Entity,
+        ...ComponentEcsType<T>
+      ]
     }
   }
 
@@ -58,7 +61,10 @@ export function Engine() {
     ...components: T
   ): Iterable<[Entity, ...Readonly<ComponentEcsType<T>>]> {
     for (const [entity, ...groupComp] of getComponentDefGroup(...components)) {
-      yield [entity, ...groupComp.map((c) => c.getFrom(entity))] as any
+      yield [entity, ...groupComp.map((c) => c.getFrom(entity))] as [
+        Entity,
+        ...Readonly<ComponentEcsType<T>>
+      ]
     }
   }
 
@@ -105,16 +111,18 @@ export function Engine() {
 /**
  * @alpha
  */
-export type Engine = ReturnType<typeof Engine>
+export type Engine = ReturnType<typeof preEngine> & {
+  baseComponents: ReturnType<typeof defineSdkComponents>
+}
 
 /**
  * @alpha
  */
-export function EngineWithComponents() {
-  const engine = Engine()
-  const components = defineSdkComponents(engine)
+export function Engine() {
+  const engine = preEngine()
+  const baseComponents = defineSdkComponents(engine)
   return {
     ...engine,
-    components
+    baseComponents
   }
 }
