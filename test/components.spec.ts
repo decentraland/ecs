@@ -1,14 +1,13 @@
-import { Engine } from '../src/engine'
-import { defineLegacyComponents } from '../src/legacy-components'
 import { Quaternion, Vector3 } from '@dcl/ecs-math/dist/next'
+
+import { EngineWithComponents } from '../src/engine'
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to'
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo })
 
 describe('Legacy component tests', () => {
   it('cube example scene', () => {
-    // Should be expose from library?
-    const newEngine = Engine()
-    const sdk = defineLegacyComponents(newEngine)
+    const newEngine = EngineWithComponents()
+    const sdk = newEngine.components
 
     // Scene part
     const spawnCube = (x: number, y: number, z: number) => {

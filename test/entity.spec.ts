@@ -1,4 +1,4 @@
-import { EntityContainer } from '../src/entity'
+import { EntityContainer } from '../src/engine/entity'
 
 describe('Entity container', () => {
   it('generates new entities', () => {

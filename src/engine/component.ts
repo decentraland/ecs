@@ -1,8 +1,8 @@
-import { EcsType } from './built-in-types'
+import { EcsType } from '../built-in-types'
 import { Entity } from './entity'
 import { readonly } from './utils'
-import { createSerializer } from './serialization/Serializer'
-import { createParser } from './serialization/Parser'
+import { createSerializer } from '../serialization/Serializer'
+import { createParser } from '../serialization/Parser'
 
 export type EcsResult<T extends EcsType> = T extends EcsType
   ? ReturnType<T['deserialize']>
@@ -10,7 +10,7 @@ export type EcsResult<T extends EcsType> = T extends EcsType
 
 export type ComponentType<T extends EcsType> = EcsResult<T>
 
-export type ComponentDefinition<T extends EcsType> = {
+export type ComponentDefinition<T extends EcsType = EcsType<any>> = {
   _id: number
   has(entity: Entity): boolean
   // removeFrom(entity: Entity): void

@@ -1,5 +1,3 @@
-export type Unpacked<T> = T extends (infer U)[] ? U : T
-
 const isProd = () => false
 
 export function readonly<T extends Record<string, unknown>>(

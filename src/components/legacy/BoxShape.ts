@@ -1,6 +1,6 @@
-import { Parser } from '../serialization/Parser'
-import { Serializer } from '../serialization/Serializer'
-import { EcsType } from '../built-in-types/EcsType'
+import { Parser } from '../../serialization/Parser'
+import { Serializer } from '../../serialization/Serializer'
+import { EcsType } from '../../built-in-types/EcsType'
 import { BaseShape } from './Shape'
 
 type BoxShape = BaseShape & {
