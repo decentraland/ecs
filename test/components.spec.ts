@@ -64,4 +64,28 @@ describe('Legacy component tests', () => {
 
     newEngine.update(1 / 60)
   })
+  it('box shape test', () => {
+    const newEngine = Engine()
+    const sdk = newEngine.baseComponents
+    const entity = newEngine.addEntity()
+    const entity2 = newEngine.addEntity()
+    const _boxShape = sdk.BoxShape.create(entity, {
+      isPointerBlocker: true,
+      visible: true,
+      withCollisions: true,
+      uvs: [0, 3234.32, 123.2, Math.PI / 2]
+    })
+
+    sdk.BoxShape.create(entity2, {
+      isPointerBlocker: false,
+      visible: false,
+      withCollisions: false,
+      uvs: [-1, -2]
+    })
+
+    const buffer = sdk.BoxShape.toBinary(entity)
+    sdk.BoxShape.updateFromBinary(entity2, buffer)
+
+    expect(_boxShape).toBeDeepCloseTo(sdk.BoxShape.getFrom(entity2))
+  })
 })

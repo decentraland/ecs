@@ -11,34 +11,55 @@ type Transform = {
 // This transform can be optimized with Float32Array for example
 export const Transform: EcsType<Transform> = {
   serialize(value: Transform, builder: Serializer): void {
-    builder.bb.writeFloat32(value.position.x)
-    builder.bb.writeFloat32(value.position.y)
-    builder.bb.writeFloat32(value.position.z)
-    builder.bb.writeFloat32(value.rotation.x)
-    builder.bb.writeFloat32(value.rotation.y)
-    builder.bb.writeFloat32(value.rotation.z)
-    builder.bb.writeFloat32(value.rotation.w)
-    builder.bb.writeFloat32(value.scale.x)
-    builder.bb.writeFloat32(value.scale.y)
-    builder.bb.writeFloat32(value.scale.z)
+    builder.dataView.view.setFloat32(
+      builder.dataView.poffset(4),
+      value.position.x
+    )
+    builder.dataView.view.setFloat32(
+      builder.dataView.poffset(4),
+      value.position.y
+    )
+    builder.dataView.view.setFloat32(
+      builder.dataView.poffset(4),
+      value.position.z
+    )
+    builder.dataView.view.setFloat32(
+      builder.dataView.poffset(4),
+      value.rotation.x
+    )
+    builder.dataView.view.setFloat32(
+      builder.dataView.poffset(4),
+      value.rotation.y
+    )
+    builder.dataView.view.setFloat32(
+      builder.dataView.poffset(4),
+      value.rotation.z
+    )
+    builder.dataView.view.setFloat32(
+      builder.dataView.poffset(4),
+      value.rotation.w
+    )
+    builder.dataView.view.setFloat32(builder.dataView.poffset(4), value.scale.x)
+    builder.dataView.view.setFloat32(builder.dataView.poffset(4), value.scale.y)
+    builder.dataView.view.setFloat32(builder.dataView.poffset(4), value.scale.z)
   },
   deserialize(reader: Parser): Transform {
     return {
       position: Vector3.create(
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32()
+        reader.dataView.view.getFloat32(reader.dataView.poffset(4)),
+        reader.dataView.view.getFloat32(reader.dataView.poffset(4)),
+        reader.dataView.view.getFloat32(reader.dataView.poffset(4))
       ),
       rotation: Quaternion.create(
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32()
+        reader.dataView.view.getFloat32(reader.dataView.poffset(4)),
+        reader.dataView.view.getFloat32(reader.dataView.poffset(4)),
+        reader.dataView.view.getFloat32(reader.dataView.poffset(4)),
+        reader.dataView.view.getFloat32(reader.dataView.poffset(4))
       ),
       scale: Vector3.create(
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32()
+        reader.dataView.view.getFloat32(reader.dataView.poffset(4)),
+        reader.dataView.view.getFloat32(reader.dataView.poffset(4)),
+        reader.dataView.view.getFloat32(reader.dataView.poffset(4))
       )
     }
   }

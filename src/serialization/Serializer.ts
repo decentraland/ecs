@@ -1,17 +1,17 @@
-import ByteBuffer from 'bytebuffer'
+import { createDataViewExtended, DataViewExtended } from './DataViewExtended'
 
 export type Serializer = {
-  bb: ByteBuffer
+  dataView: DataViewExtended
   push: (fn: () => void) => void
   getData: () => Uint8Array
 }
 
 export function createSerializer(): Serializer {
-  const bb = ByteBuffer.allocate(2048, false, false)
+  const dataView = createDataViewExtended({ initialCapacity: 2048 })
   const fnQueue: (() => void)[] = []
 
   return {
-    bb,
+    dataView,
     push(fn: () => void): void {
       fnQueue.push(fn)
     },
@@ -19,7 +19,7 @@ export function createSerializer(): Serializer {
       for (const fn of fnQueue) {
         fn()
       }
-      return new Uint8Array(bb.buffer.subarray(0, bb.offset))
+      return dataView.binary()
     }
   }
 }

@@ -37,6 +37,6 @@
     "@dcl/eslint-config": "^1.0.3",
     "@types/bytebuffer": "^5.0.43",
     "bytebuffer": "^5.0.1",
-    "flatbuffers": "^2.0.4"
+    "flatbuffers": "^2.0.6"
   }
 }

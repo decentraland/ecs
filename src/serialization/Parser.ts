@@ -1,18 +1,12 @@
-import ByteBuffer from 'bytebuffer'
+import { createDataViewExtended, DataViewExtended } from './DataViewExtended'
 
 export type Parser = {
-  bb: ByteBuffer
+  dataView: DataViewExtended
 }
 
 export function createParser(dataArray: Uint8Array): Parser {
-  // TODO: implement better way (replacing Bytebuffer approach)
-  const buffer = ByteBuffer.allocate(dataArray.length, false, false)
-  for (const byte of dataArray) {
-    buffer.writeByte(byte)
-  }
-  buffer.reset()
-
+  const dataView = createDataViewExtended({ buffer: dataArray })
   return {
-    bb: buffer
+    dataView
   }
 }
