@@ -1,5 +1,4 @@
 import { createByteBuffer, ByteBuffer } from '../ByteBuffer'
-import { createDataViewExtended, DataViewExtended } from '../DataViewExtended'
 
 export enum MessageType {
   PUT_COMPONENT = 1,
@@ -23,21 +22,16 @@ export type PutComponentOperation =
 export type WireMessage = PutComponentOperation | DeleteComponentOperation
 
 const CURRENT_VERSION = 0
-export function writeComponentOperation(
-  message: WireMessage,
+
+export function writeMessage(
+  wrapMessage: (buf: ByteBuffer) => MessageType,
   messageBuf: ByteBuffer = createByteBuffer()
-): ByteBuffer {
+) {
   // reserve the beginning
   const startMessageOffset = messageBuf.reserve(12)
 
-  // Write the body of message
-  messageBuf.writeUint64(BigInt(message.entityId))
-  messageBuf.writeUint32(message.componentClassId)
-  messageBuf.writeUint64(BigInt(message.timestamp))
-  messageBuf.writeUint32(message.data.byteLength)
-  messageBuf
-    .buffer()
-    .set(message.data, messageBuf.reserve(message.data.byteLength))
+  // write body
+  const messageType = wrapMessage(messageBuf)
 
   // write header
   // Length
@@ -49,7 +43,22 @@ export function writeComponentOperation(
     )
   // Version
   messageBuf.view().setUint32(startMessageOffset + 4, CURRENT_VERSION)
-  messageBuf.view().setUint32(startMessageOffset + 8, message.messageType)
+  messageBuf.view().setUint32(startMessageOffset + 8, messageType)
 
   return messageBuf
+}
+
+export function writeComponentOperation(
+  message: WireMessage,
+  messageBuf?: ByteBuffer
+): ByteBuffer {
+  const writeBody = (buf: ByteBuffer) => {
+    buf.writeUint64(BigInt(message.entityId))
+    buf.writeUint32(message.componentClassId)
+    buf.writeUint64(BigInt(message.timestamp))
+    buf.writeBuffer(message.data)
+    return message.messageType
+  }
+
+  return writeMessage(writeBody, messageBuf)
 }
