@@ -1,32 +1,55 @@
-import { DataViewExtended } from '../DataViewExtended'
+import { createByteBuffer, ByteBuffer } from '../ByteBuffer'
+import { createDataViewExtended, DataViewExtended } from '../DataViewExtended'
 
-export type ComponentOperation = {
-  messageType: number
-  entityId: bigint
+export enum MessageType {
+  PUT_COMPONENT = 1,
+  DELETE_COMPONENT = 2
+}
+
+// TODO: see bigint
+export type ComponentOperation<T extends MessageType> = {
+  messageType: T
+  entityId: bigint | number
   componentClassId: number
-  timestamp: bigint
+  timestamp: bigint | number
   data: Uint8Array
 }
 
-export function writeAnyMessage(
-  buf: DataViewExtended,
-  message: ComponentOperation
-): void {
+export type DeleteComponentOperation =
+  ComponentOperation<MessageType.DELETE_COMPONENT>
+export type PutComponentOperation =
+  ComponentOperation<MessageType.PUT_COMPONENT>
+
+export type WireMessage = PutComponentOperation | DeleteComponentOperation
+
+const CURRENT_VERSION = 0
+export function writeComponentOperation(
+  message: WireMessage,
+  messageBuf: ByteBuffer = createByteBuffer()
+): ByteBuffer {
   // reserve the beginning
-  const startMessageOffset = buf.poffset(8)
+  const startMessageOffset = messageBuf.reserve(12)
 
   // Write the body of message
-  buf.view.setUint32(buf.poffset(4), message.messageType)
-  buf.view.setUint32(buf.poffset(4), message.messageType)
-  buf.view.setBigUint64(buf.poffset(8), message.entityId)
-  buf.view.setUint32(buf.poffset(4), message.componentClassId)
-  buf.view.setBigUint64(buf.poffset(8), message.timestamp)
-  buf.view.setUint32(buf.poffset(4), message.data.byteLength)
-  buf.buffer().set(message.data, buf.poffset(message.data.byteLength))
+  messageBuf.writeUint64(BigInt(message.entityId))
+  messageBuf.writeUint32(message.componentClassId)
+  messageBuf.writeUint64(BigInt(message.timestamp))
+  messageBuf.writeUint32(message.data.byteLength)
+  messageBuf
+    .buffer()
+    .set(message.data, messageBuf.reserve(message.data.byteLength))
 
   // write header
   // Length
-  buf.view.setUint32(startMessageOffset, buf.offset() - startMessageOffset)
+  messageBuf
+    .view()
+    .setUint32(
+      startMessageOffset,
+      messageBuf.offset() - startMessageOffset - 12
+    )
   // Version
-  buf.view.setUint32(startMessageOffset + 4, 0)
+  messageBuf.view().setUint32(startMessageOffset + 4, CURRENT_VERSION)
+  messageBuf.view().setUint32(startMessageOffset + 8, message.messageType)
+
+  return messageBuf
 }

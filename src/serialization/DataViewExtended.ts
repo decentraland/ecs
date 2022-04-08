@@ -16,7 +16,7 @@ export type DataViewExtendedCreationOptions = {
 const defaultInitialCapacity = 10240
 
 export function createDataViewExtended(
-  options: DataViewExtendedCreationOptions
+  options: DataViewExtendedCreationOptions = {}
 ): DataViewExtended {
   let buffer =
     options.buffer ||

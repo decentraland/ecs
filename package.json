@@ -33,7 +33,7 @@
     "dist"
   ],
   "dependencies": {
-    "@dcl/ecs-math": "^1.0.2",
+    "@dcl/ecs-math": "^2.0.0-20220323170902.commit-c4f0d91",
     "@dcl/eslint-config": "^1.0.3",
     "@types/bytebuffer": "^5.0.43",
     "bytebuffer": "^5.0.1",

@@ -3,7 +3,7 @@ import { Serializer } from '../../../serialization/Serializer'
 import { EcsType } from '../../../built-in-types/EcsType'
 import { BaseShape } from './../Shape'
 import { BoxShape as fbBoxShape } from './box-shape'
-import { Builder, ByteBuffer } from 'flatbuffers'
+import { Builder, ByteBuffer as FlatBufferByteBuffer } from 'flatbuffers'
 
 type BoxShape = BaseShape & {
   uvs: number[]
@@ -23,10 +23,10 @@ export const BoxShape: EcsType<BoxShape> = {
     )
     fbBuilder.finish(boxShape)
     const data = fbBuilder.asUint8Array()
-    builder.dataView.buffer().set(data, builder.dataView.poffset(data.length))
+    builder.bb.buffer().set(data, builder.bb.reserve(data.length))
   },
   deserialize(reader: Parser): BoxShape {
-    const buf = new ByteBuffer(reader.dataView.buffer())
+    const buf = new FlatBufferByteBuffer(reader.bb.buffer())
     const boxShape = fbBoxShape.getRootAsBoxShape(buf)
 
     const newValue: BoxShape = {

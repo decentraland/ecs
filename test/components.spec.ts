@@ -1,4 +1,4 @@
-import { Quaternion, Vector3 } from '@dcl/ecs-math/dist/next'
+import { Quaternion, Vector3 } from '@dcl/ecs-math'
 
 import { Engine } from '../src/engine'
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to'

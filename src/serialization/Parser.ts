@@ -1,12 +1,12 @@
-import { createDataViewExtended, DataViewExtended } from './DataViewExtended'
+import { ByteBuffer, createByteBuffer } from './ByteBuffer'
 
 export type Parser = {
-  dataView: DataViewExtended
+  bb: ByteBuffer
 }
 
 export function createParser(dataArray: Uint8Array): Parser {
-  const dataView = createDataViewExtended({ buffer: dataArray })
+  const bb = createByteBuffer(dataArray)
   return {
-    dataView
+    bb
   }
 }

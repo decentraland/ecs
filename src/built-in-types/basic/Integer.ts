@@ -4,36 +4,36 @@ import { EcsType } from '../EcsType'
 
 export const Int64: EcsType<bigint> = {
   serialize(value: bigint, builder: Serializer): void {
-    builder.dataView.view.setBigInt64(builder.dataView.poffset(8), value)
+    builder.bb.writeUint64(value)
   },
   deserialize(reader: Parser): bigint {
-    return reader.dataView.view.getBigInt64(reader.dataView.poffset(8))
+    return BigInt(reader.bb.readUint64())
   }
 }
 
 export const Int32: EcsType<number> = {
   serialize(value: number, builder: Serializer): void {
-    builder.dataView.view.setInt32(builder.dataView.poffset(4), value)
+    builder.bb.writeInt32(value)
   },
   deserialize(reader: Parser): number {
-    return reader.dataView.view.getInt32(reader.dataView.poffset(4))
+    return reader.bb.readInt32()
   }
 }
 
 export const Int16: EcsType<number> = {
   serialize(value: number, builder: Serializer): void {
-    builder.dataView.view.setInt16(builder.dataView.poffset(2), value)
+    builder.bb.writeInt16(value)
   },
   deserialize(reader: Parser): number {
-    return reader.dataView.view.getInt16(reader.dataView.poffset(2))
+    return reader.bb.readInt16()
   }
 }
 
 export const Int8: EcsType<number> = {
   serialize(value: number, builder: Serializer): void {
-    builder.dataView.view.setInt8(builder.dataView.poffset(8), value)
+    builder.bb.writeInt8(value)
   },
   deserialize(reader: Parser): number {
-    return reader.dataView.view.getInt8(reader.dataView.poffset(8))
+    return reader.bb.readInt8()
   }
 }

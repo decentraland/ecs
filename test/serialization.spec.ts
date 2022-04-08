@@ -11,6 +11,14 @@ import {
 } from '../src/built-in-types'
 import { Engine } from '../src/engine'
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to'
+import {
+  MessageType,
+  writeComponentOperation
+} from '../src/serialization/crdt/ComponentOperation'
+import {
+  Vector3 as MathVector3,
+  Quaternion as MathQuaternion
+} from '@dcl/ecs-math'
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo })
 
 const Vector3 = MapType({ x: Float32, y: Float32, z: Float32 })
@@ -260,5 +268,40 @@ describe('Engine tests', () => {
       253, 201, 154, 65, 19, 92, 41, 65, 35, 137, 55, 71, 32, 253, 51, 64, 166,
       217, 23, 69, 191, 0, 205
     ])
+  })
+
+  it('serialization one wiremessage', () => {
+    const newEngine = Engine()
+    const sdk = newEngine.baseComponents
+    const entity = newEngine.addEntity()
+
+    const mutableTransform = sdk.Transform.create(entity, {
+      position: MathVector3.create(1, 1, 1),
+      scale: MathVector3.create(1, 1, 1),
+      rotation: MathQuaternion.create(1, 1, 1, 1)
+    })
+
+    const data = writeComponentOperation({
+      messageType: MessageType.PUT_COMPONENT,
+      componentClassId: sdk.Transform._id,
+      timestamp: 20,
+      entityId: entity,
+      data: sdk.Transform.toBinary(entity)
+    })
+
+    mutableTransform.position.x = 31.3
+
+    const data2 = writeComponentOperation(
+      {
+        messageType: MessageType.PUT_COMPONENT,
+        componentClassId: sdk.Transform._id,
+        timestamp: 20,
+        entityId: entity,
+        data: sdk.Transform.toBinary(entity)
+      },
+      data
+    ).toBinary()
+
+    console.log({ data2 })
   })
 })

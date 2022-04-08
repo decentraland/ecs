@@ -4,8 +4,8 @@
 
 ```ts
 
-import { Quaternion } from '@dcl/ecs-math/dist/next';
-import { Vector3 } from '@dcl/ecs-math/dist/next';
+import { Quaternion } from '@dcl/ecs-math';
+import { Vector3 } from '@dcl/ecs-math';
 
 // @alpha (undocumented)
 export function Engine(): {
