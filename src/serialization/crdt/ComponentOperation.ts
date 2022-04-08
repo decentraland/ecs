@@ -6,18 +6,20 @@ export enum MessageType {
 }
 
 // TODO: see bigint
-export type ComponentOperation<T extends MessageType> = {
-  messageType: T
+export type PartialComponentOperation = {
   entityId: bigint | number
   componentClassId: number
   timestamp: bigint | number
   data: Uint8Array
 }
 
-export type DeleteComponentOperation =
-  ComponentOperation<MessageType.DELETE_COMPONENT>
-export type PutComponentOperation =
-  ComponentOperation<MessageType.PUT_COMPONENT>
+export type DeleteComponentOperation = PartialComponentOperation & {
+  messageType: MessageType.DELETE_COMPONENT
+}
+
+export type PutComponentOperation = PartialComponentOperation & {
+  messageType: MessageType.PUT_COMPONENT
+}
 
 export type WireMessage = PutComponentOperation | DeleteComponentOperation
 
@@ -61,4 +63,13 @@ export function writeComponentOperation(
   }
 
   return writeMessage(writeBody, messageBuf)
+}
+
+export function writePutComponentOperation(
+  message: PartialComponentOperation,
+  messageBuf?: ByteBuffer
+): ByteBuffer {
+  // TODO: to not break the performance : :
+  ;(message as PutComponentOperation).messageType = MessageType.PUT_COMPONENT
+  return writeComponentOperation(message as PutComponentOperation, messageBuf)
 }
