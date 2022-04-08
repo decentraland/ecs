@@ -45,6 +45,7 @@ export type ComponentDefinition<T extends EcsType = EcsType<any>> = {
 export function defineComponent<T extends EcsType>(
   componentId: number,
   spec: T
+  // meta: { syncFlags }
 ): ComponentDefinition<T> {
   const data = new Map<Entity, ComponentType<T>>()
   const dirtyIterator = new Set<Entity>()
