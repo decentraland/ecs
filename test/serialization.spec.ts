@@ -5,20 +5,13 @@ import {
   Float64,
   Int16,
   Int32,
+  Int64,
   Int8,
   MapType,
   String
 } from '../src/built-in-types'
 import { Engine } from '../src/engine'
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to'
-import {
-  MessageType,
-  writeComponentOperation
-} from '../src/serialization/crdt/ComponentOperation'
-import {
-  Vector3 as MathVector3,
-  Quaternion as MathQuaternion
-} from '@dcl/ecs-math'
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo })
 
 const Vector3 = MapType({ x: Float32, y: Float32, z: Float32 })
@@ -193,19 +186,22 @@ describe('Engine tests', () => {
       MapType({
         a: Int32,
         b: Int32,
-        c: ArrayType(Int32)
+        c: ArrayType(Int32),
+        d: Int64
       })
     )
     const myComponent = TestComponentType.create(entityFilled, {
       a: 2331,
       b: 10,
-      c: [2, 3, 4, 5]
+      c: [2, 3, 4, 5],
+      d: BigInt(-1)
     })
 
     TestComponentType.create(entityEmpty, {
       a: 0,
       b: 0,
-      c: []
+      c: [],
+      d: BigInt(10)
     })
 
     const buffer = TestComponentType.toBinary(entityFilled)
@@ -215,6 +211,7 @@ describe('Engine tests', () => {
     expect(modifiedComponent.a).toBe(myComponent.a)
     expect(modifiedComponent.b).toBe(myComponent.b)
     expect(modifiedComponent.c).toEqual(myComponent.c)
+    expect(modifiedComponent.d).toEqual(myComponent.d)
   })
 
   it('copy component from binary deco/encode', () => {
@@ -262,8 +259,8 @@ describe('Engine tests', () => {
     })
 
     const buffer = TransformComponent.toBinary(entity)
-    expect(buffer.length).toBe(40)
-    expect(Array.from(buffer)).toStrictEqual([
+    expect(buffer.size()).toBe(40)
+    expect(Array.from(buffer.toBinary())).toStrictEqual([
       66, 222, 51, 51, 67, 94, 56, 82, 67, 166, 170, 61, 68, 49, 198, 102, 69,
       253, 201, 154, 65, 19, 92, 41, 65, 35, 137, 55, 71, 32, 253, 51, 64, 166,
       217, 23, 69, 191, 0, 205

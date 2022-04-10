@@ -1,32 +1,29 @@
-import { Parser } from '../../../serialization/Parser'
-import { Serializer } from '../../../serialization/Serializer'
 import { EcsType } from '../../../built-in-types/EcsType'
 import { BaseShape } from './../Shape'
 import { BoxShape as fbBoxShape } from './box-shape'
 import { Builder, ByteBuffer as FlatBufferByteBuffer } from 'flatbuffers'
+import { ByteBuffer } from '../../../serialization/ByteBuffer'
 
 type BoxShape = BaseShape & {
   uvs: number[]
 }
 
 export const BoxShape: EcsType<BoxShape> = {
-  serialize(value: BoxShape, builder: Serializer): void {
+  serialize(value: BoxShape, builder: ByteBuffer): void {
     const fbBuilder = new Builder()
-
-    const uvs = fbBoxShape.createUvsVector(fbBuilder, value.uvs)
     const boxShape = fbBoxShape.createBoxShape(
       fbBuilder,
       value.withCollisions,
       value.isPointerBlocker,
       value.visible,
-      uvs
+      fbBoxShape.createUvsVector(fbBuilder, value.uvs)
     )
     fbBuilder.finish(boxShape)
-    const data = fbBuilder.asUint8Array()
-    builder.bb.buffer().set(data, builder.bb.reserve(data.length))
+
+    builder.writeBuffer(fbBuilder.asUint8Array(), false)
   },
-  deserialize(reader: Parser): BoxShape {
-    const buf = new FlatBufferByteBuffer(reader.bb.buffer())
+  deserialize(reader: ByteBuffer): BoxShape {
+    const buf = new FlatBufferByteBuffer(reader.buffer())
     const boxShape = fbBoxShape.getRootAsBoxShape(buf)
 
     const newValue: BoxShape = {

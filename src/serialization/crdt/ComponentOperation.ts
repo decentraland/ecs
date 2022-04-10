@@ -1,9 +1,11 @@
-import { createByteBuffer, ByteBuffer } from '../ByteBuffer'
-
-export enum MessageType {
-  PUT_COMPONENT = 1,
-  DELETE_COMPONENT = 2
-}
+import { ByteBuffer } from '../ByteBuffer'
+import {
+  MessageHeader,
+  MessageType,
+  MESSAGE_HEADER_CURRENT_VERSION,
+  MESSAGE_HEADER_LENGTH,
+  readMessageHeader
+} from '../WireMessage'
 
 // TODO: see bigint
 export type PartialComponentOperation = {
@@ -13,63 +15,61 @@ export type PartialComponentOperation = {
   data: Uint8Array
 }
 
-export type DeleteComponentOperation = PartialComponentOperation & {
-  messageType: MessageType.DELETE_COMPONENT
-}
+export const COMPONENT_OPERATION_LENGTH = 24
 
-export type PutComponentOperation = PartialComponentOperation & {
-  messageType: MessageType.PUT_COMPONENT
-}
-
-export type WireMessage = PutComponentOperation | DeleteComponentOperation
-
-const CURRENT_VERSION = 0
-
-export function writeMessage(
-  wrapMessage: (buf: ByteBuffer) => MessageType,
-  messageBuf: ByteBuffer = createByteBuffer()
+/**
+ * Call this function for an optimal writing data passing the ByteBuffer
+ *  already created and a callback
+ * @param writeData
+ * @param messageBuf
+ */
+export function prepareAndWritePutComponentOperation(
+  entityId: bigint,
+  componentClassId: number,
+  timestamp: bigint,
+  writeData: (buf: ByteBuffer) => void,
+  messageBuf: ByteBuffer
 ) {
   // reserve the beginning
-  const startMessageOffset = messageBuf.reserve(12)
+  const view = messageBuf.view()
+  const startMessageOffset = messageBuf.incrementWriteOffset(
+    MESSAGE_HEADER_LENGTH + COMPONENT_OPERATION_LENGTH
+  )
 
   // write body
-  const messageType = wrapMessage(messageBuf)
+  writeData(messageBuf)
+  const messageLength =
+    messageBuf.size() - startMessageOffset - MESSAGE_HEADER_LENGTH
 
-  // write header
-  // Length
-  messageBuf
-    .view()
-    .setUint32(
-      startMessageOffset,
-      messageBuf.offset() - startMessageOffset - 12
-    )
-  // Version
-  messageBuf.view().setUint32(startMessageOffset + 4, CURRENT_VERSION)
-  messageBuf.view().setUint32(startMessageOffset + 8, messageType)
-
-  return messageBuf
+  // Write hedaer
+  view.setUint32(startMessageOffset, messageLength)
+  view.setUint32(startMessageOffset + 4, MESSAGE_HEADER_CURRENT_VERSION)
+  view.setUint32(startMessageOffset + 8, MessageType.PUT_COMPONENT)
+  view.setBigInt64(startMessageOffset + 12, entityId)
+  view.setUint32(startMessageOffset + 20, componentClassId)
+  view.setBigInt64(startMessageOffset + 24, timestamp)
+  view.setUint32(
+    startMessageOffset + 32,
+    messageLength - COMPONENT_OPERATION_LENGTH
+  )
 }
 
-export function writeComponentOperation(
-  message: WireMessage,
-  messageBuf?: ByteBuffer
-): ByteBuffer {
-  const writeBody = (buf: ByteBuffer) => {
-    buf.writeUint64(BigInt(message.entityId))
-    buf.writeUint32(message.componentClassId)
-    buf.writeUint64(BigInt(message.timestamp))
-    buf.writeBuffer(message.data)
-    return message.messageType
+export function readPutComponentOperationWithoutData(
+  buf: ByteBuffer
+): (MessageHeader & PartialComponentOperation) | null {
+  const header = readMessageHeader(buf)
+  if (!header) {
+    return null
   }
 
-  return writeMessage(writeBody, messageBuf)
-}
+  const view = buf.view()
+  const offset = buf.incrementReadOffset(24)
 
-export function writePutComponentOperation(
-  message: PartialComponentOperation,
-  messageBuf?: ByteBuffer
-): ByteBuffer {
-  // TODO: to not break the performance : :
-  ;(message as PutComponentOperation).messageType = MessageType.PUT_COMPONENT
-  return writeComponentOperation(message as PutComponentOperation, messageBuf)
+  return {
+    ...header,
+    entityId: view.getBigUint64(offset),
+    componentClassId: view.getInt32(offset),
+    timestamp: view.getBigUint64(offset),
+    data: new Uint8Array(0)
+  }
 }

@@ -1,5 +1,4 @@
-import { Parser } from '../serialization/Parser'
-import { Serializer } from '../serialization/Serializer'
+import { ByteBuffer } from '../serialization/ByteBuffer'
 import { EcsType } from './EcsType'
 
 export interface Spec {
@@ -16,13 +15,13 @@ export type Result<T extends Spec> = {
 
 export function MapType<T extends Spec>(spec: T): EcsType<Result<T>> {
   return {
-    serialize(value: Result<T>, builder: Serializer): void {
+    serialize(value: Result<T>, builder: ByteBuffer): void {
       for (const key in spec) {
         const type = spec[key]
         type.serialize(value[key], builder)
       }
     },
-    deserialize(reader: Parser): Result<T> {
+    deserialize(reader: ByteBuffer): Result<T> {
       const newValue: Result<T> = {} as any
       for (const key in spec) {
         const type = spec[key]

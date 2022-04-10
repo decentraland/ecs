@@ -1,7 +1,6 @@
 import { Quaternion, Vector3 } from '@dcl/ecs-math'
-import { Parser } from '../../serialization/Parser'
-import { Serializer } from '../../serialization/Serializer'
 import { EcsType } from '../../built-in-types/EcsType'
+import { ByteBuffer } from '../../serialization/ByteBuffer'
 
 type Transform = {
   position: Vector3.MutableVector3
@@ -10,9 +9,9 @@ type Transform = {
 }
 // This transform can be optimized with Float32Array for example
 export const Transform: EcsType<Transform> = {
-  serialize(value: Transform, builder: Serializer): void {
-    const view = builder.bb.view()
-    const ptr = builder.bb.reserve(40)
+  serialize(value: Transform, builder: ByteBuffer): void {
+    const view = builder.view()
+    const ptr = builder.incrementWriteOffset(40)
     view.setFloat32(ptr, value.position.x)
     view.setFloat32(ptr + 4, value.position.y)
     view.setFloat32(ptr + 8, value.position.z)
@@ -24,9 +23,9 @@ export const Transform: EcsType<Transform> = {
     view.setFloat32(ptr + 32, value.scale.y)
     view.setFloat32(ptr + 36, value.scale.z)
   },
-  deserialize(reader: Parser): Transform {
-    const view = reader.bb.view()
-    const ptr = reader.bb.reserve(40)
+  deserialize(reader: ByteBuffer): Transform {
+    const view = reader.view()
+    const ptr = reader.incrementReadOffset(40)
     return {
       position: Vector3.create(
         view.getFloat32(ptr),
