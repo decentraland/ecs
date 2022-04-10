@@ -1,4 +1,3 @@
-
 import { EcsType } from '../built-in-types/EcsType'
 import { ByteBuffer } from '../serialization/ByteBuffer'
 
