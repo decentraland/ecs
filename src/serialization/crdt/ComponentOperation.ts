@@ -1,3 +1,4 @@
+import { ComponentDefinition } from '../../engine/component'
 import { ByteBuffer } from '../ByteBuffer'
 import {
   MessageHeader,
@@ -18,15 +19,12 @@ export const COMPONENT_OPERATION_LENGTH = 24
 
 /**
  * Call this function for an optimal writing data passing the ByteBuffer
- *  already created and a callback
- * @param writeData
- * @param messageBuf
+ *  already allocated
  */
 export function prepareAndWritePutComponentOperation(
   entityId: number,
-  componentClassId: number,
   timestamp: number,
-  writeData: (buf: ByteBuffer) => void,
+  componentDefinition: ComponentDefinition,
   messageBuf: ByteBuffer
 ) {
   // reserve the beginning
@@ -36,21 +34,52 @@ export function prepareAndWritePutComponentOperation(
   )
 
   // write body
-  writeData(messageBuf)
+  componentDefinition.writeToByteBuffer(entityId, messageBuf)
   const messageLength =
     messageBuf.size() - startMessageOffset - MESSAGE_HEADER_LENGTH
 
-  // Write hedaer
+  // Write header
+  view.setUint32(startMessageOffset, messageLength)
+  view.setUint32(startMessageOffset + 4, MESSAGE_HEADER_CURRENT_VERSION)
+  view.setUint32(startMessageOffset + 8, MessageType.PUT_COMPONENT)
+  view.setBigInt64(startMessageOffset + 12, BigInt(entityId))
+  view.setUint32(startMessageOffset + 20, componentDefinition._id)
+  view.setBigInt64(startMessageOffset + 24, BigInt(timestamp))
+  view.setUint32(
+    startMessageOffset + 32,
+    messageLength - COMPONENT_OPERATION_LENGTH
+  )
+}
+
+/**
+ * Write a component operation with a custom packed data
+ */
+export function writePutComponentOperation(
+  entityId: number,
+  timestamp: number,
+  componentClassId: number,
+  data: Uint8Array,
+  messageBuf: ByteBuffer
+) {
+  // reserve the beginning
+  const view = messageBuf.view()
+  const startMessageOffset = messageBuf.incrementWriteOffset(
+    MESSAGE_HEADER_LENGTH + COMPONENT_OPERATION_LENGTH
+  )
+
+  // write body
+  messageBuf.writeBuffer(data, false)
+  const messageLength =
+    messageBuf.size() - startMessageOffset - MESSAGE_HEADER_LENGTH
+
+  // Write header
   view.setUint32(startMessageOffset, messageLength)
   view.setUint32(startMessageOffset + 4, MESSAGE_HEADER_CURRENT_VERSION)
   view.setUint32(startMessageOffset + 8, MessageType.PUT_COMPONENT)
   view.setBigInt64(startMessageOffset + 12, BigInt(entityId))
   view.setUint32(startMessageOffset + 20, componentClassId)
   view.setBigInt64(startMessageOffset + 24, BigInt(timestamp))
-  view.setUint32(
-    startMessageOffset + 32,
-    messageLength - COMPONENT_OPERATION_LENGTH
-  )
+  view.setUint32(startMessageOffset + 32, data.length)
 }
 
 export function readPutComponentOperationWithoutData(

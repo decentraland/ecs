@@ -5,7 +5,8 @@ import { createByteBuffer } from '../src/serialization/ByteBuffer'
 import {
   COMPONENT_OPERATION_LENGTH,
   prepareAndWritePutComponentOperation,
-  readPutComponentOperationWithoutData
+  readPutComponentOperationWithoutData,
+  writePutComponentOperation
 } from '../src/serialization/crdt/ComponentOperation'
 import {
   MessageType,
@@ -40,13 +41,33 @@ describe('Component operation tests', () => {
     expect(validateIncommingWireMessage(buf)).toBe(false)
   })
 
-  it('serialize and process two messages', () => {
+  it('serialize and process a PutComenentOperation', () => {
+    const newEngine = Engine()
+    const sdk = newEngine.baseComponents
+    const entityId = newEngine.addEntity()
+    sdk.Transform.create(entityId, {
+      position: Vector3.create(1, 1, 1),
+      scale: Vector3.create(1, 1, 1),
+      rotation: Quaternion.create(1, 1, 1, 1)
+    })
+
+    const bb = createByteBuffer()
+    writePutComponentOperation(
+      entityId,
+      1,
+      sdk.Transform._id,
+      sdk.Transform.toBinary(entityId).toBinary(),
+      bb
+    )
+  })
+
+  it('serialize and process two PutComenentOperation message', () => {
     const newEngine = Engine()
     const sdk = newEngine.baseComponents
     const entityId = newEngine.addEntity()
     const entityId2 = newEngine.addEntity()
-    const componentClassId = sdk.Transform._id
-    const timestamp = 1
+
+    let timestamp = 1
 
     const mutableTransform = sdk.Transform.create(entityId, {
       position: Vector3.create(1, 1, 1),
@@ -56,27 +77,12 @@ describe('Component operation tests', () => {
 
     const bb = createByteBuffer()
 
-    prepareAndWritePutComponentOperation(
-      entityId,
-      componentClassId,
-      timestamp,
-      () => {
-        sdk.Transform.writeToByteBuffer(entityId, bb)
-      },
-      bb
-    )
+    prepareAndWritePutComponentOperation(entityId, timestamp, sdk.Transform, bb)
 
     mutableTransform.position.x = 31.3
+    timestamp++
 
-    prepareAndWritePutComponentOperation(
-      entityId,
-      componentClassId,
-      timestamp + 1,
-      () => {
-        sdk.Transform.writeToByteBuffer(entityId, bb)
-      },
-      bb
-    )
+    prepareAndWritePutComponentOperation(entityId, timestamp, sdk.Transform, bb)
 
     while (validateIncommingWireMessage(bb)) {
       const msgOne = readPutComponentOperationWithoutData(bb)
