@@ -1,21 +1,20 @@
-import { Parser } from '../../serialization/Parser'
-import { Serializer } from '../../serialization/Serializer'
+import { ByteBuffer } from '../../serialization/ByteBuffer'
 import { EcsType } from '../EcsType'
 
 export const Float32: EcsType<number> = {
-  serialize(value: number, builder: Serializer): void {
-    builder.bb.writeFloat32(value)
+  serialize(value: number, builder: ByteBuffer): void {
+    builder.writeFloat32(value)
   },
-  deserialize(reader: Parser): number {
-    return reader.bb.readFloat32()
+  deserialize(reader: ByteBuffer): number {
+    return reader.readFloat32()
   }
 }
 
 export const Float64: EcsType<number> = {
-  serialize(value: number, builder: Serializer): void {
-    builder.bb.writeFloat64(value)
+  serialize(value: number, builder: ByteBuffer): void {
+    builder.writeFloat64(value)
   },
-  deserialize(reader: Parser): number {
-    return reader.bb.readFloat64()
+  deserialize(reader: ByteBuffer): number {
+    return reader.readFloat64()
   }
 }

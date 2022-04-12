@@ -21,4 +21,7 @@ lint:
 lint-fix:
 	./node_modules/.bin/eslint . --ext .ts --fix
 
+build-flatbuffers:
+	find ./ -type f -name "*.fbs" -exec flatc --ts --csharp --gen-mutable "{}" \;
+
 .PHONY: build test

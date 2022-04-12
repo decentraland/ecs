@@ -1,7 +1,6 @@
-import { Quaternion, Vector3 } from '@dcl/ecs-math/dist/next'
-import { Parser } from '../../serialization/Parser'
-import { Serializer } from '../../serialization/Serializer'
+import { Quaternion, Vector3 } from '@dcl/ecs-math'
 import { EcsType } from '../../built-in-types/EcsType'
+import { ByteBuffer } from '../../serialization/ByteBuffer'
 
 type Transform = {
   position: Vector3.MutableVector3
@@ -10,35 +9,39 @@ type Transform = {
 }
 // This transform can be optimized with Float32Array for example
 export const Transform: EcsType<Transform> = {
-  serialize(value: Transform, builder: Serializer): void {
-    builder.bb.writeFloat32(value.position.x)
-    builder.bb.writeFloat32(value.position.y)
-    builder.bb.writeFloat32(value.position.z)
-    builder.bb.writeFloat32(value.rotation.x)
-    builder.bb.writeFloat32(value.rotation.y)
-    builder.bb.writeFloat32(value.rotation.z)
-    builder.bb.writeFloat32(value.rotation.w)
-    builder.bb.writeFloat32(value.scale.x)
-    builder.bb.writeFloat32(value.scale.y)
-    builder.bb.writeFloat32(value.scale.z)
+  serialize(value: Transform, builder: ByteBuffer): void {
+    const view = builder.view()
+    const ptr = builder.incrementWriteOffset(40)
+    view.setFloat32(ptr, value.position.x)
+    view.setFloat32(ptr + 4, value.position.y)
+    view.setFloat32(ptr + 8, value.position.z)
+    view.setFloat32(ptr + 12, value.rotation.x)
+    view.setFloat32(ptr + 16, value.rotation.y)
+    view.setFloat32(ptr + 20, value.rotation.z)
+    view.setFloat32(ptr + 24, value.rotation.w)
+    view.setFloat32(ptr + 28, value.scale.x)
+    view.setFloat32(ptr + 32, value.scale.y)
+    view.setFloat32(ptr + 36, value.scale.z)
   },
-  deserialize(reader: Parser): Transform {
+  deserialize(reader: ByteBuffer): Transform {
+    const view = reader.view()
+    const ptr = reader.incrementReadOffset(40)
     return {
       position: Vector3.create(
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32()
+        view.getFloat32(ptr),
+        view.getFloat32(ptr + 4),
+        view.getFloat32(ptr + 8)
       ),
       rotation: Quaternion.create(
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32()
+        view.getFloat32(ptr + 12),
+        view.getFloat32(ptr + 16),
+        view.getFloat32(ptr + 20),
+        view.getFloat32(ptr + 24)
       ),
       scale: Vector3.create(
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32(),
-        reader.bb.readFloat32()
+        view.getFloat32(ptr + 28),
+        view.getFloat32(ptr + 32),
+        view.getFloat32(ptr + 36)
       )
     }
   }

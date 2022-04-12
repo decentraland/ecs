@@ -1,8 +1,7 @@
 import { EcsType } from '../built-in-types'
+import { ByteBuffer, createByteBuffer } from '../serialization/ByteBuffer'
 import { Entity } from './entity'
 import { readonly } from './utils'
-import { createSerializer } from '../serialization/Serializer'
-import { createParser } from '../serialization/Parser'
 
 export type EcsResult<T extends EcsType> = T extends EcsType
   ? ReturnType<T['deserialize']>
@@ -27,8 +26,15 @@ export type ComponentDefinition<T extends EcsType = EcsType<any>> = {
 
   deleteFrom(entity: Entity): ComponentType<T> | null
 
-  updateFromBinary(entity: Entity, data: Uint8Array): ComponentType<T> | null
-  toBinary(entity: Entity): Uint8Array
+  updateOrCreateFromBinary(
+    entity: Entity,
+    data: ByteBuffer
+  ): ComponentType<T> | null
+  updateFromBinary(entity: Entity, data: ByteBuffer): ComponentType<T> | null
+  // allocates a buffer and returns new buffer
+  toBinary(entity: Entity): ByteBuffer
+  // writes to a pre-allocated buffer
+  writeToByteBuffer(entity: Entity, buffer: ByteBuffer): void
 
   iterator(): Iterable<[Entity, ComponentType<T>]>
   dirtyIterator(): Iterable<Entity>
@@ -101,26 +107,38 @@ export function defineComponent<T extends EcsType>(
         yield entity
       }
     },
-    toBinary(entity: Entity): Uint8Array {
+    toBinary(entity: Entity): ByteBuffer {
       const component = data.get(entity)
       if (!component) {
         throw new Error(`Component ${componentId} for ${entity} not found`)
       }
 
-      const buffer = createSerializer()
+      const writeBuffer = createByteBuffer()
+      spec.serialize(component, writeBuffer)
+      return writeBuffer
+    },
+    writeToByteBuffer(entity: Entity, buffer: ByteBuffer): void {
+      const component = data.get(entity)
+      if (!component) {
+        throw new Error(`Component ${componentId} for ${entity} not found`)
+      }
+
       spec.serialize(component, buffer)
-      return buffer.getData()
     },
     updateFromBinary(
       entity: Entity,
-      dataArray: Uint8Array
+      buffer: ByteBuffer
     ): ComponentType<T> | null {
       const component = data.get(entity)
       if (!component) {
         throw new Error(`Component ${componentId} for ${entity} not found`)
       }
-
-      const buffer = createParser(dataArray)
+      return this.updateOrCreateFromBinary(entity, buffer)
+    },
+    updateOrCreateFromBinary(
+      entity: Entity,
+      buffer: ByteBuffer
+    ): ComponentType<T> | null {
       const newValue = spec.deserialize(buffer)
       data.set(entity, newValue)
       return newValue
