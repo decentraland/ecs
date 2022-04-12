@@ -194,14 +194,14 @@ describe('Engine tests', () => {
       a: 2331,
       b: 10,
       c: [2, 3, 4, 5],
-      d: BigInt(-1)
+      d: -1
     })
 
     TestComponentType.create(entityEmpty, {
       a: 0,
       b: 0,
       c: [],
-      d: BigInt(10)
+      d: 10
     })
 
     const buffer = TestComponentType.toBinary(entityFilled)

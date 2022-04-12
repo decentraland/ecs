@@ -7,11 +7,10 @@ import {
   readMessageHeader
 } from '../WireMessage'
 
-// TODO: see bigint
 export type PartialComponentOperation = {
-  entityId: bigint | number
+  entityId: number
   componentClassId: number
-  timestamp: bigint | number
+  timestamp: number
   data: Uint8Array
 }
 
@@ -24,9 +23,9 @@ export const COMPONENT_OPERATION_LENGTH = 24
  * @param messageBuf
  */
 export function prepareAndWritePutComponentOperation(
-  entityId: bigint,
+  entityId: number,
   componentClassId: number,
-  timestamp: bigint,
+  timestamp: number,
   writeData: (buf: ByteBuffer) => void,
   messageBuf: ByteBuffer
 ) {
@@ -45,9 +44,9 @@ export function prepareAndWritePutComponentOperation(
   view.setUint32(startMessageOffset, messageLength)
   view.setUint32(startMessageOffset + 4, MESSAGE_HEADER_CURRENT_VERSION)
   view.setUint32(startMessageOffset + 8, MessageType.PUT_COMPONENT)
-  view.setBigInt64(startMessageOffset + 12, entityId)
+  view.setBigInt64(startMessageOffset + 12, BigInt(entityId))
   view.setUint32(startMessageOffset + 20, componentClassId)
-  view.setBigInt64(startMessageOffset + 24, timestamp)
+  view.setBigInt64(startMessageOffset + 24, BigInt(timestamp))
   view.setUint32(
     startMessageOffset + 32,
     messageLength - COMPONENT_OPERATION_LENGTH
@@ -67,9 +66,9 @@ export function readPutComponentOperationWithoutData(
 
   return {
     ...header,
-    entityId: view.getBigUint64(offset),
+    entityId: Number(view.getBigUint64(offset)),
     componentClassId: view.getInt32(offset),
-    timestamp: view.getBigUint64(offset),
+    timestamp: Number(view.getBigUint64(offset)),
     data: new Uint8Array(0)
   }
 }

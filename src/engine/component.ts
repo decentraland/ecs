@@ -31,7 +31,10 @@ export type ComponentDefinition<T extends EcsType = EcsType<any>> = {
     data: ByteBuffer
   ): ComponentType<T> | null
   updateFromBinary(entity: Entity, data: ByteBuffer): ComponentType<T> | null
-  toBinary(entity: Entity, buffer?: ByteBuffer): ByteBuffer
+  // allocates a buffer and returns new buffer
+  toBinary(entity: Entity): ByteBuffer
+  // writes to a pre-allocated buffer
+  writeToByteBuffer(entity: Entity, buffer: ByteBuffer): void
 
   iterator(): Iterable<[Entity, ComponentType<T>]>
   dirtyIterator(): Iterable<Entity>
@@ -104,15 +107,23 @@ export function defineComponent<T extends EcsType>(
         yield entity
       }
     },
-    toBinary(entity: Entity, buffer?: ByteBuffer): ByteBuffer {
+    toBinary(entity: Entity): ByteBuffer {
       const component = data.get(entity)
       if (!component) {
         throw new Error(`Component ${componentId} for ${entity} not found`)
       }
 
-      const writeBuffer = buffer || createByteBuffer()
+      const writeBuffer = createByteBuffer()
       spec.serialize(component, writeBuffer)
       return writeBuffer
+    },
+    writeToByteBuffer(entity: Entity, buffer: ByteBuffer): void {
+      const component = data.get(entity)
+      if (!component) {
+        throw new Error(`Component ${componentId} for ${entity} not found`)
+      }
+
+      spec.serialize(component, buffer)
     },
     updateFromBinary(
       entity: Entity,

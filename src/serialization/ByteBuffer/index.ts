@@ -58,11 +58,11 @@ export interface ByteBuffer {
   readInt8: () => number
   readInt16: () => number
   readInt32: () => number
-  readInt64: () => bigint | number
+  readInt64: () => bigint
   readUint8: () => number
   readUint16: () => number
   readUint32: () => number
-  readUint64: () => bigint | number
+  readUint64: () => bigint
 
   // Write methods
 
@@ -79,11 +79,11 @@ export interface ByteBuffer {
   writeInt8: (value: number) => void
   writeInt16: (value: number) => void
   writeInt32: (value: number) => void
-  writeInt64: (value: bigint | number) => void
+  writeInt64: (value: bigint) => void
   writeUint8: (value: number) => void
   writeUint16: (value: number) => void
   writeUint32: (value: number) => void
-  writeUint64: (value: bigint | number) => void
+  writeUint64: (value: bigint) => void
 }
 
 export interface CreateByteBufferOptions {
@@ -194,7 +194,7 @@ export function createByteBuffer(
       return view.getInt32(roAdd(4))
     },
 
-    readInt64(): bigint | number {
+    readInt64(): bigint {
       return view.getBigInt64(roAdd(8))
     },
 
@@ -210,7 +210,7 @@ export function createByteBuffer(
       return view.getUint32(roAdd(4))
     },
 
-    readUint64(): bigint | number {
+    readUint64(): bigint {
       return view.getBigUint64(roAdd(8))
     },
 
@@ -269,9 +269,9 @@ export function createByteBuffer(
       view.setInt32(o, value)
     },
 
-    writeInt64(value: bigint | number): void {
+    writeInt64(value: bigint): void {
       const o = woAdd(8)
-      view.setBigInt64(o, BigInt(value))
+      view.setBigInt64(o, value)
     },
 
     writeUint8(value: number): void {
@@ -289,9 +289,9 @@ export function createByteBuffer(
       view.setUint32(o, value)
     },
 
-    writeUint64(value: bigint | number): void {
+    writeUint64(value: bigint): void {
       const o = woAdd(8)
-      view.setBigUint64(o, BigInt(value))
+      view.setBigUint64(o, value)
     }
   }
 }

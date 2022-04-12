@@ -10,9 +10,8 @@ import {
 import {
   MessageType,
   MESSAGE_HEADER_CURRENT_VERSION,
-  readMessageHeader,
   validateIncommingWireMessage,
-  writeMessageWithCb
+  writeMessageWithCbToBuffer
 } from '../src/serialization/WireMessage'
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo })
 
@@ -21,7 +20,7 @@ describe('Component operation tests', () => {
     const buf = createByteBuffer()
 
     expect(validateIncommingWireMessage(buf)).toBe(false)
-    writeMessageWithCb((buf) => {
+    writeMessageWithCbToBuffer((buf) => {
       buf.writeInt8(100)
       return 0
     }, buf)
@@ -47,7 +46,7 @@ describe('Component operation tests', () => {
     const entityId = newEngine.addEntity()
     const entityId2 = newEngine.addEntity()
     const componentClassId = sdk.Transform._id
-    const timestamp = BigInt(1)
+    const timestamp = 1
 
     const mutableTransform = sdk.Transform.create(entityId, {
       position: Vector3.create(1, 1, 1),
@@ -58,11 +57,11 @@ describe('Component operation tests', () => {
     const bb = createByteBuffer()
 
     prepareAndWritePutComponentOperation(
-      BigInt(entityId),
+      entityId,
       componentClassId,
       timestamp,
       () => {
-        sdk.Transform.toBinary(entityId, bb)
+        sdk.Transform.writeToByteBuffer(entityId, bb)
       },
       bb
     )
@@ -70,11 +69,11 @@ describe('Component operation tests', () => {
     mutableTransform.position.x = 31.3
 
     prepareAndWritePutComponentOperation(
-      BigInt(entityId),
+      entityId,
       componentClassId,
-      timestamp + BigInt(1),
+      timestamp + 1,
       () => {
-        sdk.Transform.toBinary(entityId, bb)
+        sdk.Transform.writeToByteBuffer(entityId, bb)
       },
       bb
     )

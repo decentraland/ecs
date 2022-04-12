@@ -12,7 +12,7 @@
  *
  */
 
-import { ByteBuffer, createByteBuffer } from './ByteBuffer'
+import { ByteBuffer } from './ByteBuffer'
 
 type Uint32 = number
 
@@ -35,9 +35,9 @@ export type MessageHeader = {
 export const MESSAGE_HEADER_LENGTH = 12
 export const MESSAGE_HEADER_CURRENT_VERSION: number = 0
 
-export function writeMessageWithCb(
+export function writeMessageWithCbToBuffer(
   wrapMessage: (buf: ByteBuffer) => MessageType,
-  messageBuf: ByteBuffer = createByteBuffer()
+  messageBuf: ByteBuffer
 ) {
   // reserve the beginning
   const view = messageBuf.view()
