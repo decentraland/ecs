@@ -1,6 +1,7 @@
-import crdt, { Message } from '@dcl/crdt'
+import { Message, crdtProtocol } from '@dcl/crdt'
 import type { PreEngine } from '../../engine'
 import { Entity } from '../../engine/entity'
+import { createTransport } from './transport'
 import { parseKey, getKey } from './utils'
 
 /**
@@ -9,57 +10,54 @@ import { parseKey, getKey } from './utils'
  * Where do we create the transport and process the received messages?
  */
 export function crdtSceneSystem(engine: PreEngine) {
-  const entitiesSynced: Set<Entity> = new Set()
-  async function sendMessage() {}
-  const crdtClient = crdt.crdtProtocol<Uint8Array>(sendMessage, 'scene-id-crdt')
+  const crdtClient = crdtProtocol<Uint8Array>('scene-id-crdt')
   const messages = new Set<Message<Uint8Array>>()
+  const transport = createTransport()
 
-  const ws = new WebSocket('ws://localhost:8000')
-  ws.onmessage = (message: MessageEvent<Message<Uint8Array>>) => {
+  transport.onmessage = (message: MessageEvent<Message<Uint8Array>>) => {
     messages.add(message.data)
   }
 
-  async function sendMessages(messages: crdt.Message<Uint8Array>[]) {
-    for (const message of messages) {
-      const [_entityId, _componentId] = parseKey(message.key)
-      console.log('SendMEssage', message)
-      // catch sendMessage Error
-      // engine.getComponent(componentId)
-      /**
-       *  Renderer <--> Scene => Only Class ID. SynchronizedEntityType.Renderer
-       *  Scene <--> Scene => Only Sync component. SynchronizedEntityType.Networked
-       *  Scene <--> Editor => All. SynchronizedEntityType.All
-       * */
-    }
+  async function sendMessages(messages: Message<Uint8Array>[]) {
+    // TODO create chunk of messages.
+    messages.forEach((message) => transport.send(JSON.stringify(message)))
   }
 
+  /**
+   * This messages will be processed on every tick.
+   */
   function processMessages() {
-    for (const message of messages) {
+    const resendMessages: Message<Uint8Array>[] = []
+    const messagesToProcess = Array.from(messages)
+
+    for (const message of messagesToProcess) {
       const [entity, classId] = parseKey(message.key)
-      void crdtClient.processMessage(message)
-      if (crdtClient.getState()[message.key]?.data === message.data) {
-        // We need to update the component state
-        engine.getComponent(classId)?.updateFromBinary(entity, message.data)
-        engine.getComponent(classId)?.clearDirty()
-        // TODO this should remove the dirty
+      const msg = crdtClient.processMessage(message)
+      if (msg === message) {
+        const componentDefinition = engine.getComponent(classId)
+        if (!componentDefinition) {
+          throw new Error('Component not found')
+        }
+        componentDefinition.updateFromBinary(entity, message.data)
+        componentDefinition.clearDirty()
+      } else {
+        resendMessages.push(msg)
       }
+      messages.delete(message)
     }
+    sendMessages(resendMessages).catch((e) => console.error(e))
   }
 
-  function processDirtyComponents(dirtyEntities: Entity[]) {
-    const crdtMessages: crdt.Message<Uint8Array>[] = []
-    for (const entity of dirtyEntities) {
-      entitiesSynced.add(entity)
-      for (const component of engine.getEntityComponents(entity)) {
-        if (!component.isDirty(entity)) {
-          continue
+  function processDirtyComponents(dirtyMap: Map<Entity, Set<number>>) {
+    const crdtMessages: Message<Uint8Array>[] = []
+    for (const [entity, componentsId] of dirtyMap) {
+      for (const componentId of componentsId) {
+        const component = engine.componentsDefinition.get(componentId)
+        if (!component) {
+          throw new Error('Component not found')
         }
-        const key = getKey(entity, component._id)
-        const event = crdtClient.createEvent(
-          key,
-          component.getFrom(entity)!.toBinary()
-        )
-        // void sendMessage(event)
+        const key = getKey(entity, componentId)
+        const event = crdtClient.createEvent(key, component.toBinary(entity))
         crdtMessages.push(event)
       }
     }

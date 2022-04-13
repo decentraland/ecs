@@ -6,20 +6,20 @@ expect.extend({ toBeDeepCloseTo, toMatchCloseTo })
 
 describe('Legacy component tests', () => {
   it('cube example scene', () => {
-    const newEngine = Engine()
-    const sdk = newEngine.baseComponents
-    // Scene part
-    const spawnCube = (x: number, y: number, z: number) => {
-      const newCubeEntity = newEngine.addEntity()
+    const engine = Engine()
+    const sdk = engine.baseComponents
 
-      const _boxShape = sdk.BoxShape.create(newCubeEntity, {
+    function spawnCube(x: number, y: number, z: number) {
+      const newCubeEntity = engine.addEntity()
+
+      sdk.BoxShape.create(newCubeEntity, {
         isPointerBlocker: true,
         visible: true,
         withCollisions: true,
         uvs: [0, 0, 0, 0]
       })
 
-      const _transform = sdk.Transform.create(newCubeEntity, {
+      sdk.Transform.create(newCubeEntity, {
         position: Vector3.create(x, y, z),
         scale: Vector3.One(),
         rotation: Quaternion.Identity()
@@ -28,8 +28,8 @@ describe('Legacy component tests', () => {
       return newCubeEntity
     }
 
-    function RotatorSystem(dt: number) {
-      const group = newEngine.mutableGroupOf(sdk.Transform)
+    function rotatorSystem(dt: number) {
+      const group = engine.mutableGroupOf(sdk.Transform)
       for (const [entity, component] of group) {
         Quaternion.multiplyToRef(
           component.rotation,
@@ -46,7 +46,7 @@ describe('Legacy component tests', () => {
         expect(transformReceveid).toBeDeepCloseTo(transformOriginal)
       }
 
-      const groupBoxShape = newEngine.mutableGroupOf(sdk.BoxShape)
+      const groupBoxShape = engine.mutableGroupOf(sdk.BoxShape)
       for (const [entity, component] of groupBoxShape) {
         const boxShapeData = sdk.BoxShape.toBinary(entity)
         const boxShapeOriginal = { ...component }
@@ -58,10 +58,9 @@ describe('Legacy component tests', () => {
       }
     }
 
-    const _baseCube = spawnCube(4, 2, 4)
-    newEngine.addSystem(RotatorSystem)
-
-    newEngine.update(1 / 60)
+    spawnCube(4, 2, 4)
+    engine.addSystem(rotatorSystem)
+    engine.update(1 / 60)
   })
   it('box shape test', () => {
     const newEngine = Engine()

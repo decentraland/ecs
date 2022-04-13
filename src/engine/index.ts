@@ -6,7 +6,6 @@ import {
 import { ComponentEcsType, Update } from './types'
 import { EcsType } from '../built-in-types'
 import { defineSdkComponents } from '../components'
-import { isNotUndefined } from './utils'
 import { crdtSceneSystem } from '../systems/crdt'
 
 /**
@@ -34,16 +33,13 @@ function preEngine() {
     return entity
   }
 
-  function getEntityComponents(entity: Entity) {
-    return Array.from(entitiesComponent.get(entity) || [])
-      .map((classId) => componentsDefinition.get(classId))
-      .filter(isNotUndefined)
-  }
-
   function removeEntity(entity: Entity) {
-    const components = getEntityComponents(entity)
-    components.forEach((component) => component.deleteFrom(entity))
-
+    // TODO: Remove all the components of that entity
+    for (const [, component] of componentsDefinition) {
+      if (component.has(entity)) {
+        component.deleteFrom(entity)
+      }
+    }
     entitiesComponent.delete(entity)
     return entityContainer.removeEntity(entity)
   }
@@ -117,7 +113,6 @@ function preEngine() {
     defineComponent,
     mutableGroupOf,
     groupOf,
-    getEntityComponents,
     getComponent
   }
 }
@@ -151,20 +146,17 @@ export function Engine() {
     // TODO: Perf tip
     // Should we add some dirtyIteratorSet at engine level so we dont have
     // to iterate all the component definitions to get the dirty ones ?
-    const dirtySet = new Set<Entity>()
+    const dirtySet = new Map<Entity, Set<number>>()
     for (const [classId, definition] of engine.componentsDefinition) {
       for (const entity of definition.dirtyIterator()) {
-        dirtySet.add(entity)
-        const entityContainer = engine.entitiesComponent.get(entity)
-        const isDelete = !definition.getOrNull(entity)
-        isDelete
-          ? entityContainer?.delete(classId)
-          : entityContainer?.add(classId)
+        if (!dirtySet.has(entity)) {
+          dirtySet.set(entity, new Set())
+        }
+        dirtySet.get(entity)!.add(classId)
       }
     }
 
-    crdtSystem.processDirtyComponents([...dirtySet])
-
+    crdtSystem.processDirtyComponents(dirtySet)
     for (const [_classId, definition] of engine.componentsDefinition) {
       definition.clearDirty()
     }
@@ -177,7 +169,6 @@ export function Engine() {
     defineComponent: engine.defineComponent,
     mutableGroupOf: engine.mutableGroupOf,
     groupOf: engine.groupOf,
-    getEntityComponents: engine.getEntityComponents,
     getComponent: engine.getComponent,
     update,
     baseComponents
