@@ -9,16 +9,26 @@ import { parseKey, getKey } from './utils'
  * What about when we remove the SyncComponent ? Should we notify all the clients? How ?
  * Where do we create the transport and process the received messages?
  */
+let i = 0
 export function crdtSceneSystem(engine: PreEngine) {
-  const crdtClient = crdtProtocol<Uint8Array>('scene-id-crdt')
+  i++
+  const crdtClient = crdtProtocol<Uint8Array>('scene-id-crdt' + i)
   const messages = new Set<Message<Uint8Array>>()
   const transport = createTransport()
 
-  transport.onmessage = (message: MessageEvent<Message<Uint8Array>>) => {
-    messages.add(message.data)
+  transport.onmessage = (message: MessageEvent<string>) => {
+    console.log({ wsClient: crdtClient.getUUID(), transport: transport.url })
+    const msg: Message<Uint8Array> = JSON.parse(message.data)
+    msg.data = new Uint8Array(Object.values(msg.data))
+    messages.add(msg)
   }
 
   async function sendMessages(messages: Message<Uint8Array>[]) {
+    console.log({
+      messages,
+      wsClient: crdtClient.getUUID(),
+      transport: transport.url
+    })
     // TODO create chunk of messages.
     messages.forEach((message) => transport.send(JSON.stringify(message)))
   }
@@ -33,10 +43,16 @@ export function crdtSceneSystem(engine: PreEngine) {
     for (const message of messagesToProcess) {
       const [entity, classId] = parseKey(message.key)
       const msg = crdtClient.processMessage(message)
+      console.log(msg, msg === message)
       if (msg === message) {
         const componentDefinition = engine.getComponent(classId)
         if (!componentDefinition) {
-          throw new Error('Component not found')
+          throw new Error(
+            'Component not found. You need to declare the components at the beginnig of the engine declaration'
+          )
+        }
+        if (!componentDefinition.has(entity)) {
+          componentDefinition.create(entity, {})
         }
         componentDefinition.updateFromBinary(entity, message.data)
         componentDefinition.clearDirty()

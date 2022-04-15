@@ -71,7 +71,9 @@ export function defineComponent<T extends EcsType>(
     getFrom: function (entity: Entity): Readonly<ComponentType<T>> {
       const component = data.get(entity)
       if (!component) {
-        throw new Error(`Component ${componentId} for ${entity} not found`)
+        throw new Error(
+          `[getFrom] Component ${componentId} for ${entity} not found`
+        )
       }
       return readonly(component)
     },
@@ -81,7 +83,9 @@ export function defineComponent<T extends EcsType>(
     ): ComponentType<T> {
       const component = data.get(entity)
       if (component) {
-        throw new Error(`Component ${componentId} for ${entity} already exists`)
+        throw new Error(
+          `[create] Component ${componentId} for ${entity} already exists`
+        )
       }
       data.set(entity, value)
       dirtyIterator.add(entity)
@@ -98,7 +102,9 @@ export function defineComponent<T extends EcsType>(
     mutable: function (entity: Entity): ComponentType<T> {
       const component = data.get(entity)
       if (!component) {
-        throw new Error(`Component ${componentId} for ${entity} not found`)
+        throw new Error(
+          `[mutable] Component ${componentId} for ${entity} not found`
+        )
       }
       dirtyIterator.add(entity)
       return component
@@ -126,7 +132,9 @@ export function defineComponent<T extends EcsType>(
     writeToByteBuffer(entity: Entity, buffer: ByteBuffer): void {
       const component = data.get(entity)
       if (!component) {
-        throw new Error(`Component ${componentId} for ${entity} not found`)
+        throw new Error(
+          `[toBinary] Component ${componentId} for ${entity} not found`
+        )
       }
 
       spec.serialize(component, buffer)
@@ -137,7 +145,9 @@ export function defineComponent<T extends EcsType>(
     ): ComponentType<T> | null {
       const component = data.get(entity)
       if (!component) {
-        throw new Error(`Component ${componentId} for ${entity} not found`)
+        throw new Error(
+          `[updateFromBinary] Component ${componentId} for ${entity} not found`
+        )
       }
       return this.updateOrCreateFromBinary(entity, buffer)
     },
