@@ -2,6 +2,10 @@ import { Message, crdtProtocol } from '@dcl/crdt'
 import type { PreEngine } from '../../engine'
 import { Entity } from '../../engine/entity'
 import { createByteBuffer } from '../../serialization/ByteBuffer'
+import {
+  readPutComponentOperationWithoutData,
+  writePutComponent
+} from '../../serialization/crdt/ComponentOperation'
 import { createTransport } from './transport'
 import { parseKey, getKey } from './utils'
 
@@ -10,24 +14,23 @@ import { parseKey, getKey } from './utils'
  * What about when we remove the SyncComponent ? Should we notify all the clients? How ?
  * Where do we create the transport and process the received messages?
  */
-let i = 0
 export function crdtSceneSystem(engine: PreEngine) {
-  i++
-  const crdtClient = crdtProtocol<Uint8Array>('scene-id-crdt' + i)
+  const crdtClient = crdtProtocol<Uint8Array>('scene-id-crdt')
   const messages = new Set<Message<Uint8Array>>()
   const transport = createTransport()
 
-  transport.onmessage = (message: MessageEvent<string>) => {
-    const msg: Message<Uint8Array> = JSON.parse(message.data)
-    msg.data = new Uint8Array(Object.values(msg.data))
-    messages.add(msg)
-  }
+  transport.onmessage = (chunkMessage: MessageEvent<Uint8Array>) => {
+    if (!chunkMessage.data?.length) return
 
-  async function sendMessages(messages: Message<Uint8Array>[]) {
-    // TODO create chunk of messages.
-    messages.forEach((message) => transport.send(JSON.stringify(message)))
-  }
+    const buffer = createByteBuffer({
+      reading: { buffer: chunkMessage.data, currentOffset: 0 }
+    })
 
+    const message = readPutComponentOperationWithoutData(buffer)
+    if (!message) return
+    const { entityId, componentClassId, data, timestamp } = message
+    messages.add({ key: getKey(entityId, componentClassId), data, timestamp })
+  }
   /**
    * This messages will be processed on every tick.
    */
@@ -49,8 +52,10 @@ export function crdtSceneSystem(engine: PreEngine) {
           componentDefinition.create(entity, {})
         }
         // TODO: lean
-        const bb = createByteBuffer()
-        bb.writeBuffer(message.data, false)
+        const bb = createByteBuffer({
+          reading: { buffer: message.data, currentOffset: 0 }
+        })
+        console.log(bb.toBinary())
         componentDefinition.updateFromBinary(entity, bb)
         componentDefinition.clearDirty()
       } else {
@@ -58,11 +63,12 @@ export function crdtSceneSystem(engine: PreEngine) {
       }
       messages.delete(message)
     }
-    sendMessages(resendMessages).catch((e) => console.error(e))
+    // sendMessages(resendMessages).catch((e) => console.error(e))
   }
 
-  function processDirtyComponents(dirtyMap: Map<Entity, Set<number>>) {
-    const crdtMessages: Message<Uint8Array>[] = []
+  function send(dirtyMap: Map<Entity, Set<number>>) {
+    const buffer = createByteBuffer()
+
     for (const [entity, componentsId] of dirtyMap) {
       for (const componentId of componentsId) {
         const component = engine.componentsDefinition.get(componentId)
@@ -74,13 +80,14 @@ export function crdtSceneSystem(engine: PreEngine) {
           key,
           component.toBinary(entity).toBinary()
         )
-        crdtMessages.push(event)
+        writePutComponent(entity, event.timestamp + 10, component, buffer)
       }
     }
-    void sendMessages(crdtMessages)
+    transport.send(buffer.toBinary())
   }
+
   return {
-    processDirtyComponents,
+    send,
     processMessages
   }
 }

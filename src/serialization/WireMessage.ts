@@ -33,7 +33,7 @@ export type MessageHeader = {
 }
 
 export const MESSAGE_HEADER_LENGTH = 12
-export const MESSAGE_HEADER_CURRENT_VERSION: number = 0
+export const MESSAGE_HEADER_CURRENT_VERSION: number = 1
 
 export function writeMessageWithCbToBuffer(
   wrapMessage: (buf: ByteBuffer) => MessageType,

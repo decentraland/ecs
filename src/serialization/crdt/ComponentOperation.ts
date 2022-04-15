@@ -1,3 +1,4 @@
+import { calculateUTF8Bytes } from 'bytebuffer'
 import { ComponentDefinition } from '../../engine/component'
 import { ByteBuffer } from '../ByteBuffer'
 import {
@@ -21,7 +22,7 @@ export const COMPONENT_OPERATION_LENGTH = 24
  * Call this function for an optimal writing data passing the ByteBuffer
  *  already allocated
  */
-export function prepareAndWritePutComponentOperation(
+export function writePutComponent(
   entityId: number,
   timestamp: number,
   componentDefinition: ComponentDefinition,
@@ -52,9 +53,10 @@ export function prepareAndWritePutComponentOperation(
 }
 
 /**
+ * @deprecated
  * Write a component operation with a custom packed data
  */
-export function writePutComponentOperation(
+export function _writePutComponent(
   entityId: number,
   timestamp: number,
   componentClassId: number,
@@ -89,15 +91,16 @@ export function readPutComponentOperationWithoutData(
   if (!header) {
     return null
   }
+  const messageSize = header.length + MESSAGE_HEADER_LENGTH
 
   const view = buf.view()
-  const offset = buf.incrementReadOffset(24)
+  const offset = buf.incrementReadOffset(MESSAGE_HEADER_LENGTH)
 
   return {
     ...header,
     entityId: Number(view.getBigUint64(offset)),
-    componentClassId: view.getInt32(offset),
-    timestamp: Number(view.getBigUint64(offset)),
-    data: new Uint8Array(0)
+    componentClassId: view.getInt32(offset + 8),
+    timestamp: Number(view.getBigUint64(offset + 4 + 8)),
+    data: buf.buffer().subarray(buf.currentReadOffset() + 12, messageSize)
   }
 }

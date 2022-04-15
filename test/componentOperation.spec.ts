@@ -4,9 +4,9 @@ import { Engine } from '../src/engine'
 import { createByteBuffer } from '../src/serialization/ByteBuffer'
 import {
   COMPONENT_OPERATION_LENGTH,
-  prepareAndWritePutComponentOperation,
+  writePutComponent,
   readPutComponentOperationWithoutData,
-  writePutComponentOperation
+  _writePutComponent
 } from '../src/serialization/crdt/ComponentOperation'
 import {
   MessageType,
@@ -52,7 +52,7 @@ describe('Component operation tests', () => {
     })
 
     const bb = createByteBuffer()
-    writePutComponentOperation(
+    _writePutComponent(
       entityId,
       1,
       sdk.Transform._id,
@@ -77,12 +77,12 @@ describe('Component operation tests', () => {
 
     const bb = createByteBuffer()
 
-    prepareAndWritePutComponentOperation(entityId, timestamp, sdk.Transform, bb)
+    writePutComponent(entityId, timestamp, sdk.Transform, bb)
 
     mutableTransform.position.x = 31.3
     timestamp++
 
-    prepareAndWritePutComponentOperation(entityId, timestamp, sdk.Transform, bb)
+    writePutComponent(entityId, timestamp, sdk.Transform, bb)
 
     while (validateIncommingWireMessage(bb)) {
       const msgOne = readPutComponentOperationWithoutData(bb)

@@ -12,6 +12,5 @@ module.exports = {
   verbose: true,
   testMatch: ["**/*.spec.(ts)"],
   testEnvironment: "node",
-  // globalSetup: './test/setup.ts'
   setupFilesAfterEnv: ['./test/setup.ts']
 }

@@ -24,6 +24,7 @@ export const Transform: EcsType<Transform> = {
     view.setFloat32(ptr + 36, value.scale.z)
   },
   deserialize(reader: ByteBuffer): Transform {
+    console.log(reader.buffer())
     const view = reader.view()
     const ptr = reader.incrementReadOffset(40)
     return {

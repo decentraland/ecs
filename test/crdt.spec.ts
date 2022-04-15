@@ -1,4 +1,5 @@
 import { Message } from '@dcl/crdt'
+import { Quaternion, Vector3 } from '@dcl/ecs-math'
 import { Float32, MapType } from '../src/built-in-types'
 import { Engine } from '../src/engine'
 import * as transport from '../src/systems/crdt/transport'
@@ -10,9 +11,9 @@ const TestType = MapType({
 })
 
 const DEFAULT_POSITION = {
-  position: { x: 0, y: 0, z: 0 },
-  rotation: { x: 1, y: 1, z: 1, w: 1 },
-  scale: { x: 2, y: 2, z: 2 }
+  position: Vector3.create(0, 1, 2),
+  scale: Vector3.One(),
+  rotation: Quaternion.Identity()
 }
 
 /**
@@ -94,11 +95,11 @@ describe('CRDT tests', () => {
   it.only('should sent new entity through the wire and process it in the other engine', () => {
     const [clientA, clientB] = createSandbox({ length: 2 })
 
+    clientA.engine.addEntity()
     const entityA = clientA.engine.addEntity()
     const { Transform } = clientA.engine.baseComponents
 
     Transform.create(entityA, DEFAULT_POSITION)
-
     clientA.engine.update(1 / 30)
     clientB.engine.update(1 / 30)
 
