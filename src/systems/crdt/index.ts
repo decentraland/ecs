@@ -1,6 +1,7 @@
 import { Message, crdtProtocol } from '@dcl/crdt'
 import type { PreEngine } from '../../engine'
 import { Entity } from '../../engine/entity'
+import { createByteBuffer } from '../../serialization/ByteBuffer'
 import { createTransport } from './transport'
 import { parseKey, getKey } from './utils'
 
@@ -17,18 +18,12 @@ export function crdtSceneSystem(engine: PreEngine) {
   const transport = createTransport()
 
   transport.onmessage = (message: MessageEvent<string>) => {
-    console.log({ wsClient: crdtClient.getUUID(), transport: transport.url })
     const msg: Message<Uint8Array> = JSON.parse(message.data)
     msg.data = new Uint8Array(Object.values(msg.data))
     messages.add(msg)
   }
 
   async function sendMessages(messages: Message<Uint8Array>[]) {
-    console.log({
-      messages,
-      wsClient: crdtClient.getUUID(),
-      transport: transport.url
-    })
     // TODO create chunk of messages.
     messages.forEach((message) => transport.send(JSON.stringify(message)))
   }
@@ -43,7 +38,6 @@ export function crdtSceneSystem(engine: PreEngine) {
     for (const message of messagesToProcess) {
       const [entity, classId] = parseKey(message.key)
       const msg = crdtClient.processMessage(message)
-      console.log(msg, msg === message)
       if (msg === message) {
         const componentDefinition = engine.getComponent(classId)
         if (!componentDefinition) {
@@ -54,7 +48,10 @@ export function crdtSceneSystem(engine: PreEngine) {
         if (!componentDefinition.has(entity)) {
           componentDefinition.create(entity, {})
         }
-        componentDefinition.updateFromBinary(entity, message.data)
+        // TODO: lean
+        const bb = createByteBuffer()
+        bb.writeBuffer(message.data, false)
+        componentDefinition.updateFromBinary(entity, bb)
         componentDefinition.clearDirty()
       } else {
         resendMessages.push(msg)
@@ -73,7 +70,10 @@ export function crdtSceneSystem(engine: PreEngine) {
           throw new Error('Component not found')
         }
         const key = getKey(entity, componentId)
-        const event = crdtClient.createEvent(key, component.toBinary(entity))
+        const event = crdtClient.createEvent(
+          key,
+          component.toBinary(entity).toBinary()
+        )
         crdtMessages.push(event)
       }
     }

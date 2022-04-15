@@ -58,12 +58,12 @@ describe('CRDT tests', () => {
     engine.update(1 / 30)
     const transformCRDT: Message<Uint8Array> = {
       key: getKey(entityA, Transform._id),
-      data: Transform.toBinary(entityA),
+      data: Transform.toBinary(entityA).toBinary(),
       timestamp: 1
     }
     const testCRDT: Message<Uint8Array> = {
       key: getKey(entityA, Test._id),
-      data: Test.toBinary(entityA),
+      data: Test.toBinary(entityA).toBinary(),
       timestamp: 1
     }
     expect(spySend).toBeCalledWith(JSON.stringify(transformCRDT))
@@ -77,7 +77,7 @@ describe('CRDT tests', () => {
     engine.update(1 / 30)
     const transformCRDT2: Message<Uint8Array> = {
       key: getKey(entityA, Transform._id),
-      data: Transform.toBinary(entityA),
+      data: Transform.toBinary(entityA).toBinary(),
       timestamp: 2
     }
     expect(ws.send).toBeCalledWith(JSON.stringify(transformCRDT2))
@@ -91,7 +91,7 @@ describe('CRDT tests', () => {
     expect(ws.send).toBeCalledTimes(0)
   })
 
-  it('should process messages from another scenes', () => {
+  it.only('should sent new entity through the wire and process it in the other engine', () => {
     const [clientA, clientB] = createSandbox({ length: 2 })
 
     const entityA = clientA.engine.addEntity()
