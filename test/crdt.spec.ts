@@ -100,6 +100,7 @@ describe('CRDT tests', () => {
     const { Transform } = clientA.engine.baseComponents
 
     Transform.create(entityA, DEFAULT_POSITION)
+    console.log(Transform.toBinary(entityA).toBinary())
     clientA.engine.update(1 / 30)
     clientB.engine.update(1 / 30)
 

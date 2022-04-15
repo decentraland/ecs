@@ -84,7 +84,7 @@ export function _writePutComponent(
   view.setUint32(startMessageOffset + 32, data.length)
 }
 
-export function readPutComponentOperationWithoutData(
+export function readPutOperation(
   buf: ByteBuffer
 ): (MessageHeader & PartialComponentOperation) | null {
   const header = readMessageHeader(buf)

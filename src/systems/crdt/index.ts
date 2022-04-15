@@ -3,7 +3,7 @@ import type { PreEngine } from '../../engine'
 import { Entity } from '../../engine/entity'
 import { createByteBuffer } from '../../serialization/ByteBuffer'
 import {
-  readPutComponentOperationWithoutData,
+  readPutOperation,
   writePutComponent
 } from '../../serialization/crdt/ComponentOperation'
 import { createTransport } from './transport'
@@ -26,7 +26,7 @@ export function crdtSceneSystem(engine: PreEngine) {
       reading: { buffer: chunkMessage.data, currentOffset: 0 }
     })
 
-    const message = readPutComponentOperationWithoutData(buffer)
+    const message = readPutOperation(buffer)
     if (!message) return
     const { entityId, componentClassId, data, timestamp } = message
     messages.add({ key: getKey(entityId, componentClassId), data, timestamp })

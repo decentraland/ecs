@@ -5,7 +5,7 @@ import { createByteBuffer } from '../src/serialization/ByteBuffer'
 import {
   COMPONENT_OPERATION_LENGTH,
   writePutComponent,
-  readPutComponentOperationWithoutData,
+  readPutOperation,
   _writePutComponent
 } from '../src/serialization/crdt/ComponentOperation'
 import {
@@ -85,7 +85,7 @@ describe('Component operation tests', () => {
     writePutComponent(entityId, timestamp, sdk.Transform, bb)
 
     while (validateIncommingWireMessage(bb)) {
-      const msgOne = readPutComponentOperationWithoutData(bb)
+      const msgOne = readPutOperation(bb)
       expect(msgOne.version).toBe(MESSAGE_HEADER_CURRENT_VERSION)
       expect(msgOne.length).toBe(40 + COMPONENT_OPERATION_LENGTH)
       expect(msgOne.type).toBe(MessageType.PUT_COMPONENT)
