@@ -76,14 +76,12 @@ export namespace PutComponentOperation {
   }
 
   export function read(buf: ByteBuffer): (WireMessage.Header & Type) | null {
-    const startBuf = buf.currentReadOffset()
     const header = WireMessage.readHeader(buf)
 
     if (!header) {
       return null
     }
 
-    const messageSize = header.length + WireMessage.HEADER_LENGTH
     const view = buf.view()
 
     const entityId: Entity = Number(
@@ -102,7 +100,7 @@ export namespace PutComponentOperation {
 
     const data = buf
       .buffer()
-      .subarray(buf.currentReadOffset(), messageSize + startBuf)
+      .subarray(buf.currentReadOffset(), buf.currentReadOffset() + dataLength)
     buf.incrementReadOffset(dataLength)
 
     return {
