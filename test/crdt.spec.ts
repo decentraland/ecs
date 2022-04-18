@@ -1,9 +1,7 @@
-import { Message } from '@dcl/crdt'
 import { Quaternion, Vector3 } from '@dcl/ecs-math'
 import { Float32, MapType } from '../src/built-in-types'
 import { Engine } from '../src/engine'
 import * as transport from '../src/systems/crdt/transport'
-import CrdtUtils from '../src/systems/crdt/utils'
 
 const TestType = MapType({
   x: Float32,

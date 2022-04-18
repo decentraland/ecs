@@ -1,4 +1,3 @@
-import { CLASS_ID } from '../../components'
 import { ComponentDefinition } from '../../engine/component'
 import { Entity } from '../../engine/entity'
 import { ByteBuffer } from '../ByteBuffer'

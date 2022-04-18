@@ -123,14 +123,16 @@ function preEngine() {
 export type PreEngine = ReturnType<typeof preEngine>
 
 // TODO Fix this type
-export type Engine = ReturnType<typeof preEngine> & {
+/**
+ * @public
+ */
+export type Engine = PreEngine & {
   baseComponents: ReturnType<typeof defineSdkComponents>
 }
 
 /**
- * @alpha
+ * @public
  */
-
 export function Engine() {
   const engine = preEngine()
   const crdtSystem = crdtSceneSystem(engine)
