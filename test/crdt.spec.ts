@@ -45,7 +45,7 @@ function createSandbox({ length }: { length: number }) {
 }
 
 describe('CRDT tests', () => {
-  it('Send dirty components via trasnport and spy on send messages', () => {
+  it('Send ONLY dirty components via trasnport and spy on send messages', () => {
     const { engine, ws, spySend } = createSandbox({ length: 1 })[0]
     const entityA = engine.addEntity()
     const { Transform } = engine.baseComponents
@@ -57,18 +57,7 @@ describe('CRDT tests', () => {
 
     // Tick update and verify that both messages are being sent through ws.send
     engine.update(1 / 30)
-    const transformCRDT: Message<Uint8Array> = {
-      key: CrdtUtils.getKey(entityA, Transform._id),
-      data: Transform.toBinary(entityA).toBinary(),
-      timestamp: 1
-    }
-    const testCRDT: Message<Uint8Array> = {
-      key: CrdtUtils.getKey(entityA, Test._id),
-      data: Test.toBinary(entityA).toBinary(),
-      timestamp: 1
-    }
-    expect(spySend).toBeCalledWith(JSON.stringify(transformCRDT))
-    expect(spySend).toBeCalledWith(JSON.stringify(testCRDT))
+    expect(spySend).toBeCalledTimes(1)
 
     // Reset ws.send called times
     jest.resetAllMocks()
@@ -76,12 +65,7 @@ describe('CRDT tests', () => {
     // Update a component and verify that's being sent through the crdt system
     Transform.mutable(entityA).position.x = 10
     engine.update(1 / 30)
-    const transformCRDT2: Message<Uint8Array> = {
-      key: CrdtUtils.getKey(entityA, Transform._id),
-      data: Transform.toBinary(entityA).toBinary(),
-      timestamp: 2
-    }
-    expect(ws.send).toBeCalledWith(JSON.stringify(transformCRDT2))
+    expect(ws.send).toBeCalledTimes(1)
 
     // Reset ws.send again
     jest.resetAllMocks()
@@ -92,14 +76,9 @@ describe('CRDT tests', () => {
     expect(ws.send).toBeCalledTimes(0)
   })
 
-  it.only('should sent new entity through the wire and process it in the other engine', () => {
+  it('should sent new entity through the wire and process it in the other engine', () => {
     const [clientA, clientB] = createSandbox({ length: 2 })
 
-    clientA.engine.addEntity()
-    clientA.engine.addEntity()
-    clientA.engine.addEntity()
-    clientA.engine.addEntity()
-    clientA.engine.addEntity()
     const entityA = clientA.engine.addEntity()
     const { Transform } = clientA.engine.baseComponents
     const TransformB = clientB.engine.baseComponents.Transform
@@ -111,7 +90,11 @@ describe('CRDT tests', () => {
     TestA.create(entityA, DEFAULT_TEST)
 
     clientA.engine.update(1 / 30)
+    expect(TestB.has(entityA)).toBe(false)
+
+    // Update engine, process crdt messages.
     clientB.engine.update(1 / 30)
+
     expect(DEFAULT_POSITION).toBeDeepCloseTo(TransformB.getFrom(entityA))
     expect(DEFAULT_TEST).toBeDeepCloseTo(TestB.getFrom(entityA))
     expect(clientA.spySend).toBeCalledTimes(1)

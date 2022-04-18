@@ -162,6 +162,7 @@ export function createByteBuffer(
      * Reading purpose
      */
 
+    // TODO: it returns the amount not the new offset.
     incrementReadOffset(amount: number): number {
       return roAdd(amount)
     },
