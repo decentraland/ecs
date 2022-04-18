@@ -2,12 +2,9 @@ import { Message, crdtProtocol } from '@dcl/crdt'
 import type { PreEngine } from '../../engine'
 import { Entity } from '../../engine/entity'
 import { createByteBuffer } from '../../serialization/ByteBuffer'
-import {
-  readPutOperation,
-  writePutComponent
-} from '../../serialization/crdt/ComponentOperation'
+import { PutComponentOperation } from '../../serialization/crdt/componentOperation'
 import { createTransport } from './transport'
-import { parseKey, getKey } from './utils'
+import CrdtUtils from './utils'
 
 /**
  * TODO:
@@ -25,11 +22,14 @@ export function crdtSceneSystem(engine: PreEngine) {
     const buffer = createByteBuffer({
       reading: { buffer: chunkMessage.data, currentOffset: 0 }
     })
-
-    const message = readPutOperation(buffer)
+    const message = PutComponentOperation.read(buffer)
     if (!message) return
     const { entityId, componentClassId, data, timestamp } = message
-    messages.add({ key: getKey(entityId, componentClassId), data, timestamp })
+    messages.add({
+      key: CrdtUtils.getKey(entityId, componentClassId),
+      data,
+      timestamp
+    })
   }
   /**
    * This messages will be processed on every tick.
@@ -39,7 +39,7 @@ export function crdtSceneSystem(engine: PreEngine) {
     const messagesToProcess = Array.from(messages)
 
     for (const message of messagesToProcess) {
-      const [entity, classId] = parseKey(message.key)
+      const [entity, classId] = CrdtUtils.parseKey(message.key)
       const msg = crdtClient.processMessage(message)
       if (msg === message) {
         const componentDefinition = engine.getComponent(classId)
@@ -75,12 +75,17 @@ export function crdtSceneSystem(engine: PreEngine) {
         if (!component) {
           throw new Error('Component not found')
         }
-        const key = getKey(entity, componentId)
+        const key = CrdtUtils.getKey(entity, componentId)
         const event = crdtClient.createEvent(
           key,
           component.toBinary(entity).toBinary()
         )
-        writePutComponent(entity, event.timestamp + 10, component, buffer)
+        PutComponentOperation.write(
+          entity,
+          event.timestamp + 10,
+          component,
+          buffer
+        )
       }
     }
     transport.send(buffer.toBinary())

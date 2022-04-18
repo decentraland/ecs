@@ -16,74 +16,55 @@ import { ByteBuffer } from './ByteBuffer'
 
 type Uint32 = number
 
-export enum MessageType {
-  RESERVED = 0,
+export namespace WireMessage {
+  export enum Enum {
+    RESERVED = 0,
 
-  // Component Operation
-  PUT_COMPONENT = 1,
-  DELETE_COMPONENT = 2,
+    // Component Operation
+    PUT_COMPONENT = 1,
+    DELETE_COMPONENT = 2,
 
-  MAX_MESSAGE_TYPE
-}
-
-export type MessageHeader = {
-  length: Uint32
-  version: Uint32
-  type: Uint32
-}
-
-export const MESSAGE_HEADER_LENGTH = 12
-export const MESSAGE_HEADER_CURRENT_VERSION: number = 1
-
-export function writeMessageWithCbToBuffer(
-  wrapMessage: (buf: ByteBuffer) => MessageType,
-  messageBuf: ByteBuffer
-) {
-  // reserve the beginning
-  const view = messageBuf.view()
-  const startMessageOffset = messageBuf.incrementWriteOffset(
-    MESSAGE_HEADER_LENGTH
-  )
-
-  // write body
-  const messageType = wrapMessage(messageBuf)
-  const messageLength =
-    messageBuf.size() - startMessageOffset - MESSAGE_HEADER_LENGTH
-
-  // Write hedaer
-  view.setUint32(startMessageOffset, messageLength)
-  view.setUint32(startMessageOffset + 4, MESSAGE_HEADER_CURRENT_VERSION)
-  view.setUint32(startMessageOffset + 8, messageType)
-
-  return messageBuf
-}
-
-/**
- * Validate if the message incoming is completed
- * @param buf
- */
-export function validateIncommingWireMessage(buf: ByteBuffer) {
-  const rem = buf.remainingBytes()
-  if (rem < MESSAGE_HEADER_LENGTH) {
-    return false
+    // TODO: ?
+    MAX_MESSAGE_TYPE
   }
 
-  const messageLength = buf.view().getUint32(buf.currentReadOffset())
-  if (rem < messageLength + MESSAGE_HEADER_LENGTH) {
-    return false
+  export type Header = {
+    length: Uint32
+    version: Uint32
+    type: Uint32
   }
 
-  return true
+  export const HEADER_LENGTH = 12
+  export const HEADER_CURRENT_VERSION: number = 1
+  /**
+   * Validate if the message incoming is completed
+   * @param buf
+   */
+  export function validate(buf: ByteBuffer) {
+    const rem = buf.remainingBytes()
+    if (rem < HEADER_LENGTH) {
+      return false
+    }
+
+    const messageLength = buf.view().getUint32(buf.currentReadOffset())
+    if (rem < messageLength + HEADER_LENGTH) {
+      return false
+    }
+
+    return true
+  }
+
+  export function readHeader(buf: ByteBuffer): Header | null {
+    if (!validate(buf)) {
+      return null
+    }
+
+    return {
+      length: buf.readUint32(),
+      version: buf.readUint32(),
+      type: buf.readUint32() as Enum
+    }
+  }
 }
 
-export function readMessageHeader(buf: ByteBuffer): MessageHeader | null {
-  if (!validateIncommingWireMessage(buf)) {
-    return null
-  }
-
-  return {
-    length: buf.readUint32(),
-    version: buf.readUint32(),
-    type: buf.readUint32() as MessageType
-  }
-}
+export default WireMessage

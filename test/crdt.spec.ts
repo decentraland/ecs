@@ -3,7 +3,7 @@ import { Quaternion, Vector3 } from '@dcl/ecs-math'
 import { Float32, MapType } from '../src/built-in-types'
 import { Engine } from '../src/engine'
 import * as transport from '../src/systems/crdt/transport'
-import { getKey } from '../src/systems/crdt/utils'
+import CrdtUtils from '../src/systems/crdt/utils'
 
 const TestType = MapType({
   x: Float32,
@@ -58,12 +58,12 @@ describe('CRDT tests', () => {
     // Tick update and verify that both messages are being sent through ws.send
     engine.update(1 / 30)
     const transformCRDT: Message<Uint8Array> = {
-      key: getKey(entityA, Transform._id),
+      key: CrdtUtils.getKey(entityA, Transform._id),
       data: Transform.toBinary(entityA).toBinary(),
       timestamp: 1
     }
     const testCRDT: Message<Uint8Array> = {
-      key: getKey(entityA, Test._id),
+      key: CrdtUtils.getKey(entityA, Test._id),
       data: Test.toBinary(entityA).toBinary(),
       timestamp: 1
     }
@@ -77,7 +77,7 @@ describe('CRDT tests', () => {
     Transform.mutable(entityA).position.x = 10
     engine.update(1 / 30)
     const transformCRDT2: Message<Uint8Array> = {
-      key: getKey(entityA, Transform._id),
+      key: CrdtUtils.getKey(entityA, Transform._id),
       data: Transform.toBinary(entityA).toBinary(),
       timestamp: 2
     }

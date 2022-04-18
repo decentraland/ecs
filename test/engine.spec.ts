@@ -20,27 +20,32 @@ describe('Engine tests', () => {
 
   it('should not allow u to create same component to an existing entitiy', () => {
     const engine = Engine()
+    const entity = engine.addEntity()
     const Position = engine.defineComponent(888, PositionType)
-    Position.create(1, { x: 1 })
-    expect(() => Position.create(1, { x: 10 })).toThrowError()
+    Position.create(entity, { x: 1 })
+    expect(() => Position.create(entity, { x: 10 })).toThrowError()
   })
 
   it('should throw an error if the component doesnt exist', () => {
     const engine = Engine()
     const Position = engine.defineComponent(888, PositionType)
-    expect(() => Position.mutable(1)).toThrowError()
-    expect(() => Position.toBinary(1)).toThrowError()
-    Position.create(2, { x: 10 })
-    const binary = Position.toBinary(2)
-    expect(() => Position.updateFromBinary(1, binary)).toThrowError()
+    const entity = engine.addEntity()
+    const entityB = engine.addEntity()
+    expect(() => Position.mutable(entity)).toThrowError()
+    expect(() => Position.toBinary(entity)).toThrowError()
+    Position.create(entityB, { x: 10 })
+    const binary = Position.toBinary(entityB)
+    expect(() => Position.updateFromBinary(entity, binary)).toThrowError()
   })
 
   it('should delete component if exists or not', () => {
     const engine = Engine()
     const Position = engine.defineComponent(888, PositionType)
-    Position.create(1, { x: 10 })
-    expect(Position.deleteFrom(1)).toStrictEqual({ x: 10 })
-    expect(Position.deleteFrom(2)).toStrictEqual(null)
+    const entity = engine.addEntity()
+    const entity2 = engine.addEntity()
+    Position.create(entity, { x: 10 })
+    expect(Position.deleteFrom(entity)).toStrictEqual({ x: 10 })
+    expect(Position.deleteFrom(entity2)).toStrictEqual(null)
   })
 
   it('should fail when trying to add the same system twice', () => {
@@ -53,9 +58,10 @@ describe('Engine tests', () => {
   it('should replace existing component with the new one', () => {
     const engine = Engine()
     const Position = engine.defineComponent(888, PositionType)
-    Position.create(1, { x: 1 })
-    Position.createOrReplace(1, { x: 10 })
-    expect(Position.getFrom(1)).toStrictEqual({ x: 10 })
+    const entity = engine.addEntity()
+    Position.create(entity, { x: 1 })
+    Position.createOrReplace(entity, { x: 10 })
+    expect(Position.getFrom(entity)).toStrictEqual({ x: 10 })
   })
 
   it('define component and creates new entity', () => {

@@ -2,25 +2,28 @@
 import { ComponentDefinition } from '../../engine/component'
 import { Entity } from '../../engine/entity'
 
-type ClassID = ComponentDefinition['_id']
+export namespace CrdtUtils {
+  export type ClassID = ComponentDefinition['_id']
 
-export function parseKey(key: string): [Entity, ClassID] {
-  const [entity, classId] = key.split('.').map(Number)
-  return [entity, classId]
-}
+  export function parseKey(key: string): [Entity, ClassID] {
+    const [entity, classId] = key.split('.').map(Number) as [Entity, ClassID]
+    return [entity, classId]
+  }
 
-export function getKey(entity: Entity, classId: ClassID): string {
-  return `${entity}.${classId}`
-}
+  export function getKey(entity: Entity, classId: ClassID): string {
+    return `${entity}.${classId}`
+  }
 
-export enum SynchronizedEntityType {
-  // synchronizes all entities without filter. used for renderers
-  ALL,
-  // synchronizes entities with the NetworkSynchronized component only, used for networked games
-  NETWORKED,
-  // synchronizes entities needed by the renderer
-  RENDERER
+  export enum SynchronizedEntityType {
+    // synchronizes all entities without filter. used for renderers
+    ALL,
+    // synchronizes entities with the NetworkSynchronized component only, used for networked games
+    NETWORKED,
+    // synchronizes entities needed by the renderer
+    RENDERER
+  }
 }
+export default CrdtUtils
 
 // 1. engine.receiveMessage(rawMessage "diff")
 // 2. engine checks CRDT "filter"
