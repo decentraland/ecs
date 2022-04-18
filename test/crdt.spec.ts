@@ -96,16 +96,24 @@ describe('CRDT tests', () => {
     const [clientA, clientB] = createSandbox({ length: 2 })
 
     clientA.engine.addEntity()
+    clientA.engine.addEntity()
+    clientA.engine.addEntity()
+    clientA.engine.addEntity()
+    clientA.engine.addEntity()
     const entityA = clientA.engine.addEntity()
     const { Transform } = clientA.engine.baseComponents
+    const TransformB = clientB.engine.baseComponents.Transform
+    const TestA = clientA.engine.defineComponent(888, TestType)
+    const TestB = clientB.engine.defineComponent(888, TestType)
 
     Transform.create(entityA, DEFAULT_POSITION)
-    console.log(Transform.toBinary(entityA).toBinary())
+    const DEFAULT_TEST = { x: 10.231231, y: 0.12321321312 }
+    TestA.create(entityA, DEFAULT_TEST)
+
     clientA.engine.update(1 / 30)
     clientB.engine.update(1 / 30)
-
-    const bTransform = clientB.engine.baseComponents.Transform.getFrom(entityA)
-    expect(DEFAULT_POSITION).toStrictEqual(bTransform)
+    expect(DEFAULT_POSITION).toBeDeepCloseTo(TransformB.getFrom(entityA))
+    expect(DEFAULT_TEST).toBeDeepCloseTo(TestB.getFrom(entityA))
     expect(clientA.spySend).toBeCalledTimes(1)
     expect(clientB.spySend).toBeCalledTimes(0)
   })

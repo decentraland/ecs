@@ -1,11 +1,8 @@
 import { Quaternion, Vector3 } from '@dcl/ecs-math'
-import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to'
 import { Engine } from '../src/engine'
 import { createByteBuffer } from '../src/serialization/ByteBuffer'
 import { PutComponentOperation } from '../src/serialization/crdt/componentOperation'
 import WireMessage from '../src/serialization/wireMessage'
-
-expect.extend({ toBeDeepCloseTo, toMatchCloseTo })
 
 describe('Component operation tests', () => {
   it('validate corrupt message', () => {
@@ -69,8 +66,7 @@ describe('Component operation tests', () => {
       expect(msgOne.version).toBe(WireMessage.HEADER_CURRENT_VERSION)
       expect(msgOne.length).toBe(40 + PutComponentOperation.MESSAGE_LENGTH)
       expect(msgOne.type).toBe(WireMessage.Enum.PUT_COMPONENT)
-      const component = sdk.Transform.updateOrCreateFromBinary(entityId2, bb)
-      console.log({ component })
+      sdk.Transform.upsertFromBinary(entityId2, bb)
     }
   })
 })

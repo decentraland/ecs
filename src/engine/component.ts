@@ -24,10 +24,7 @@ export type ComponentDefinition<T extends EcsType = EcsType<any>> = {
   createOrReplace(entity: Entity, val: ComponentType<T>): ComponentType<T>
   deleteFrom(entity: Entity): ComponentType<T> | null
 
-  updateOrCreateFromBinary(
-    entity: Entity,
-    data: ByteBuffer
-  ): ComponentType<T> | null
+  upsertFromBinary(entity: Entity, data: ByteBuffer): ComponentType<T> | null
   updateFromBinary(entity: Entity, data: ByteBuffer): ComponentType<T> | null
   // allocates a buffer and returns new buffer
   toBinary(entity: Entity): ByteBuffer
@@ -149,9 +146,9 @@ export function defineComponent<T extends EcsType>(
           `[updateFromBinary] Component ${componentId} for ${entity} not found`
         )
       }
-      return this.updateOrCreateFromBinary(entity, buffer)
+      return this.upsertFromBinary(entity, buffer)
     },
-    updateOrCreateFromBinary(
+    upsertFromBinary(
       entity: Entity,
       buffer: ByteBuffer
     ): ComponentType<T> | null {

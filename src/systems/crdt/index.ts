@@ -3,6 +3,7 @@ import type { PreEngine } from '../../engine'
 import { Entity } from '../../engine/entity'
 import { createByteBuffer } from '../../serialization/ByteBuffer'
 import { PutComponentOperation } from '../../serialization/crdt/componentOperation'
+import WireMessage from '../../serialization/wireMessage'
 import { createTransport } from './transport'
 import CrdtUtils from './utils'
 
@@ -16,54 +17,66 @@ export function crdtSceneSystem(engine: PreEngine) {
   const messages = new Set<Message<Uint8Array>>()
   const transport = createTransport()
 
-  transport.onmessage = (chunkMessage: MessageEvent<Uint8Array>) => {
-    if (!chunkMessage.data?.length) return
+  transport.onmessage = parseChunkMessage
 
+  function parseChunkMessage(chunkMessage: MessageEvent<Uint8Array>) {
+    if (!chunkMessage.data?.length) return
     const buffer = createByteBuffer({
       reading: { buffer: chunkMessage.data, currentOffset: 0 }
     })
-    const message = PutComponentOperation.read(buffer)
-    if (!message) return
-    const { entityId, componentClassId, data, timestamp } = message
-    messages.add({
-      key: CrdtUtils.getKey(entityId, componentClassId),
-      data,
-      timestamp
-    })
+
+    while (WireMessage.validate(buffer)) {
+      const message = PutComponentOperation.read(buffer)
+      if (!message) return
+
+      const { entityId, componentClassId, data, timestamp } = message
+      messages.add({
+        key: CrdtUtils.getKey(entityId, componentClassId),
+        data,
+        timestamp
+      })
+    }
   }
+
+  function getMessages() {
+    const messagesToProcess = Array.from(messages)
+    messages.clear()
+    return messagesToProcess
+  }
+
   /**
    * This messages will be processed on every tick.
    */
   function processMessages() {
-    const resendMessages: Message<Uint8Array>[] = []
-    const messagesToProcess = Array.from(messages)
+    const buffer = createByteBuffer()
+    const messagesToProcess = getMessages()
 
     for (const message of messagesToProcess) {
       const [entity, classId] = CrdtUtils.parseKey(message.key)
       const msg = crdtClient.processMessage(message)
-      if (msg === message) {
-        const componentDefinition = engine.getComponent(classId)
-        if (!componentDefinition) {
-          throw new Error(
-            'Component not found. You need to declare the components at the beginnig of the engine declaration'
-          )
-        }
-        if (!componentDefinition.has(entity)) {
-          componentDefinition.create(entity, {})
-        }
-        // TODO: lean
-        const bb = createByteBuffer({
-          reading: { buffer: message.data, currentOffset: 0 }
-        })
-        console.log(bb.toBinary())
-        componentDefinition.updateFromBinary(entity, bb)
-        componentDefinition.clearDirty()
-      } else {
-        resendMessages.push(msg)
+      const component = engine.getComponent(classId)
+
+      if (!component) {
+        throw new Error(
+          'Component not found. You need to declare the components at the beginnig of the engine declaration'
+        )
       }
-      messages.delete(message)
+
+      // CRDT outdated message. Resend this message through the wire
+      if (msg !== message) {
+        PutComponentOperation.write(entity, msg.timestamp, component, buffer)
+      } else {
+        // TODO: lean. This vs createByteBuffeR({ readingbuffer: message.data }).
+        const bb = createByteBuffer()
+        bb.writeBuffer(message.data, false)
+
+        component.upsertFromBinary(entity, bb)
+        component.clearDirty()
+      }
     }
-    // sendMessages(resendMessages).catch((e) => console.error(e))
+    if (buffer.size()) {
+      transport.send(buffer.toBinary())
+    }
   }
 
   function send(dirtyMap: Map<Entity, Set<number>>) {
@@ -80,15 +93,12 @@ export function crdtSceneSystem(engine: PreEngine) {
           key,
           component.toBinary(entity).toBinary()
         )
-        PutComponentOperation.write(
-          entity,
-          event.timestamp + 10,
-          component,
-          buffer
-        )
+        PutComponentOperation.write(entity, event.timestamp, component, buffer)
       }
     }
-    transport.send(buffer.toBinary())
+    if (buffer.size()) {
+      transport.send(buffer.toBinary())
+    }
   }
 
   return {

@@ -1,8 +1,5 @@
 import { Quaternion, Vector3 } from '@dcl/ecs-math'
-
 import { Engine } from '../src/engine'
-import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to'
-expect.extend({ toBeDeepCloseTo, toMatchCloseTo })
 
 describe('Legacy component tests', () => {
   it('cube example scene', () => {

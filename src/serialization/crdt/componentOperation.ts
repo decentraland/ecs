@@ -1,3 +1,4 @@
+import { CLASS_ID } from '../../components'
 import { ComponentDefinition } from '../../engine/component'
 import { Entity } from '../../engine/entity'
 import { ByteBuffer } from '../ByteBuffer'
@@ -76,21 +77,41 @@ export namespace PutComponentOperation {
   }
 
   export function read(buf: ByteBuffer): (WireMessage.Header & Type) | null {
+    const startBuf = buf.currentReadOffset()
     const header = WireMessage.readHeader(buf)
+
     if (!header) {
       return null
     }
-    const messageSize = header.length + WireMessage.HEADER_LENGTH
 
+    const messageSize = header.length + WireMessage.HEADER_LENGTH
     const view = buf.view()
-    const offset = buf.incrementReadOffset(WireMessage.HEADER_LENGTH)
+
+    const entityId: Entity = Number(
+      view.getBigUint64(buf.currentReadOffset())
+    ) as Entity
+    buf.incrementReadOffset(8)
+
+    const componentClassId = view.getInt32(buf.currentReadOffset())
+    buf.incrementReadOffset(4)
+
+    const timestamp = Number(view.getBigUint64(buf.currentReadOffset()))
+    buf.incrementReadOffset(8)
+
+    const dataLength = view.getInt32(buf.currentReadOffset())
+    buf.incrementReadOffset(4)
+
+    const data = buf
+      .buffer()
+      .subarray(buf.currentReadOffset(), messageSize + startBuf)
+    buf.incrementReadOffset(dataLength)
 
     return {
       ...header,
-      entityId: Number(view.getBigUint64(offset)) as Entity,
-      componentClassId: view.getInt32(offset + 8),
-      timestamp: Number(view.getBigUint64(offset + 4 + 8)),
-      data: buf.buffer().subarray(buf.currentReadOffset() + 12, messageSize)
+      entityId,
+      componentClassId,
+      timestamp,
+      data
     }
   }
 }
