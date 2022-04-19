@@ -11,13 +11,36 @@ import { Vector3 } from '@dcl/ecs-math';
 export function Engine(): {
     baseComponents: {
         Sync: ComponentDefinition<EcsType<void>>;
+        BoxShape: ComponentDefinition<EcsType<{
+            withCollisions: boolean;
+            isPointerBlocker: boolean;
+            visible: boolean;
+            uvs: number[];
+        }>>;
+        CircleShape: ComponentDefinition<EcsType<{
+            withCollisions: boolean;
+            isPointerBlocker: boolean;
+            visible: boolean;
+            segments: number;
+            arc: number;
+        }>>;
+        PlaneShape: ComponentDefinition<EcsType<{
+            withCollisions: boolean;
+            isPointerBlocker: boolean;
+            visible: boolean;
+            uvs: number[];
+            width: number;
+            height: number;
+        }>>;
+        SphereShape: ComponentDefinition<EcsType<{
+            withCollisions: boolean;
+            isPointerBlocker: boolean;
+            visible: boolean;
+        }>>;
         Transform: ComponentDefinition<EcsType<{
             position: Vector3.MutableVector3;
             rotation: Quaternion.MutableQuaternion;
             scale: Vector3.MutableVector3;
-        }>>;
-        BoxShape: ComponentDefinition<EcsType<BaseShape & {
-            uvs: number[];
         }>>;
     };
     addEntity: () => number;
@@ -53,7 +76,6 @@ export function preEngine(): {
 // src/engine/index.ts:121:23 - (ae-forgotten-export) The symbol "ComponentEcsType" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:123:1 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:123:1 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:129:1 - (ae-forgotten-export) The symbol "BaseShape" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
