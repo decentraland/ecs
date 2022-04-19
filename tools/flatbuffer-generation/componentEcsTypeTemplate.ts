@@ -1,9 +1,10 @@
+const file = `
 import { Builder, ByteBuffer as FlatBufferByteBuffer } from 'flatbuffers'
 import { EcsType } from '../../../built-in-types/EcsType'
 import { ByteBuffer } from '../../../serialization/ByteBuffer'
-import { BoxShape as fbBoxShape, BoxShapeT } from './fb-generated/box-shape'
+import { Component as fbComponent, ComponentT } from './fb-generated/component-ts-file'
 
-export const COMPONENT_ID = 16
+export const COMPONENT_ID = INVALID_COMPONENT_ID
 
 type Type = number | boolean
 
@@ -15,17 +16,19 @@ type FromClass<T> = {
     : never
 }
 
-type BoxShape = FromClass<BoxShapeT>
+type Component = FromClass<ComponentT>
 
-export const BoxShape: EcsType<BoxShape> = {
-  serialize(value: BoxShape, builder: ByteBuffer): void {
+export const Component: EcsType<Component> = {
+  serialize(value: Component, builder: ByteBuffer): void {
     const fbBuilder = new Builder()
-    fbBuilder.finish(BoxShapeT.pack(fbBuilder, value))
+    fbBuilder.finish(ComponentT.pack(fbBuilder, value))
     builder.writeBuffer(fbBuilder.asUint8Array(), false)
   },
-  deserialize(reader: ByteBuffer): BoxShape {
+  deserialize(reader: ByteBuffer): Component {
     const buf = new FlatBufferByteBuffer(reader.buffer())
     // TODO: see performance
-    return { ...fbBoxShape.getRootAsBoxShape(buf).unpack() }
+    return { ...fbComponent.getRootAsComponent(buf).unpack() }
   }
 }
+`
+export default file

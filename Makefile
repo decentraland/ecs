@@ -18,6 +18,7 @@ build:
 build-tools:
 	rm -rf tools/dist/
 	./node_modules/.bin/tsc -p tools/tsconfig.json
+	chmod +x tools/dist/flatbuffer-generation/index.js
 
 lint:
 	./node_modules/.bin/eslint . --ext .ts
@@ -28,12 +29,8 @@ lint-fix:
 build-flatbuffers:
 	echo "Building tools"
 	make build-tools
-	chmod +x tools/dist/index.js
-
-	echo "Generating code from schemas..."
-	bash tools/flatbuffer-generation/generate-schemas.sh
 	
-	./tools/dist/index.js --component-path ${PWD}/src/components/legacy/flatbuffer
+	./tools/dist/flatbuffer-generation/index.js --component-path ${PWD}/src/components/legacy/flatbuffer
 
 	echo "Running eslint"
 	./node_modules/.bin/eslint ./src/components/legacy/flatbuffer/ --ext .ts --fix

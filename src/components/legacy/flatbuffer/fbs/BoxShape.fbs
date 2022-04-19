@@ -1,11 +1,9 @@
-include "index.fbs";
-
-attribute "CLASS_ID_16";
+attribute "COMPONENT_ID_16";
 
 table BoxShape {  
-  with_collisions: bool;
-  is_pointer_blocker: bool;
-  visible: bool;
+  with_collisions: bool = false;
+  is_pointer_blocker: bool = false;
+  visible: bool = false;
   uvs: [float];
 }
 

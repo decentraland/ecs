@@ -86,6 +86,7 @@ describe('Legacy component tests', () => {
     const buffer = sdk.BoxShape.toBinary(entity)
     sdk.BoxShape.updateFromBinary(entity2, buffer)
 
+    
     expect(_boxShape).toBeDeepCloseTo(sdk.BoxShape.getFrom(entity2))
   })
 })

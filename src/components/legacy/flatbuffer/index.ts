@@ -8,9 +8,15 @@ export function defineFlatbufferComponents({
   defineComponent
 }: Pick<Engine, 'defineComponent'>) {
   return {
-    BoxShape: defineComponent(BoxShape.CLASS_ID, BoxShape.BoxShape),
-    CircleShape: defineComponent(CircleShape.CLASS_ID, CircleShape.CircleShape),
-    PlaneShape: defineComponent(PlaneShape.CLASS_ID, PlaneShape.PlaneShape),
-    SphereShape: defineComponent(SphereShape.CLASS_ID, SphereShape.SphereShape)
+    BoxShape: defineComponent(BoxShape.COMPONENT_ID, BoxShape.BoxShape),
+    CircleShape: defineComponent(
+      CircleShape.COMPONENT_ID,
+      CircleShape.CircleShape
+    ),
+    PlaneShape: defineComponent(PlaneShape.COMPONENT_ID, PlaneShape.PlaneShape),
+    SphereShape: defineComponent(
+      SphereShape.COMPONENT_ID,
+      SphereShape.SphereShape
+    )
   }
 }

@@ -25,7 +25,6 @@ export function Engine(): {
             arc: number;
         }>>;
         PlaneShape: ComponentDefinition<EcsType<{
-            withCollisions: boolean;
             isPointerBlocker: boolean;
             visible: boolean;
             uvs: number[];

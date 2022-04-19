@@ -1,9 +1,7 @@
-include "index.fbs";
-
-attribute "CLASS_ID_18";
+attribute "COMPONENT_ID_18";
 
 table PlaneShape {  
-  with_collisions: bool;
+  with_collisions: bool (deprecated);
   is_pointer_blocker: bool;
   visible: bool;
   

@@ -3,7 +3,8 @@
   "parserOptions": {
     "project": [
       "tsconfig.json",
-      "test/tsconfig.json"
+      "test/tsconfig.json",
+      "tools/tsconfig.json"
     ]
   },
   "rules": {

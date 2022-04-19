@@ -32,11 +32,6 @@ export class PlaneShape {
     )
   }
 
-  withCollisions(): boolean {
-    const offset = this.bb!.__offset(this.bb_pos, 4)
-    return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false
-  }
-
   isPointerBlocker(): boolean {
     const offset = this.bb!.__offset(this.bb_pos, 6)
     return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false
@@ -84,13 +79,6 @@ export class PlaneShape {
 
   static startPlaneShape(builder: flatbuffers.Builder) {
     builder.startObject(6)
-  }
-
-  static addWithCollisions(
-    builder: flatbuffers.Builder,
-    withCollisions: boolean
-  ) {
-    builder.addFieldInt8(0, +withCollisions, +false)
   }
 
   static addIsPointerBlocker(
@@ -163,7 +151,6 @@ export class PlaneShape {
 
   static createPlaneShape(
     builder: flatbuffers.Builder,
-    withCollisions: boolean,
     isPointerBlocker: boolean,
     visible: boolean,
     uvsOffset: flatbuffers.Offset,
@@ -171,7 +158,6 @@ export class PlaneShape {
     height: number
   ): flatbuffers.Offset {
     PlaneShape.startPlaneShape(builder)
-    PlaneShape.addWithCollisions(builder, withCollisions)
     PlaneShape.addIsPointerBlocker(builder, isPointerBlocker)
     PlaneShape.addVisible(builder, visible)
     PlaneShape.addUvs(builder, uvsOffset)
@@ -182,7 +168,6 @@ export class PlaneShape {
 
   unpack(): PlaneShapeT {
     return new PlaneShapeT(
-      this.withCollisions(),
       this.isPointerBlocker(),
       this.visible(),
       this.bb!.createScalarList(this.uvs.bind(this), this.uvsLength()),
@@ -192,7 +177,6 @@ export class PlaneShape {
   }
 
   unpackTo(_o: PlaneShapeT): void {
-    _o.withCollisions = this.withCollisions()
     _o.isPointerBlocker = this.isPointerBlocker()
     _o.visible = this.visible()
     _o.uvs = this.bb!.createScalarList(this.uvs.bind(this), this.uvsLength())
@@ -203,7 +187,6 @@ export class PlaneShape {
 
 export class PlaneShapeT {
   constructor(
-    public withCollisions: boolean = false,
     public isPointerBlocker: boolean = false,
     public visible: boolean = false,
     public uvs: number[] = [],
@@ -219,7 +202,6 @@ export class PlaneShapeT {
 
     return PlaneShape.createPlaneShape(
       builder,
-      value.withCollisions,
       value.isPointerBlocker,
       value.visible,
       uvs,

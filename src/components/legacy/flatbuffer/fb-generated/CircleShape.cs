@@ -71,7 +71,7 @@ public struct CircleShape : IFlatbufferObject
       _o.Segments,
       _o.Arc);
   }
-}
+};
 
 public class CircleShapeT
 {

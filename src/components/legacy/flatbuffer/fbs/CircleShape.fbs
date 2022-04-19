@@ -1,6 +1,4 @@
-include "index.fbs";
-
-attribute "CLASS_ID_31";
+attribute "COMPONENT_ID_31";
 
 table CircleShape {  
   with_collisions: bool;

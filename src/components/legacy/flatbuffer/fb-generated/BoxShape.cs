@@ -48,8 +48,6 @@ public struct BoxShape : IFlatbufferObject
   public static void AddUvs(FlatBufferBuilder builder, VectorOffset uvsOffset) { builder.AddOffset(3, uvsOffset.Value, 0); }
   public static VectorOffset CreateUvsVector(FlatBufferBuilder builder, float[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddFloat(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateUvsVectorBlock(FlatBufferBuilder builder, float[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateUvsVectorBlock(FlatBufferBuilder builder, ArraySegment<float> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateUvsVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<float>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartUvsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<BoxShape> EndBoxShape(FlatBufferBuilder builder) {
     int o = builder.EndTable();
@@ -83,7 +81,7 @@ public struct BoxShape : IFlatbufferObject
       _o.Visible,
       _uvs);
   }
-}
+};
 
 public class BoxShapeT
 {

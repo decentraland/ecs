@@ -1,6 +1,4 @@
-include "index.fbs";
-
-attribute "CLASS_ID_17";
+attribute "COMPONENT_ID_17";
 
 table SphereShape {  
   with_collisions: bool;

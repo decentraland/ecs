@@ -6,7 +6,7 @@ import {
   PlaneShapeT
 } from './fb-generated/plane-shape'
 
-export const CLASS_ID = 18
+export const COMPONENT_ID = 18
 
 type Type = number | boolean
 

@@ -59,7 +59,7 @@ public struct SphereShape : IFlatbufferObject
       _o.IsPointerBlocker,
       _o.Visible);
   }
-}
+};
 
 public class SphereShapeT
 {

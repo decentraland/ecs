@@ -16,7 +16,6 @@ public struct PlaneShape : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PlaneShape __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public bool WithCollisions { get { int o = __p.__offset(4); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public bool IsPointerBlocker { get { int o = __p.__offset(6); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public bool Visible { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public float Uvs(int j) { int o = __p.__offset(10); return o != 0 ? __p.bb.GetFloat(__p.__vector(o) + j * 4) : (float)0; }
@@ -31,7 +30,6 @@ public struct PlaneShape : IFlatbufferObject
   public float Height { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
 
   public static Offset<PlaneShape> CreatePlaneShape(FlatBufferBuilder builder,
-      bool with_collisions = false,
       bool is_pointer_blocker = false,
       bool visible = false,
       VectorOffset uvsOffset = default(VectorOffset),
@@ -43,19 +41,15 @@ public struct PlaneShape : IFlatbufferObject
     PlaneShape.AddUvs(builder, uvsOffset);
     PlaneShape.AddVisible(builder, visible);
     PlaneShape.AddIsPointerBlocker(builder, is_pointer_blocker);
-    PlaneShape.AddWithCollisions(builder, with_collisions);
     return PlaneShape.EndPlaneShape(builder);
   }
 
   public static void StartPlaneShape(FlatBufferBuilder builder) { builder.StartTable(6); }
-  public static void AddWithCollisions(FlatBufferBuilder builder, bool withCollisions) { builder.AddBool(0, withCollisions, false); }
   public static void AddIsPointerBlocker(FlatBufferBuilder builder, bool isPointerBlocker) { builder.AddBool(1, isPointerBlocker, false); }
   public static void AddVisible(FlatBufferBuilder builder, bool visible) { builder.AddBool(2, visible, false); }
   public static void AddUvs(FlatBufferBuilder builder, VectorOffset uvsOffset) { builder.AddOffset(3, uvsOffset.Value, 0); }
   public static VectorOffset CreateUvsVector(FlatBufferBuilder builder, float[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddFloat(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateUvsVectorBlock(FlatBufferBuilder builder, float[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateUvsVectorBlock(FlatBufferBuilder builder, ArraySegment<float> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateUvsVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<float>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartUvsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddWidth(FlatBufferBuilder builder, float width) { builder.AddFloat(4, width, 0.0f); }
   public static void AddHeight(FlatBufferBuilder builder, float height) { builder.AddFloat(5, height, 0.0f); }
@@ -71,7 +65,6 @@ public struct PlaneShape : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(PlaneShapeT _o) {
-    _o.WithCollisions = this.WithCollisions;
     _o.IsPointerBlocker = this.IsPointerBlocker;
     _o.Visible = this.Visible;
     _o.Uvs = new List<float>();
@@ -88,18 +81,16 @@ public struct PlaneShape : IFlatbufferObject
     }
     return CreatePlaneShape(
       builder,
-      _o.WithCollisions,
       _o.IsPointerBlocker,
       _o.Visible,
       _uvs,
       _o.Width,
       _o.Height);
   }
-}
+};
 
 public class PlaneShapeT
 {
-  public bool WithCollisions { get; set; }
   public bool IsPointerBlocker { get; set; }
   public bool Visible { get; set; }
   public List<float> Uvs { get; set; }
@@ -107,7 +98,6 @@ public class PlaneShapeT
   public float Height { get; set; }
 
   public PlaneShapeT() {
-    this.WithCollisions = false;
     this.IsPointerBlocker = false;
     this.Visible = false;
     this.Uvs = null;

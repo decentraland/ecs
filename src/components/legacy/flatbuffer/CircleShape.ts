@@ -6,7 +6,7 @@ import {
   CircleShapeT
 } from './fb-generated/circle-shape'
 
-export const CLASS_ID = 31
+export const COMPONENT_ID = 31
 
 type Type = number | boolean
 

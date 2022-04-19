@@ -6,7 +6,7 @@ import {
   SphereShapeT
 } from './fb-generated/sphere-shape'
 
-export const CLASS_ID = 17
+export const COMPONENT_ID = 17
 
 type Type = number | boolean
 
