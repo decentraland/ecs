@@ -1,5 +1,7 @@
 include "index.fbs";
 
+attribute "CLASS_ID_18";
+
 table PlaneShape {  
   with_collisions: bool;
   is_pointer_blocker: bool;

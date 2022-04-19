@@ -33,7 +33,7 @@ build-flatbuffers:
 	echo "Generating code from schemas..."
 	bash tools/flatbuffer-generation/generate-schemas.sh
 	
-	./tools/dist/index.js --generated-path ${PWD}/src/components/legacy/flatbuffer/fb-generated --flatbuffer-path ${PWD}/src/components/legacy/flatbuffer/fbs --component-path ${PWD}/src/components/legacy/flatbuffer
+	./tools/dist/index.js --component-path ${PWD}/src/components/legacy/flatbuffer
 
 	echo "Running eslint"
 	./node_modules/.bin/eslint ./src/components/legacy/flatbuffer/ --ext .ts --fix

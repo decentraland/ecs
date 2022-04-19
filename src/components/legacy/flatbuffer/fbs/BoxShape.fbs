@@ -1,6 +1,6 @@
 include "index.fbs";
 
-attribute "CLASS_ID";
+attribute "CLASS_ID_16";
 
 table BoxShape {  
   with_collisions: bool;

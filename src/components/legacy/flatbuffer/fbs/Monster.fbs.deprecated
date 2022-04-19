@@ -1,6 +1,7 @@
 // example IDL file
 
 attribute "priority";
+attribute "CLASS_ID_2333";
 
 enum Color : byte { Red = 1, Green, Blue }
 

@@ -17,6 +17,8 @@ import { EcsType } from '../../../built-in-types/EcsType'
 import { ByteBuffer } from '../../../serialization/ByteBuffer'
 import { Component as fbComponent, ComponentT } from './fb-generated/component-ts-file'
 
+export const CLASS_ID = INVALID_CLASS_ID
+
 type Type = number | boolean
 
 type FromClass<T> = {
@@ -32,7 +34,7 @@ type Component = FromClass<ComponentT>
 export const Component: EcsType<Component> = {
   serialize(value: Component, builder: ByteBuffer): void {
     const fbBuilder = new Builder()
-    ComponentT.pack(fbBuilder, value)
+    fbBuilder.finish(ComponentT.pack(fbBuilder, value))
     builder.writeBuffer(fbBuilder.asUint8Array(), false)
   },
   deserialize(reader: ByteBuffer): Component {
@@ -74,25 +76,17 @@ function getParam(key: string) {
 }
 
 
-// work
-const generatedPath = getParam('--generated-path')
-const flatbufferPath = getParam('--flatbuffer-path')
+// work`
 const componentPath = getParam('--component-path')
-
-if (!generatedPath) {
-  console.error('Arg --generated-path is required.')
-  process.exit(1)
-}
-
-if (!flatbufferPath) {
-  console.error('Arg --flatbuffer-path is required.')
-  process.exit(2)
-}
 
 if (!componentPath) {
   console.error('Arg --component-path is required.')
-  process.exit(3)
+  process.exit(2)
 }
+
+const generatedPath = path.resolve(componentPath, 'fb-generated')
+const flatbufferPath = path.resolve(componentPath, 'fbs')
+
 
 console.log(`Decentraland > Gen dir: ${generatedPath} - fb dir: ${flatbufferPath}`)
 
@@ -101,33 +95,96 @@ const components = getFilePathsSync(flatbufferPath, false)
   .map((filePath) => filePath.substring(0, filePath.length - 4))
 
 
-
 for (const component of components) {
   const tsFile = component.split(/(?=[A-Z])/).join('-').toLowerCase() + '.ts';
   const csharpFile = component + '.cs'
-  processComponent({ component, tsFile, csharpFile, generatedPath, componentPath})
+  const fbFile = component + '.fbs'
+  processComponent({
+    component,
+    tsFile,
+    csharpFile,
+    fbFile,
+    generatedPath,
+    componentPath,
+    flatbufferPath
+  })
 }
 
 
-function processComponent(arg0: { component: string; tsFile: string; csharpFile: string; generatedPath: string, componentPath: string }) {
-  const { tsFile, generatedPath, component, componentPath } = arg0
-  const filePath = path.resolve(generatedPath, tsFile)
-  const fileContent = fs.readFileSync(filePath).toString()
+const indexContent = `
+${
+  components
+  .filter(component => component !== 'index')
+  .map((component) => `import * as ${component} from './${component}'`)
+  .join('\n')
+}
+import { Engine } from '../../../engine'
 
-  const object = fileContent.search(`export class ${component}T`)
-  const objectClass = fileContent.substring(object)
-  const newObjectClass = fileContent.substring(object)
-    .replace('pack', 'static pack')
-    .replace('flatbuffers.Builder', `flatbuffers.Builder, value: ${component}T`)
-    .replace(/this/g, 'value')
+export function defineFlatbufferComponents({
+  defineComponent
+}: Pick<Engine, 'defineComponent'>) {
 
-  const componentFilePath = path.resolve(componentPath, `${component}.ts`)
-  const componentContent = template
-    .replace(/Component/g, component)
-    .replace('component-ts-file', tsFile.substring(0, tsFile.length - 3))
+  return {
+    ${
+      components
+      .filter(component => component !== 'index')
+      .map((component) => `${component}:  defineComponent(${component}.CLASS_ID, ${component}.${component})`)
+      .join(',\n')
+    }
+  }
+}
+`
 
-  fs.writeFileSync(componentFilePath, componentContent)
+fs.writeFileSync(path.resolve(componentPath, 'index.ts'), indexContent)
 
-  fs.writeFileSync(filePath, fileContent.replace(objectClass, newObjectClass))
+function processComponent(
+  params: {
+    component: string
+    tsFile: string
+    csharpFile: string
+    fbFile: string
+    generatedPath: string
+    componentPath: string
+    flatbufferPath: string
+  }
+) {
+  const { 
+    tsFile, 
+    generatedPath, 
+    component, 
+    componentPath,
+    fbFile, 
+    flatbufferPath 
+  } = params
+
+  const flatbufferTsGeneratedPath = path.resolve(generatedPath, tsFile)
+  const flatbufferTsGeneratedContent =
+    fs.readFileSync(flatbufferTsGeneratedPath).toString()
+
+  const fbPath = path.resolve(flatbufferPath, fbFile)
+  const fbContent = fs.readFileSync(fbPath).toString()
+
+  const object = flatbufferTsGeneratedContent.search(`export class ${component}T`)
+
+  if (object > 0) {
+    const objectClass = flatbufferTsGeneratedContent.substring(object)
+    const newObjectClass = flatbufferTsGeneratedContent.substring(object)
+      .replace('pack', 'static pack')
+      .replace('flatbuffers.Builder', `flatbuffers.Builder, value: ${component}T`)
+      .replace(/this/g, 'value')
+
+    const classId = [...fbContent.matchAll(/attribute "CLASS_ID_(.*?)\"/g)][0][1]
+    const componentFilePath = path.resolve(componentPath, `${component}.ts`)
+    const componentContent = template
+      .replace(/Component/g, component)
+      .replace('component-ts-file', tsFile.substring(0, tsFile.length - 3))
+      .replace('INVALID_CLASS_ID', classId.toString())
+
+    fs.writeFileSync(componentFilePath, componentContent)
+    fs.writeFileSync(
+      flatbufferTsGeneratedPath, 
+      flatbufferTsGeneratedContent.replace(objectClass, newObjectClass)
+    )
+  }
 }
 
