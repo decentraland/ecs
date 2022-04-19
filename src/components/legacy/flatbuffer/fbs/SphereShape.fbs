@@ -1,9 +1,9 @@
+include "index.fbs";
 
-table BoxShape {  
+table SphereShape {  
   with_collisions: bool;
   is_pointer_blocker: bool;
   visible: bool;
-  uvs: [float];
 }
 
-root_type BoxShape;
+root_type SphereShape;

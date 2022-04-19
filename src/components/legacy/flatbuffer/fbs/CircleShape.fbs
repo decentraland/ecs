@@ -1,0 +1,11 @@
+include "index.fbs";
+
+table CircleShape {  
+  with_collisions: bool;
+  is_pointer_blocker: bool;
+  visible: bool;
+  segments: float;
+  arc: float;
+}
+
+root_type CircleShape;

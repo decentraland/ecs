@@ -1,0 +1,14 @@
+include "index.fbs";
+
+table PlaneShape {  
+  with_collisions: bool;
+  is_pointer_blocker: bool;
+  visible: bool;
+  
+  uvs: [float];
+
+  width: float;
+  height: float;
+}
+
+root_type PlaneShape;

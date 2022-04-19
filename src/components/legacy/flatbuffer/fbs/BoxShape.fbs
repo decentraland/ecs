@@ -1,0 +1,12 @@
+include "index.fbs";
+
+attribute "CLASS_ID";
+
+table BoxShape {  
+  with_collisions: bool;
+  is_pointer_blocker: bool;
+  visible: bool;
+  uvs: [float];
+}
+
+root_type BoxShape;
