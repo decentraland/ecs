@@ -14,7 +14,7 @@ import CrdtUtils from './utils'
  */
 export function crdtSceneSystem(engine: PreEngine) {
   const crdtClient = crdtProtocol<Uint8Array>('scene-id-crdt')
-  const messages = new Set<Message<Uint8Array>>()
+  const messages: Message<Uint8Array>[] = []
   const transport = createTransport()
 
   transport.onmessage = parseChunkMessage
@@ -30,7 +30,7 @@ export function crdtSceneSystem(engine: PreEngine) {
       if (!message) return
 
       const { entityId, componentClassId, data, timestamp } = message
-      messages.add({
+      messages.push({
         key: CrdtUtils.getKey(entityId, componentClassId),
         data,
         timestamp
@@ -40,7 +40,7 @@ export function crdtSceneSystem(engine: PreEngine) {
 
   function getMessages() {
     const messagesToProcess = Array.from(messages)
-    messages.clear()
+    messages.length = 0
     return messagesToProcess
   }
 

@@ -159,6 +159,7 @@ export function Engine() {
     }
 
     crdtSystem.send(dirtySet)
+
     for (const [_classId, definition] of engine.componentsDefinition) {
       definition.clearDirty()
     }
