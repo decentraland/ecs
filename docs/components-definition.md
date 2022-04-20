@@ -1,3 +1,7 @@
+---
+title: "Component definition"
+slug: "contributor/sdk/new-ecs/component-definition"
+---
 
 # Definition of a component
 
