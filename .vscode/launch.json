@@ -23,6 +23,16 @@
         "internalConsoleOptions": "neverOpen",
         "protocol": "inspector",
         "autoAttachChildProcesses": true
+      },
+      {
+        "type": "node",
+        "name": "Debug tool flatbuffer",
+        "request": "launch",
+        "program": "${workspaceFolder}/tools/dist/flatbuffer-generation/index.js",
+        "cwd": "${workspaceFolder}",
+        "console": "integratedTerminal", 
+        "args": ["test", "--component-path", "${workspaceFolder}/src/components/legacy/flatbuffer"],
+        "preLaunchTask": "Build tools"
       }
     ]
   }

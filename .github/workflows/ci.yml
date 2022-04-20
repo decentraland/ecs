@@ -18,7 +18,9 @@ jobs:
         with:
           node-version: 16.x
       - name: install
-        run:  npm install
+        run:  make install
+      - name: test-flatbuffer
+        run:  make test-build-flatbuffers
       - name: build
         run:  make build
       - name: test

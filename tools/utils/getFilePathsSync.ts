@@ -13,15 +13,18 @@ export function getFilePathsSync(
   // Return value
   const files: string[] = []
 
-  stats.forEach(async (stat, i) => {
+  for (const [index, stat] of stats.entries()) {
     if (stat.isDirectory()) {
       if (recursive) {
-        files.concat(getFilePathsSync(filePaths[i]))
+        const folderFiles = getFilePathsSync(filePaths[index]).map((fileName) =>
+          path.resolve(`/${fileNames[index]}`, fileName).substring(1)
+        )
+        files.push(...folderFiles)
       }
     } else {
-      files.push(fileNames[i])
+      files.push(fileNames[index])
     }
-  })
+  }
 
   return files
 }

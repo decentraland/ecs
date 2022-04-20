@@ -5,7 +5,7 @@ TODO
 
 ## Raw types
 
-It consists of directly writing in the buffer to be sent thourgh the wire. Ideally to types that
+It consists of directly writing in the buffer to be sent through the wire. Ideally to types that
 probably never change and need to be fast. E.g: transform component
 
 - typescript
@@ -26,9 +26,14 @@ Without keys, almost raw types.
 
 ## Flat Buffers
 Flatbuffer has many language supports, it's fast and it has tools for forward-backwards compatibility.
-- typescript: flatbuffer copmiler auto-generation and post processing
-- c#: flatbuffer copmiler auto-generation and post processing
-- json definition: flatbuffer copmiler auto-generation
+- typescript: flatbuffer compiler auto-generation and post processing
+- c#: flatbuffer compiler auto-generation and post processing
+- json definition: flatbuffer compiler auto-generation
+
+The goal of post processing is to auto-generated a data-type for typescript and C#
+
+
+
 
 ### Generation and maintain
 TODO

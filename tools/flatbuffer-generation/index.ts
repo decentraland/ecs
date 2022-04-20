@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
+import { copySync, mkdirSync, removeSync } from 'fs-extra'
 import path from 'path'
+import { compareFolders } from '../utils/compareFolder'
 import { getFilePathsSync } from '../utils/getFilePathsSync'
 import { generateComponent } from './generateComponent'
 import { generateFlatbuffer } from './generateFlatbuffer'
@@ -23,14 +25,26 @@ function getParam(key: string) {
  *
  */
 async function main() {
-  const componentPath = getParam('--component-path')
-  if (!componentPath) {
+  const componentPathParam = getParam('--component-path')
+  const test = process.argv.findIndex((item) => item === 'test') !== -1
+  if (!componentPathParam) {
     console.error('Arg --component-path is required.')
     process.exit(2)
   }
 
+  const componentPath = test
+    ? path.resolve(process.cwd(), 'temp-flatbuffer')
+    : componentPathParam
   const generatedPath = path.resolve(componentPath, 'fb-generated')
   const flatbufferPath = path.resolve(componentPath, 'fbs')
+
+  if (test) {
+    removeSync(componentPath)
+    mkdirSync(path.resolve(componentPath, 'fbs'), { recursive: true })
+    copySync(path.resolve(componentPathParam, 'fbs'), flatbufferPath, {
+      recursive: true
+    })
+  }
 
   console.log(
     `Decentraland > Gen dir: ${generatedPath} - fb dir: ${flatbufferPath}`
@@ -67,6 +81,15 @@ async function main() {
   }
 
   await generateIndex({ components, componentPath })
+
+  if (test) {
+    const result = compareFolders(componentPath, componentPathParam)
+    removeSync(componentPath)
+
+    if (!result) {
+      process.exit(1)
+    }
+  }
 }
 
 main().catch((err) => {
