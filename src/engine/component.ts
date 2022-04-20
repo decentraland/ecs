@@ -12,7 +12,6 @@ export type ComponentType<T extends EcsType> = EcsResult<T>
 export type ComponentDefinition<T extends EcsType = EcsType<any>> = {
   _id: number
   has(entity: Entity): boolean
-  // removeFrom(entity: Entity): void
   getFrom(entity: Entity): Readonly<ComponentType<T>>
 
   getOrNull(entity: Entity): Readonly<ComponentType<T>> | null
@@ -23,13 +22,9 @@ export type ComponentDefinition<T extends EcsType = EcsType<any>> = {
   // adds this component to the list "to be reviewed next frame"
   mutable(entity: Entity): ComponentType<T>
   createOrReplace(entity: Entity, val: ComponentType<T>): ComponentType<T>
-
   deleteFrom(entity: Entity): ComponentType<T> | null
 
-  updateOrCreateFromBinary(
-    entity: Entity,
-    data: ByteBuffer
-  ): ComponentType<T> | null
+  upsertFromBinary(entity: Entity, data: ByteBuffer): ComponentType<T> | null
   updateFromBinary(entity: Entity, data: ByteBuffer): ComponentType<T> | null
   // allocates a buffer and returns new buffer
   toBinary(entity: Entity): ByteBuffer
@@ -37,25 +32,33 @@ export type ComponentDefinition<T extends EcsType = EcsType<any>> = {
   writeToByteBuffer(entity: Entity, buffer: ByteBuffer): void
 
   iterator(): Iterable<[Entity, ComponentType<T>]>
+
+  // Dirty
   dirtyIterator(): Iterable<Entity>
   clearDirty(): void
+  isDirty(entity: Entity): boolean
 }
 
 export function defineComponent<T extends EcsType>(
   componentId: number,
   spec: T
+  // meta: { syncFlags }
 ): ComponentDefinition<T> {
   const data = new Map<Entity, ComponentType<T>>()
-  let dirtyIterator = new Set<Entity>()
+  const dirtyIterator = new Set<Entity>()
 
   return {
     _id: componentId,
+    isDirty: function (entity: Entity): boolean {
+      return dirtyIterator.has(entity)
+    },
     has: function (entity: Entity): boolean {
       return data.has(entity)
     },
     deleteFrom: function (entity: Entity): ComponentType<T> | null {
       const component = data.get(entity)
       data.delete(entity)
+      dirtyIterator.add(entity)
       return component || null
     },
     getOrNull: function (entity: Entity): Readonly<ComponentType<T>> | null {
@@ -65,7 +68,9 @@ export function defineComponent<T extends EcsType>(
     getFrom: function (entity: Entity): Readonly<ComponentType<T>> {
       const component = data.get(entity)
       if (!component) {
-        throw new Error(`Component ${componentId} for ${entity} not found`)
+        throw new Error(
+          `[getFrom] Component ${componentId} for ${entity} not found`
+        )
       }
       return readonly(component)
     },
@@ -75,7 +80,9 @@ export function defineComponent<T extends EcsType>(
     ): ComponentType<T> {
       const component = data.get(entity)
       if (component) {
-        throw new Error(`Component ${componentId} for ${entity} already exists`)
+        throw new Error(
+          `[create] Component ${componentId} for ${entity} already exists`
+        )
       }
       data.set(entity, value)
       dirtyIterator.add(entity)
@@ -92,7 +99,9 @@ export function defineComponent<T extends EcsType>(
     mutable: function (entity: Entity): ComponentType<T> {
       const component = data.get(entity)
       if (!component) {
-        throw new Error(`Component ${componentId} for ${entity} not found`)
+        throw new Error(
+          `[mutable] Component ${componentId} for ${entity} not found`
+        )
       }
       dirtyIterator.add(entity)
       return component
@@ -120,7 +129,9 @@ export function defineComponent<T extends EcsType>(
     writeToByteBuffer(entity: Entity, buffer: ByteBuffer): void {
       const component = data.get(entity)
       if (!component) {
-        throw new Error(`Component ${componentId} for ${entity} not found`)
+        throw new Error(
+          `[toBinary] Component ${componentId} for ${entity} not found`
+        )
       }
 
       spec.serialize(component, buffer)
@@ -131,20 +142,23 @@ export function defineComponent<T extends EcsType>(
     ): ComponentType<T> | null {
       const component = data.get(entity)
       if (!component) {
-        throw new Error(`Component ${componentId} for ${entity} not found`)
+        throw new Error(
+          `[updateFromBinary] Component ${componentId} for ${entity} not found`
+        )
       }
-      return this.updateOrCreateFromBinary(entity, buffer)
+      return this.upsertFromBinary(entity, buffer)
     },
-    updateOrCreateFromBinary(
+    upsertFromBinary(
       entity: Entity,
       buffer: ByteBuffer
     ): ComponentType<T> | null {
       const newValue = spec.deserialize(buffer)
       data.set(entity, newValue)
+      dirtyIterator.add(entity)
       return newValue
     },
     clearDirty: function () {
-      dirtyIterator = new Set<Entity>()
+      dirtyIterator.clear()
     }
   }
 }

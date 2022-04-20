@@ -6,13 +6,19 @@ import {
 import { ComponentEcsType, Update } from './types'
 import { EcsType } from '../built-in-types'
 import { defineSdkComponents } from '../components'
+import { crdtSceneSystem } from '../systems/crdt'
 
 /**
  * @alpha
  */
-export function preEngine() {
+function preEngine() {
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
+  // TODO: find a way to make this work. Maybe a proxy/callback to be up-to-date
+  const entitiesComponent = new Map<
+    number,
+    Set<ComponentDefinition<any>['_id']>
+  >()
   const systems = new Set<Update>()
 
   function addSystem(fn: Update) {
@@ -24,13 +30,18 @@ export function preEngine() {
 
   function addEntity() {
     const entity = entityContainer.generateEntity()
+    // entitiesCompnonent.set(entity, new Set())
     return entity
   }
 
   function removeEntity(entity: Entity) {
+    // TODO: Remove all the components of that entity
     for (const [, component] of componentsDefinition) {
-      component.deleteFrom(entity)
+      if (component.has(entity)) {
+        component.deleteFrom(entity)
+      }
     }
+    // entitiesComponent.delete(entity)
     return entityContainer.removeEntity(entity)
   }
 
@@ -44,6 +55,12 @@ export function preEngine() {
     const newComponent = defComponent<T>(componentId, spec)
     componentsDefinition.set(componentId, newComponent)
     return newComponent
+  }
+
+  function getComponent<T extends EcsType>(
+    componentId: number
+  ): ComponentDefinition<T> | undefined {
+    return componentsDefinition.get(componentId)
   }
 
   function* mutableGroupOf<
@@ -87,42 +104,77 @@ export function preEngine() {
     }
   }
 
-  function update(dt: number) {
-    for (const system of systems) {
-      system(dt)
-    }
-
-    for (const [, definition] of componentsDefinition) {
-      definition.clearDirty()
-    }
-  }
-
   return {
+    entitiesComponent,
+    componentsDefinition,
+    systems,
     addEntity,
     removeEntity,
     addSystem,
     defineComponent,
     mutableGroupOf,
     groupOf,
-    update
+    getComponent
   }
 }
 
 /**
  * @alpha
  */
-export type Engine = ReturnType<typeof preEngine> & {
+export type PreEngine = ReturnType<typeof preEngine>
+
+// TODO Fix this type
+/**
+ * @public
+ */
+export type Engine = PreEngine & {
   baseComponents: ReturnType<typeof defineSdkComponents>
 }
 
 /**
- * @alpha
+ * @public
  */
 export function Engine() {
   const engine = preEngine()
+  const crdtSystem = crdtSceneSystem(engine)
   const baseComponents = defineSdkComponents(engine)
+
+  function update(dt: number) {
+    crdtSystem.processMessages()
+
+    for (const system of engine.systems) {
+      system(dt)
+    }
+
+    // TODO: Perf tip
+    // Should we add some dirtyIteratorSet at engine level so we dont have
+    // to iterate all the component definitions to get the dirty ones ?
+    const dirtySet = new Map<Entity, Set<number>>()
+    for (const [classId, definition] of engine.componentsDefinition) {
+      for (const entity of definition.dirtyIterator()) {
+        if (!dirtySet.has(entity)) {
+          dirtySet.set(entity, new Set())
+        }
+        dirtySet.get(entity)!.add(classId)
+      }
+    }
+
+    crdtSystem.send(dirtySet)
+
+    for (const [_classId, definition] of engine.componentsDefinition) {
+      definition.clearDirty()
+    }
+  }
+
   return {
-    ...engine,
+    addEntity: engine.addEntity,
+    removeEntity: engine.removeEntity,
+    addSystem: engine.addSystem,
+    defineComponent: engine.defineComponent,
+    mutableGroupOf: engine.mutableGroupOf,
+    groupOf: engine.groupOf,
+    getComponent: engine.getComponent,
+    update,
     baseComponents
   }
 }

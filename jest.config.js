@@ -12,4 +12,5 @@ module.exports = {
   verbose: true,
   testMatch: ["**/*.spec.(ts)"],
   testEnvironment: "node",
+  setupFilesAfterEnv: ['./test/setup.ts']
 }
