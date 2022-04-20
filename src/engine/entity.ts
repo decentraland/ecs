@@ -1,9 +1,13 @@
-export type Entity = number
+declare const entitySymbol: unique symbol
+
+export type Entity = number & { [entitySymbol]: true }
+
 function Entity(entity: number): Entity {
-  return entity
+  return entity as Entity
 }
 
 type Config = { start: number; finish: number }
+
 export function EntityContainer(configParam?: Config) {
   const config: Config = configParam || { start: 0, finish: 1000 }
   const usedEntities: Set<Entity> = new Set()

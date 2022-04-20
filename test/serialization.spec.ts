@@ -11,8 +11,6 @@ import {
   String
 } from '../src/built-in-types'
 import { Engine } from '../src/engine'
-import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to'
-expect.extend({ toBeDeepCloseTo, toMatchCloseTo })
 
 const Vector3 = MapType({ x: Float32, y: Float32, z: Float32 })
 const Quaternion = MapType({ x: Float32, y: Float32, z: Float32, w: Float32 })

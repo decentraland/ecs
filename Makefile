@@ -32,6 +32,9 @@ build:
 	./node_modules/.bin/tsc -p tools/tsconfig.json
 	chmod +x tools/dist/flatbuffer-generation/index.js
 
+watch:
+	./node_modules/.bin/tsc -p tsconfig.json -w
+
 lint:
 	./node_modules/.bin/eslint . --ext .ts
 

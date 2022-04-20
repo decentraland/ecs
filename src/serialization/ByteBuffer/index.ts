@@ -160,8 +160,8 @@ export function createByteBuffer(
 
     /**
      * Reading purpose
+     * Returns the previuos offsset size before incrementing
      */
-
     incrementReadOffset(amount: number): number {
       return roAdd(amount)
     },

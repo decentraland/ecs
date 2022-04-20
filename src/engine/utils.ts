@@ -9,3 +9,7 @@ export function readonly<T extends Record<string, unknown>>(
   }
   return Object.freeze({ ...val })
 }
+
+export function isNotUndefined<T>(val: T | undefined): val is T {
+  return !!val
+}
