@@ -46,7 +46,6 @@ install_flatbuffer_compiler:
 
 build-flatbuffers:
 	./tools/dist/flatbuffer-generation/index.js --component-path ${PWD}/src/components/legacy/flatbuffer
-	./node_modules/.bin/eslint ./src/components/legacy/flatbuffer --ext .ts --fix
 
 test-build-flatbuffers:
 	./tools/dist/flatbuffer-generation/index.js test --component-path ${PWD}/src/components/legacy/flatbuffer

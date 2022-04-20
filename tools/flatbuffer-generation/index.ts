@@ -4,6 +4,7 @@ import { copySync, mkdirSync, removeSync } from 'fs-extra'
 import path from 'path'
 import { compareFolders } from '../utils/compareFolder'
 import { getFilePathsSync } from '../utils/getFilePathsSync'
+import { runCommand } from '../utils/shellCommand'
 import { generateComponent } from './generateComponent'
 import { generateFlatbuffer } from './generateFlatbuffer'
 import { generateIndex } from './generateIndex'
@@ -81,6 +82,11 @@ async function main() {
   }
 
   await generateIndex({ components, componentPath })
+  await runCommand({
+    command: path.resolve(process.cwd(), 'node_modules', '.bin', 'eslint'),
+    args: [componentPath, '--ext', '.ts', '--fix'],
+    workingDir: process.cwd()
+  })
 
   if (test) {
     const result = compareFolders(componentPath, componentPathParam)
