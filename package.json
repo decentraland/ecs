@@ -23,7 +23,7 @@
   "devDependencies": {
     "@microsoft/api-extractor": "^7.23.0",
     "@types/flatbuffers": "^1.10.0",
-    "@types/jest": "^27.4.0",
+    "@types/jest": "^27.4.1",
     "jest": "^27.4.7",
     "jest-matcher-deep-close-to": "^3.0.2",
 <<<<<<< HEAD
