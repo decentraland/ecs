@@ -63,10 +63,11 @@ export function crdtSceneSystem(engine: PreEngine) {
       }
 
       // CRDT outdated message. Resend this message through the wire
+      // TODO: perf transactor
       if (msg !== message) {
         PutComponentOperation.write(entity, msg.timestamp, component, buffer)
       } else {
-        // TODO: lean. This vs createByteBuffeR({ readingbuffer: message.data }).
+        // TODO lean: reading/writing vs writeBuffer bug
         const bb = createByteBuffer()
         bb.writeBuffer(message.data, false)
 
@@ -74,6 +75,7 @@ export function crdtSceneSystem(engine: PreEngine) {
         component.clearDirty()
       }
     }
+
     if (buffer.size()) {
       transport.send(buffer.toBinary())
     }

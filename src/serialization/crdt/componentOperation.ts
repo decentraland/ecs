@@ -65,6 +65,7 @@ export namespace PutComponentOperation {
     const messageLength =
       messageBuf.size() - startMessageOffset - WireMessage.HEADER_LENGTH
 
+    // TODO: change to messageBuf.read and verify offset bug
     // Write header
     view.setUint32(startMessageOffset, messageLength)
     view.setUint32(startMessageOffset + 4, WireMessage.HEADER_CURRENT_VERSION)
@@ -95,13 +96,7 @@ export namespace PutComponentOperation {
     const timestamp = Number(view.getBigUint64(buf.currentReadOffset()))
     buf.incrementReadOffset(8)
 
-    const dataLength = view.getInt32(buf.currentReadOffset())
-    buf.incrementReadOffset(4)
-
-    const data = buf
-      .buffer()
-      .subarray(buf.currentReadOffset(), buf.currentReadOffset() + dataLength)
-    buf.incrementReadOffset(dataLength)
+    const data = buf.readBuffer()
 
     return {
       ...header,

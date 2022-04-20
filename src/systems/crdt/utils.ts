@@ -25,6 +25,7 @@ export namespace CrdtUtils {
 }
 export default CrdtUtils
 
+// TODO: next version split between diff types of transports/crdts.
 // 1. engine.receiveMessage(rawMessage "diff")
 // 2. engine checks CRDT "filter"
 //   2.1. If pass, then apply CRDT message to internal cache

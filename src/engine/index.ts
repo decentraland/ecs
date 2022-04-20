@@ -14,6 +14,7 @@ import { crdtSceneSystem } from '../systems/crdt'
 function preEngine() {
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
+  // TODO: find a way to make this work. Maybe a proxy/callback to be up-to-date
   const entitiesComponent = new Map<
     number,
     Set<ComponentDefinition<any>['_id']>
@@ -29,7 +30,7 @@ function preEngine() {
 
   function addEntity() {
     const entity = entityContainer.generateEntity()
-    entitiesComponent.set(entity, new Set())
+    // entitiesCompnonent.set(entity, new Set())
     return entity
   }
 
@@ -40,7 +41,7 @@ function preEngine() {
         component.deleteFrom(entity)
       }
     }
-    entitiesComponent.delete(entity)
+    // entitiesComponent.delete(entity)
     return entityContainer.removeEntity(entity)
   }
 
