@@ -1,6 +1,0 @@
-# Bytebuffer
-TODO
-
-## Typescript
-
-## C#
