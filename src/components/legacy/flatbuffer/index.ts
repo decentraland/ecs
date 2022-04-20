@@ -1,5 +1,6 @@
 import * as BoxShape from './BoxShape'
 import * as CircleShape from './CircleShape'
+import * as FBTransform from './FBTransform'
 import * as PlaneShape from './PlaneShape'
 import * as SphereShape from './SphereShape'
 import { Engine } from '../../../engine'
@@ -12,6 +13,10 @@ export function defineFlatbufferComponents({
     CircleShape: defineComponent(
       CircleShape.COMPONENT_ID,
       CircleShape.CircleShape
+    ),
+    FBTransform: defineComponent(
+      FBTransform.COMPONENT_ID,
+      FBTransform.FBTransform
     ),
     PlaneShape: defineComponent(PlaneShape.COMPONENT_ID, PlaneShape.PlaneShape),
     SphereShape: defineComponent(

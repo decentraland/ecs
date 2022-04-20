@@ -1,0 +1,22 @@
+attribute "COMPONENT_ID_997";
+
+struct Quaternion {
+  x: float;
+  y: float;
+  z: float;  
+  w: float;  
+}
+
+struct Vector3 {
+  x: float;
+  y: float;
+  z: float;  
+}
+
+table FBTransform {
+  position: Vector3;
+  rotation: Quaternion;
+  scale: Vector3;
+}
+
+root_type FBTransform;
