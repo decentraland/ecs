@@ -1,48 +1,39 @@
 {
   "name": "@dcl/ecs",
   "version": "1.0.0",
-  "description": "base component",
+  "description": "Decentraland ECS",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/well-known-components/base-component.git"
+    "url": "git+https://github.com/decentraland/ecs.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["dcl", "ecs", "decentraland-ecs"],
+  "author": "DCL",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/well-known-components/base-component/issues"
+    "url": "https://github.com/decentraland/ecs/issues"
   },
-  "prettier": {
-    "printWidth": 120,
-    "semi": false
-  },
-  "homepage": "https://github.com/well-known-components/base-component#readme",
+  "homepage": "https://github.com/decentraland/ecs#readme",
   "devDependencies": {
+    "@dcl/eslint-config": "^1.0.3",
     "@microsoft/api-extractor": "^7.23.0",
     "@types/flatbuffers": "^1.10.0",
+    "@types/bytebuffer": "^5.0.43",
     "@types/jest": "^27.4.1",
-    "jest": "^27.4.7",
+    "jest": "^27.5.1",
     "jest-matcher-deep-close-to": "^3.0.2",
-<<<<<<< HEAD
-    "ts-jest": "^27.1.3",
-    "typescript": "^4.6.3"
-=======
     "ts-jest": "^27.1.4",
-    "typescript": "^4.5.5"
->>>>>>> 87811e0 (Bump ts-jest from 27.1.3 to 27.1.4)
+    "typescript": "^4.6.3"
   },
-  "files": [
-    "dist"
-  ],
   "dependencies": {
     "@dcl/crdt": "^1.0.0-20220412150438.commit-965dc72",
     "@dcl/ecs-math": "^2.0.0-20220323170902.commit-c4f0d91",
-    "@dcl/eslint-config": "^1.0.3",
-    "@types/bytebuffer": "^5.0.43",
     "bytebuffer": "^5.0.1",
     "flatbuffers": "^2.0.6"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
