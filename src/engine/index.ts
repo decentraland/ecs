@@ -14,7 +14,8 @@ import { crdtSceneSystem } from '../systems/crdt'
 function preEngine() {
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
-  // TODO: find a way to make this work. Maybe a proxy/callback to be up-to-date
+  // TODO: find a way to make this work.
+  // Maybe a proxy/callback to be up-to-date
   const entitiesComponent = new Map<
     number,
     Set<ComponentDefinition<any>['_id']>
@@ -28,9 +29,9 @@ function preEngine() {
     systems.add(fn)
   }
 
-  function addEntity() {
-    const entity = entityContainer.generateEntity()
+  function addEntity(dynamic: boolean = false) {
     // entitiesCompnonent.set(entity, new Set())
+    const entity = entityContainer.generateEntity(dynamic)
     return entity
   }
 
