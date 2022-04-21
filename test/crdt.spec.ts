@@ -1,9 +1,10 @@
 import { Quaternion, Vector3 } from '@dcl/ecs-math'
 import { Float32, Int8, MapType } from '../src/built-in-types'
 import { Engine } from '../src/engine'
-import { ComponentDefinition } from '../src/engine/component'
 import { Entity } from '../src/engine/entity'
+import EntityUtils from '../src/engine/entity-utils'
 import * as transport from '../src/systems/crdt/transport'
+import { wait } from './utils'
 
 const Position = {
   id: 88,
@@ -109,7 +110,7 @@ describe('CRDT tests', () => {
   })
 
   it('should sent new entity through the wire and process it in the other engine', () => {
-    const [clientA, clientB] = createSandbox({ length: 2 })
+    const [clientA, clientB] = createSandbox({ length: 12 })
 
     const entityA = clientA.engine.addEntity(true)
     const { Transform } = clientA.engine.baseComponents
@@ -133,8 +134,20 @@ describe('CRDT tests', () => {
     expect(clientB.spySend).toBeCalledTimes(0)
   })
 
-  it('create multiple clients with the same code. Just like a scene', () => {
-    const clients = createSandbox({ length: 2 })
+  it('create multiple clients with the same code. Just like a scene', async () => {
+    const CLIENT_LENGTH = 6
+    const UPDATE_MS = 100
+    const DOOR_VALUE = 8
+
+    function getDoorComponent(engine: Engine) {
+      return engine.getComponent<typeof Door.type>(Door.id)
+    }
+    const clients = createSandbox({ length: CLIENT_LENGTH })
+
+    const interval = setInterval(() => {
+      clients.forEach((c) => c.engine.update(1))
+    }, UPDATE_MS)
+
     clients.forEach(({ engine }) => {
       const PosCompomnent = engine.defineComponent(Position.id, Position.type)
       const DoorComponent = engine.defineComponent(Door.id, Door.type)
@@ -143,8 +156,6 @@ describe('CRDT tests', () => {
       engine.baseComponents.Transform.create(entity, DEFAULT_POSITION)
       PosCompomnent.create(entity, Vector3.Up())
       DoorComponent.create(entity, { open: 1 })
-      engine.update(1 / 30)
-      return entity
     })
 
     clients.forEach((c) => expect(c.spySend).toBeCalledTimes(0))
@@ -153,7 +164,7 @@ describe('CRDT tests', () => {
      */
     const [clientA, ...otherClients] = clients
     const { Transform } = clientA.engine.baseComponents
-    const DoorComponent = clientA.engine.getComponent<typeof Door.type>(Door.id)
+    const DoorComponent = getDoorComponent(clientA.engine)
     // Upate Transform from static entity
     const entity = (clientA.engine.addEntity() - 1) as Entity
     Transform.mutable(entity).position.x = 10
@@ -162,16 +173,27 @@ describe('CRDT tests', () => {
     const dynamicEntity = clientA.engine.addEntity(true)
     DoorComponent.create(dynamicEntity, { open: 1 })
 
-    clientA.engine.update(1 / 30)
+    otherClients.forEach(({ engine }, index) => {
+      const DoorComponent = getDoorComponent(engine)
+      const first = index === 0
 
-    otherClients.forEach((client) => {
-      client.engine.update(1 / 30)
-      const { Transform } = client.engine.baseComponents
-      const DoorComponent = client.engine.getComponent(Door.id)
+      function doorSystem(_dt: number) {
+        for (const [entity, door] of engine.mutableGroupOf(DoorComponent)) {
+          if (EntityUtils.isStaticEntity(entity)) continue
+          if (door.open === 1) {
+            door.open = first ? DOOR_VALUE : 3
+          }
+        }
+      }
+      engine.addSystem(doorSystem)
+    })
 
-      expect(client.spySend).toBeCalledTimes(0)
-      expect(Transform.getFrom(entity).position.x).toBe(10)
-      expect(DoorComponent.getFrom(dynamicEntity)).toStrictEqual({ open: 1 })
+    // Wait for the updates
+    await wait(UPDATE_MS * 2)
+    clearInterval(interval)
+    clients.forEach(({ engine }) => {
+      const doorValue = getDoorComponent(engine).getFrom(dynamicEntity).open
+      expect(doorValue).toBe(DOOR_VALUE)
     })
   })
 })

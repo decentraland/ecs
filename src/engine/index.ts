@@ -134,14 +134,29 @@ export type PreEngine = ReturnType<typeof preEngine>
 /**
  * @public
  */
-export type Engine = PreEngine & {
+export type Engine = {
+  addEntity(dynamic?: boolean): Entity
+  removeEntity(entity: Entity): void
+  addSystem(system: Update): void
+  defineComponent<T extends EcsType>(
+    componentId: number,
+    spec: T
+  ): ComponentDefinition<T>
+  mutableGroupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(
+    ...components: T
+  ): Iterable<[Entity, ...ComponentEcsType<T>]>
+  groupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(
+    ...components: T
+  ): Iterable<[Entity, ...Readonly<ComponentEcsType<T>>]>
+  getComponent<T extends EcsType>(componentId: number): ComponentDefinition<T>
+  update(dt: number): void
   baseComponents: ReturnType<typeof defineSdkComponents>
 }
 
 /**
  * @public
  */
-export function Engine() {
+export function Engine(): Engine {
   const engine = preEngine()
   const crdtSystem = crdtSceneSystem(engine)
   const baseComponents = defineSdkComponents(engine)
