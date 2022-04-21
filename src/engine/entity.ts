@@ -1,4 +1,4 @@
-import { EntityOffset } from './entity-offset'
+import { EntityUtils } from './entity-utils'
 
 declare const entitySymbol: unique symbol
 export type Entity = number & { [entitySymbol]: true }
@@ -36,7 +36,7 @@ function Entity(withOffset: boolean = false) {
   }
 
   // TODO: getoffset from a server?
-  const offset = withOffset ? EntityOffset.getOffset() : 0
+  const offset = withOffset ? EntityUtils.getOffset() : 0
   const usedEntities: Set<Entity> = new Set()
   const unusedEntities: Set<Entity> = new Set()
 
@@ -52,7 +52,7 @@ function Entity(withOffset: boolean = false) {
     const iterator = unusedEntities[Symbol.iterator]().next()
     if (iterator.done) {
       const entity = createEntity(Math.max(...usedEntities.values()) + 1)
-      if (entity >= EntityOffset.MAX + offset) {
+      if (entity >= EntityUtils.MAX_ENTITIES + offset) {
         throw new Error('Entity rate limit exceed')
       }
       usedEntities.add(entity)

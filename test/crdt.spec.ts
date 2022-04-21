@@ -1,6 +1,8 @@
 import { Quaternion, Vector3 } from '@dcl/ecs-math'
 import { Float32, Int8, MapType } from '../src/built-in-types'
 import { Engine } from '../src/engine'
+import { ComponentDefinition } from '../src/engine/component'
+import { Entity } from '../src/engine/entity'
 import * as transport from '../src/systems/crdt/transport'
 
 const Position = {
@@ -13,7 +15,9 @@ const Position = {
 
 const Door = {
   id: 888,
-  type: Int8
+  type: MapType({
+    open: Int8
+  })
 }
 
 const DEFAULT_POSITION = {
@@ -51,9 +55,31 @@ function createSandbox({ length }: { length: number }) {
 }
 
 describe('CRDT tests', () => {
-  it('Send ONLY dirty components via trasnport and spy on send messages', () => {
-    const { engine, ws, spySend } = createSandbox({ length: 1 })[0]
+  it('should not send static entities, only updates', () => {
+    const { engine, spySend } = createSandbox({ length: 1 })[0]
     const entityA = engine.addEntity()
+    const { Transform } = engine.baseComponents
+    const Test = engine.defineComponent(Position.id, Position.type)
+
+    // Create two basic components for entity A
+    Transform.create(entityA, DEFAULT_POSITION)
+    Test.create(entityA, { x: 1, y: 2 })
+
+    // Tick update and verify that both messages are being sent through ws.send
+    engine.update(1 / 30)
+    expect(spySend).toBeCalledTimes(0)
+
+    // Reset ws.send called times
+    jest.resetAllMocks()
+
+    Transform.mutable(entityA).position.x = 10
+    engine.update(1 / 30)
+    expect(spySend).toBeCalledTimes(1)
+  })
+
+  it('Send ONLY dirty components via trasnport and spy on send messages', () => {
+    const { engine, spySend } = createSandbox({ length: 1 })[0]
+    const entityA = engine.addEntity(true)
     const { Transform } = engine.baseComponents
     const Test = engine.defineComponent(Position.id, Position.type)
 
@@ -71,7 +97,7 @@ describe('CRDT tests', () => {
     // Update a component and verify that's being sent through the crdt system
     Transform.mutable(entityA).position.x = 10
     engine.update(1 / 30)
-    expect(ws.send).toBeCalledTimes(1)
+    expect(spySend).toBeCalledTimes(1)
 
     // Reset ws.send again
     jest.resetAllMocks()
@@ -79,13 +105,13 @@ describe('CRDT tests', () => {
     // Call update again with no updates and verify that there's no message
     // being sent through the wire
     engine.update(1 / 30)
-    expect(ws.send).toBeCalledTimes(0)
+    expect(spySend).toBeCalledTimes(0)
   })
 
   it('should sent new entity through the wire and process it in the other engine', () => {
     const [clientA, clientB] = createSandbox({ length: 2 })
 
-    const entityA = clientA.engine.addEntity()
+    const entityA = clientA.engine.addEntity(true)
     const { Transform } = clientA.engine.baseComponents
     const TransformB = clientB.engine.baseComponents.Transform
     const TestA = clientA.engine.defineComponent(Position.id, Position.type)
@@ -107,27 +133,45 @@ describe('CRDT tests', () => {
     expect(clientB.spySend).toBeCalledTimes(0)
   })
 
-  it('crdt system between multiple scenes', () => {
-    const clients = createSandbox({ length: 1 })
-    const entities = clients.map(({ engine }) => {
+  it('create multiple clients with the same code. Just like a scene', () => {
+    const clients = createSandbox({ length: 2 })
+    clients.forEach(({ engine }) => {
       const PosCompomnent = engine.defineComponent(Position.id, Position.type)
       const DoorComponent = engine.defineComponent(Door.id, Door.type)
       const entity = engine.addEntity()
 
       engine.baseComponents.Transform.create(entity, DEFAULT_POSITION)
       PosCompomnent.create(entity, Vector3.Up())
-      DoorComponent.create(entity, 1)
+      DoorComponent.create(entity, { open: 1 })
       engine.update(1 / 30)
-
       return entity
     })
-    const Transform = clients[0].engine.baseComponents.Transform
 
-    expect(DEFAULT_POSITION).toBeDeepCloseTo(Transform.getFrom(entities[0]))
+    clients.forEach((c) => expect(c.spySend).toBeCalledTimes(0))
+    /**
+     * If we change a static entity in one scene. It should be send to other peers.
+     */
+    const [clientA, ...otherClients] = clients
+    const { Transform } = clientA.engine.baseComponents
+    const DoorComponent = clientA.engine.getComponent<typeof Door.type>(Door.id)
+    // Upate Transform from static entity
+    const entity = (clientA.engine.addEntity() - 1) as Entity
+    Transform.mutable(entity).position.x = 10
 
-    // expect(DEFAULT_POSITION).toBeDeepCloseTo(TransformB.getFrom(entityA))
-    // expect(DEFAULT_TEST).toBeDeepCloseTo(TestB.getFrom(entityA))
-    // expect(clientA.spySend).toBeCalledTimes(1)
-    // expect(clientB.spySend).toBeCalledTimes(0)
+    // Create a dynamic entity
+    const dynamicEntity = clientA.engine.addEntity(true)
+    DoorComponent.create(dynamicEntity, { open: 1 })
+
+    clientA.engine.update(1 / 30)
+
+    otherClients.forEach((client) => {
+      client.engine.update(1 / 30)
+      const { Transform } = client.engine.baseComponents
+      const DoorComponent = client.engine.getComponent(Door.id)
+
+      expect(client.spySend).toBeCalledTimes(0)
+      expect(Transform.getFrom(entity).position.x).toBe(10)
+      expect(DoorComponent.getFrom(dynamicEntity)).toStrictEqual({ open: 1 })
+    })
   })
 })

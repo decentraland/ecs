@@ -1,5 +1,5 @@
 import { EntityContainer } from '../src/engine/entity'
-import * as entityOffset from '../src/engine/entity-offset'
+import * as entityUtils from '../src/engine/entity-utils'
 
 describe('Entity container', () => {
   it('generates new entities', () => {
@@ -31,16 +31,16 @@ describe('Entity container', () => {
     expect(entityContainer.getUnusedEntities().has(entityA)).toBe(false)
   })
 
-  it.only('rate limit', () => {
+  it('rate limit', () => {
     const entityContainer = EntityContainer()
-    for (let i = 0; i < entityOffset.EntityOffset.MAX; i++) {
+    for (let i = 0; i < entityUtils.EntityUtils.MAX_ENTITIES; i++) {
       entityContainer.generateEntity()
     }
     expect(entityContainer.generateEntity).toThrowError()
   })
 
   it('generates dynamic entities', () => {
-    jest.spyOn(entityOffset.EntityOffset, 'getOffset').mockReturnValue(20000)
+    jest.spyOn(entityUtils.EntityUtils, 'getOffset').mockReturnValue(20000)
     const entityContainer = EntityContainer()
     const staticEntity = entityContainer.generateEntity()
     const dynamicEntity = entityContainer.generateEntity(true)

@@ -60,8 +60,14 @@ function preEngine() {
 
   function getComponent<T extends EcsType>(
     componentId: number
-  ): ComponentDefinition<T> | undefined {
-    return componentsDefinition.get(componentId)
+  ): ComponentDefinition<T> {
+    const component = componentsDefinition.get(componentId)
+    if (!component) {
+      throw new Error(
+        'Component not found. You need to declare the components at the beginnig of the engine declaration'
+      )
+    }
+    return component
   }
 
   function* mutableGroupOf<
