@@ -122,22 +122,19 @@ export class FBTransformT {
     public scale: Vector3T | null = null
   ) {}
 
-  static pack(
-    builder: flatbuffers.Builder,
-    value: FBTransformT
-  ): flatbuffers.Offset {
+  pack(builder: flatbuffers.Builder): flatbuffers.Offset {
     FBTransform.startFBTransform(builder)
     FBTransform.addPosition(
       builder,
-      value.position !== null ? value.position!.pack(builder) : 0
+      this.position !== null ? this.position!.pack(builder) : 0
     )
     FBTransform.addRotation(
       builder,
-      value.rotation !== null ? value.rotation!.pack(builder) : 0
+      this.rotation !== null ? this.rotation!.pack(builder) : 0
     )
     FBTransform.addScale(
       builder,
-      value.scale !== null ? value.scale!.pack(builder) : 0
+      this.scale !== null ? this.scale!.pack(builder) : 0
     )
 
     return FBTransform.endFBTransform(builder)

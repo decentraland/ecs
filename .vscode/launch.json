@@ -33,6 +33,29 @@
         "console": "integratedTerminal", 
         "args": ["test", "--component-path", "${workspaceFolder}/src/components/legacy/flatbuffer"],
         "preLaunchTask": "Build tools"
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Jest current file",
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
+        "runtimeArgs": [
+          "--async-stack-traces"
+        ],
+        "args": [
+          "${fileBasename}",
+          "--verbose",
+          "--no-cache",
+          "-i"
+        ],
+        "skipFiles": [
+          "<node_internals>/**/*.js",
+          "node_modules/**/*.js"
+        ],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen",
+        "protocol": "inspector",
+        "autoAttachChildProcesses": true
       }
     ]
   }
