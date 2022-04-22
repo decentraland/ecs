@@ -6,21 +6,9 @@ import EntityUtils from '../src/engine/entity-utils'
 import * as transport from '../src/systems/crdt/transport'
 import { wait } from './utils'
 
-const Position = {
-  id: 88,
-  type: MapType({
-    x: Float32,
-    y: Float32
-  })
-}
-
-const Door = {
-  id: 888,
-  type: MapType({
-    open: Int8
-  })
-}
-
+const Position = { id: 88, type: MapType({ x: Float32, y: Float32 }) }
+const Door = { id: 888, type: MapType({ open: Int8 }) }
+const WS_SEND_DELAY = 30
 const DEFAULT_POSITION = {
   position: Vector3.create(0, 1, 2),
   scale: Vector3.One(),
@@ -46,9 +34,10 @@ function createSandbox({ length }: { length: number }) {
   // Broadcast between clients
   clients.forEach((client) => {
     client.ws.send = (data) => {
-      clients.forEach(
-        (c) => c.id !== client.id && c.ws.onmessage({ data } as MessageEvent)
-      )
+      clients.forEach(async (c) => {
+        await wait(WS_SEND_DELAY)
+        c.id !== client.id && c.ws.onmessage({ data } as MessageEvent)
+      })
     }
   })
 
@@ -109,7 +98,7 @@ describe('CRDT tests', () => {
     expect(spySend).toBeCalledTimes(0)
   })
 
-  it('should sent new entity through the wire and process it in the other engine', () => {
+  it('should sent new entity through the wire and process it in the other engine', async () => {
     const [clientA, clientB] = createSandbox({ length: 12 })
 
     const entityA = clientA.engine.addEntity(true)
@@ -126,8 +115,8 @@ describe('CRDT tests', () => {
     expect(TestB.has(entityA)).toBe(false)
 
     // Update engine, process crdt messages.
+    await wait(WS_SEND_DELAY)
     clientB.engine.update(1 / 30)
-
     expect(DEFAULT_POSITION).toBeDeepCloseTo(TransformB.getFrom(entityA))
     expect(DEFAULT_TEST).toBeDeepCloseTo(TestB.getFrom(entityA))
     expect(clientA.spySend).toBeCalledTimes(1)
@@ -172,25 +161,27 @@ describe('CRDT tests', () => {
     // Create a dynamic entity
     const dynamicEntity = clientA.engine.addEntity(true)
     DoorComponent.create(dynamicEntity, { open: 1 })
-
+    const randomGuyWin = (Math.random() * CLIENT_LENGTH - 1) | 0
     otherClients.forEach(({ engine }, index) => {
       const DoorComponent = getDoorComponent(engine)
-      const first = index === 0
+      const isRandomGuy = randomGuyWin === index
 
       function doorSystem(_dt: number) {
         for (const [entity, door] of engine.mutableGroupOf(DoorComponent)) {
           if (EntityUtils.isStaticEntity(entity)) continue
-          if (door.open === 1) {
-            door.open = first ? DOOR_VALUE : 3
-          }
+          door.open = isRandomGuy
+            ? DOOR_VALUE
+            : Math.max(Math.random(), DOOR_VALUE) // Some random value < DOOR_VALUE
         }
       }
       engine.addSystem(doorSystem)
     })
 
     // Wait for the updates
-    await wait(UPDATE_MS * 2)
+    await wait(UPDATE_MS * 4)
     clearInterval(interval)
+    await wait(UPDATE_MS)
+
     clients.forEach(({ engine }) => {
       const doorValue = getDoorComponent(engine).getFrom(dynamicEntity).open
       expect(doorValue).toBe(DOOR_VALUE)
