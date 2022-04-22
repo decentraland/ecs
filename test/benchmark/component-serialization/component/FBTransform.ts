@@ -5,9 +5,9 @@ import { ByteBuffer } from '../package/ByteBuffer'
 import {
   FBTransform as fbFBTransform,
   FBTransformT
-} from './../fb-generated/f-b-transform'
-import { QuaternionT } from './../fb-generated/quaternion'
-import { Vector3T } from './../fb-generated/vector3'
+} from '../fb-generated/f-b-transform'
+import { QuaternionT } from '../fb-generated/quaternion'
+import { Vector3T } from '../fb-generated/vector3'
 
 type FBTransform = {
   position: Vector3.MutableVector3

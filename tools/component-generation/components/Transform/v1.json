@@ -1,0 +1,35 @@
+{
+  "schema": {
+    "type": "struct",
+    "fields": {
+      "position": {
+        "type": "struct",
+        "fields": {
+          "x": { "type": "float32" },
+          "y": { "type": "float32" },
+          "z": { "type": "float32" }
+        }
+      },
+      "rotation": {
+        "type": "struct",
+        "fields": {
+          "x": { "type": "float32" },
+          "y": { "type": "float32" },
+          "z": { "type": "float32" },
+          "w": { "type": "float32" }
+        }
+      },
+      "scale": {
+        "type": "struct",
+        "fields": {
+          "x": { "type": "float32" },
+          "y": { "type": "float32" },
+          "z": { "type": "float32" }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "componentId": 1
+  }
+}

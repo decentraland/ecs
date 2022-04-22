@@ -40,6 +40,8 @@
     "@dcl/eslint-config": "^1.0.3",
     "@types/bytebuffer": "^5.0.43",
     "bytebuffer": "^5.0.1",
-    "flatbuffers": "^2.0.6"
+    "flatbuffers": "^2.0.6",
+    "protobufjs": "^6.11.2",
+    "ts-proto": "^1.110.4"
   }
 }

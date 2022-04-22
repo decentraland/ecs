@@ -1,0 +1,53 @@
+attribute "COMPONENT_ID_997";
+
+struct FBColor3 {
+  r: float;
+  g: float;
+  b: float;
+}
+
+struct FBColor4 {
+  r: float;
+  g: float;
+  b: float;
+  a: float;
+}
+
+enum FBTransparencyMode: int {
+  OPAQUE = 0,
+  ALPHA_TEST = 1,
+  ALPHA_BLEND = 2,
+  ALPHA_TEST_AND_BLEND = 3,
+  AUTO = 4
+}
+
+union FBColor { FBColor3, FBColor4 }
+
+table FBTexture {
+  src: string;
+  sampling_mode: int;
+  wrap: int;
+  has_alpha: bool;
+}
+
+// all params are optionals for default (in a table)
+table FBMaterial {
+  alpha_test: float;
+  albedo_color: FBColor;
+  emissive_color: FBColor3;
+  metallic: float;
+  roughness: float;
+  reflectivity_color: FBColor3;
+  direct_intensity: float;
+  micro_surface: float;
+  emissive_intensity: float;
+  specular_intensity: float;
+  albedo_texture: FBTexture;
+  alpha_texture: FBTexture;
+  emissive_texture: FBTexture;
+  bump_texture: FBTexture;
+  cast_shadows: bool;
+  transparency_mode: FBTransparencyMode;
+}
+
+root_type FBMaterial;

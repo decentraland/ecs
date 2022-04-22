@@ -28,3 +28,32 @@ export function getFilePathsSync(
 
   return files
 }
+
+export type PathItem = { path: string; isDirectory: boolean }
+
+export function getPathsSync(
+  dir: string,
+  recursive: boolean = true
+): PathItem[] {
+  // variables
+  const fileNames = fs.readdirSync(dir)
+  const filePaths = fileNames.map((fileName) => path.resolve(dir, fileName))
+  const stats = filePaths.map((filePath) => fs.statSync(filePath))
+
+  // Return value
+  const files: { path: string; isDirectory: boolean }[] = []
+
+  for (const [index, stat] of stats.entries()) {
+    files.push({ path: fileNames[index], isDirectory: stat.isDirectory() })
+
+    if (stat.isDirectory() && recursive) {
+      const folderFiles = getPathsSync(filePaths[index]).map((fileName) => ({
+        path: path.resolve(`/${fileNames[index]}`, fileName.path).substring(1),
+        isDirectory: fileName.isDirectory
+      }))
+      files.push(...folderFiles)
+    }
+  }
+
+  return files
+}

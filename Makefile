@@ -5,10 +5,14 @@ endif
 
 export PATH := flatc2:$(PATH)
 
+  
+PROTOBUF_VERSION = 3.19.1
 ifeq ($(UNAME),Darwin)
 FLATC_ZIP = Mac.flatc.binary.zip
+PROTOBUF_ZIP = protoc-$(PROTOBUF_VERSION)-osx-x86_64.zip
 else
 FLATC_ZIP = Linux.flatc.binary.clang++-9.zip
+PROTOBUF_ZIP = protoc-$(PROTOBUF_VERSION)-linux-x86_64.zip
 endif
 
 test:
@@ -46,6 +50,12 @@ install_flatbuffer_compiler:
 	unzip -o $(FLATC_ZIP) -d node_modules/.bin
 	rm $(FLATC_ZIP)
 	chmod +x node_modules/.bin/flatc
+
+install_protobuffer_compiler:
+	curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v$(PROTOBUF_VERSION)/$(PROTOBUF_ZIP)
+	unzip -o $(PROTOBUF_ZIP) -d node_modules/.bin
+	rm $(PROTOBUF_ZIP)
+	chmod +x node_modules/.bin/protoc
 
 build-flatbuffers:
 	./tools/dist/flatbuffer-generation/index.js --component-path ${PWD}/src/components/legacy/flatbuffer

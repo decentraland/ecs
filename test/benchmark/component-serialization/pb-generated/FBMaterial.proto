@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package decentraland.PBMaterial;
+
+message PBColor3 {
+  float r = 1;
+  float g = 2;
+  float b = 3;
+}
+
+message PBColor4 {
+  float r = 1;
+  float g = 2;
+  float b = 3;
+  float a = 4;
+}
+
+enum PBTransparencyMode {
+  OPAQUE = 0;
+  ALPHA_TEST = 1;
+  ALPHA_BLEND = 2;
+  ALPHA_TEST_AND_BLEND = 3;
+  AUTO = 4;
+}
+
+message PBColor { 
+  oneof color {
+    PBColor3 color3 = 1; 
+    PBColor4 color4 = 2; 
+  }
+}
+
+message PBTexture {
+  string src = 1;
+  int32 sampling_mode = 2;
+  int32 wrap = 3;
+  bool has_alpha = 4;
+}
+
+// all params are optionals for default (in a table)
+message PBMaterial {
+  optional float alpha_test = 1;
+  optional PBColor albedo_color = 2;
+  optional PBColor3 emissive_color = 3;
+  optional float metallic = 4;
+  optional float roughness = 5;
+  optional PBColor3 reflectivity_color = 6;
+  optional float direct_intensity = 7;
+  optional float micro_surface = 8;
+  optional float emissive_intensity = 9;
+  optional float specular_intensity = 10;
+  optional PBTexture albedo_texture = 11;
+  optional PBTexture alpha_texture = 12;
+  optional PBTexture emissive_texture = 13;
+  optional PBTexture bump_texture = 14;
+  optional bool cast_shadows = 15;
+  optional PBTransparencyMode transparency_mode = 16;
+}

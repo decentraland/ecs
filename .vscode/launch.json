@@ -26,16 +26,6 @@
       },
       {
         "type": "node",
-        "name": "Debug tool flatbuffer",
-        "request": "launch",
-        "program": "${workspaceFolder}/tools/dist/flatbuffer-generation/index.js",
-        "cwd": "${workspaceFolder}",
-        "console": "integratedTerminal", 
-        "args": ["test", "--component-path", "${workspaceFolder}/src/components/legacy/flatbuffer"],
-        "preLaunchTask": "Build tools"
-      },
-      {
-        "type": "node",
         "request": "launch",
         "name": "Jest current file",
         "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
@@ -56,6 +46,16 @@
         "internalConsoleOptions": "neverOpen",
         "protocol": "inspector",
         "autoAttachChildProcesses": true
+      },
+      {
+        "type": "node",
+        "name": "Debug tool component-generation",
+        "request": "launch",
+        "program": "${workspaceFolder}/tools/dist/component-generation/index.js",
+        "cwd": "${workspaceFolder}",
+        "console": "integratedTerminal", 
+        "args": ["--component-path", "${workspaceFolder}/src/serialization/components"],
+        "preLaunchTask": "Build tools"
       }
     ]
   }
