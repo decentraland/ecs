@@ -125,7 +125,9 @@ export const FBMaterial: EcsType<Material> = {
     builder.writeBuffer(fbBuilder.asUint8Array(), false)
   },
   deserialize(reader: ByteBuffer): Material {
-    const buf = new FlatBufferByteBuffer(reader.buffer())
+    const buf = new FlatBufferByteBuffer(
+      reader.buffer().subarray(reader.incrementReadOffset(0))
+    )
     const value = fbFBMaterial.getRootAsFBMaterial(buf).unpack()
     return { ...(value as any) }
   }

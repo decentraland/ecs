@@ -17,7 +17,7 @@ type FBTransform = {
 
 export const FBTransform: EcsType<FBTransform> = {
   serialize(value: FBTransform, builder: ByteBuffer): void {
-    const fbBuilder = new Builder()
+    const fbBuilder = new Builder(1024)
     const fbValue = new FBTransformT(
       new Vector3T(value.position.x, value.position.y, value.position.z),
       new QuaternionT(
@@ -33,7 +33,9 @@ export const FBTransform: EcsType<FBTransform> = {
     builder.writeBuffer(fbBuilder.asUint8Array(), false)
   },
   deserialize(reader: ByteBuffer): FBTransform {
-    const buf = new FlatBufferByteBuffer(reader.buffer())
+    const buf = new FlatBufferByteBuffer(
+      reader.buffer().subarray(reader.incrementReadOffset(0))
+    )
     const value = fbFBTransform.getRootAsFBTransform(buf).unpack()
 
     return {

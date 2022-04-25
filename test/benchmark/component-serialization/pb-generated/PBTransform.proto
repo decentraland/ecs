@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package decentraland.PBTransform;
+
+message PBQuaternion { 
+  float x = 1;
+  float y = 2;
+  float z = 3;
+  float w = 4;
+}
+
+message PBVector3 {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
+// all params are optionals for default (in a table)
+message PBTransform {
+  PBVector3 position = 1;
+  PBQuaternion rotation = 2;
+  PBVector3 scale = 3; 
+}

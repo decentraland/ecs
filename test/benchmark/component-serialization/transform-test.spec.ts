@@ -2,6 +2,7 @@ import { Quaternion, Vector3 } from '@dcl/ecs-math'
 import { Builder } from 'flatbuffers'
 import { measureTime } from '../utils'
 import { FBTransform } from './component/FBTransform'
+import { PBTransform } from './component/PBTransform'
 import { Transform } from './component/Transform'
 import { FBTransformT } from './fb-generated/f-b-transform'
 import { QuaternionT } from './fb-generated/quaternion'
@@ -10,23 +11,11 @@ import { createByteBuffer } from './package/ByteBuffer'
 
 type LegacyTransform = ReturnType<typeof Transform['deserialize']>
 
-function TransformToFBTransformT(value: LegacyTransform) {
-  return new FBTransformT(
-    new Vector3T(value.position.x, value.position.y, value.position.z),
-    new QuaternionT(
-      value.rotation.x,
-      value.rotation.y,
-      value.rotation.z,
-      value.rotation.w
-    ),
-    new Vector3T(value.scale.x, value.scale.y, value.scale.z)
-  )
-}
+const TransformTestCount = 12000
+const TransformBufferInitialCapacity = TransformTestCount * 200
 
 describe('benchmark ', () => {
   it('real case, only using bytebuffer without realloc', () => {
-    const N = 10003
-
     const valueTransform: LegacyTransform = {
       position: Vector3.Up(),
       rotation: Quaternion.Identity(),
@@ -34,36 +23,95 @@ describe('benchmark ', () => {
     }
 
     // Transform
-    const buffer1 = createByteBuffer({ initialCapacity: N * 40 * 100 })
+    const bufferTransform = createByteBuffer({
+      initialCapacity: TransformBufferInitialCapacity
+    })
     const dtTransform = measureTime(() => {
-      for (let i = 0; i < N; i++) {
-        Transform.serialize(valueTransform, buffer1)
+      for (let i = 0; i < TransformTestCount; i++) {
+        Transform.serialize(valueTransform, bufferTransform)
       }
     })
 
     // FlatBuffer Transform
-    const buffer2 = createByteBuffer({ initialCapacity: N * 40 * 100 })
+    const bufferFBTransform = createByteBuffer({
+      initialCapacity: TransformBufferInitialCapacity
+    })
     const dtFBTransform = measureTime(() => {
-      for (let i = 0; i < N; i++) {
-        FBTransform.serialize(valueTransform, buffer2)
+      for (let i = 0; i < TransformTestCount; i++) {
+        FBTransform.serialize(valueTransform, bufferFBTransform)
+      }
+    })
+
+    // FlatBuffer Transform
+    const bufferPBTransform = createByteBuffer({
+      initialCapacity: TransformBufferInitialCapacity
+    })
+    const dtPBTransform = measureTime(() => {
+      for (let i = 0; i < TransformTestCount; i++) {
+        PBTransform.serialize(valueTransform, bufferPBTransform)
       }
     })
 
     console.log(
-      ` Serialization ${N} transforms using only Bytebufffer:
+      ` Serialization ${TransformTestCount} transforms using only Bytebufffer:
           Time:
           - Raw ${dtTransform}ms
           - Flatbuffer ${dtFBTransform}ms
+          - protobuffer ${dtPBTransform}ms
           Size:
-          - Raw ${buffer1.incrementWriteOffset(0)} bytes
-          - Flatbuffer ${buffer2.incrementWriteOffset(0)} bytes
+          - Raw ${bufferTransform
+            .incrementWriteOffset(0)
+            .toLocaleString()} bytes
+          - Flatbuffer ${bufferFBTransform
+            .incrementWriteOffset(0)
+            .toLocaleString()} bytes
+          - Protobuffer ${bufferPBTransform
+            .incrementWriteOffset(0)
+            .toLocaleString()} bytes
+      `
+    )
+
+    const ecsTypeTransformBuffer = createByteBuffer({
+      reading: { buffer: bufferTransform.toBinary(), currentOffset: 0 }
+    })
+    const dtDeserializeTransform = measureTime(() => {
+      for (let i = 0; i < TransformTestCount; i++) {
+        Transform.deserialize(ecsTypeTransformBuffer)
+      }
+    })
+
+    const ecsTypeFBTransformBuffer = createByteBuffer({
+      reading: { buffer: bufferFBTransform.toBinary(), currentOffset: 0 }
+    })
+    const dtDeserializeFBTransform = measureTime(() => {
+      for (let i = 0; i < TransformTestCount; i++) {
+        FBTransform.deserialize(ecsTypeFBTransformBuffer)
+      }
+    })
+
+    const ecsTypePBTransformBuffer = createByteBuffer({
+      reading: { buffer: bufferPBTransform.toBinary(), currentOffset: 0 }
+    })
+    const dtDeserializePBTransform = measureTime(() => {
+      for (let i = 0; i < TransformTestCount; i++) {
+        PBTransform.deserialize(ecsTypePBTransformBuffer)
+      }
+    })
+
+    console.log(
+      ` Deserialization ${TransformTestCount} Transforms component:
+          Time:
+          - EcsType with optional ${dtDeserializeTransform}ms
+          - Flatbuffer ${dtDeserializeFBTransform}ms
+          - Protobuffer ${dtDeserializePBTransform}ms
       `
     )
   })
 
   it('fake case, using bytebuffer without realloc for transform and builder for fbtransform', () => {
-    const N = 10003
-    const buffer = createByteBuffer({ initialCapacity: N * 40 })
+    const buffer = createByteBuffer({
+      initialCapacity: TransformBufferInitialCapacity
+    })
 
     const valueTransform: LegacyTransform = {
       position: Vector3.Up(),
@@ -73,27 +121,40 @@ describe('benchmark ', () => {
 
     // Transform
     const dtTransform = measureTime(() => {
-      for (let i = 0; i < N; i++) {
+      for (let i = 0; i < TransformTestCount; i++) {
         Transform.serialize(valueTransform, buffer)
       }
     })
+
+    function TransformToFBTransformT(value: LegacyTransform) {
+      return new FBTransformT(
+        new Vector3T(value.position.x, value.position.y, value.position.z),
+        new QuaternionT(
+          value.rotation.x,
+          value.rotation.y,
+          value.rotation.z,
+          value.rotation.w
+        ),
+        new Vector3T(value.scale.x, value.scale.y, value.scale.z)
+      )
+    }
 
     // FlatBuffer Transform
     const fbValueTransform = TransformToFBTransformT(valueTransform)
     const builder = new Builder()
     const dtFBTransform = measureTime(() => {
-      for (let i = 0; i < N; i++) {
+      for (let i = 0; i < TransformTestCount; i++) {
         fbValueTransform.pack(builder)
       }
     })
 
     console.log(
-      ` Serialization ${N} transforms using Bytebufffer and builder for flatbuffer:
+      ` Serialization ${TransformTestCount} transforms using Bytebufffer and builder for flatbuffer:
           Time:
           - Raw ${dtTransform}ms
           - Flatbuffer ${dtFBTransform}ms
           Size:
-          - Raw ${buffer.incrementWriteOffset(0)} bytes
+          - Raw ${buffer.incrementWriteOffset(0).toLocaleString()} bytes
           - Flatbuffer ${builder.offset()} bytes
       `
     )
