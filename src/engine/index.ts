@@ -163,7 +163,6 @@ export function Engine(): Engine {
 
   function update(dt: number) {
     crdtSystem.processMessages()
-
     for (const system of engine.systems) {
       system(dt)
     }
@@ -180,7 +179,6 @@ export function Engine(): Engine {
         dirtySet.get(entity)!.add(classId)
       }
     }
-
     crdtSystem.send(dirtySet)
 
     for (const [_classId, definition] of engine.componentsDefinition) {

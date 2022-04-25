@@ -10,8 +10,8 @@ type Transform = {
 // This transform can be optimized with Float32Array for example
 export const Transform: EcsType<Transform> = {
   serialize(value: Transform, builder: ByteBuffer): void {
-    const view = builder.view()
     const ptr = builder.incrementWriteOffset(40)
+    const view = builder.view()
     view.setFloat32(ptr, value.position.x)
     view.setFloat32(ptr + 4, value.position.y)
     view.setFloat32(ptr + 8, value.position.z)

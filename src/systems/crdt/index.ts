@@ -80,7 +80,6 @@ export function crdtSceneSystem(engine: PreEngine) {
 
   function send(dirtyMap: Map<Entity, Set<number>>) {
     const buffer = createByteBuffer()
-
     for (const [entity, componentsId] of dirtyMap) {
       if (EntityUtils.isStaticEntity(entity) && !crdtEntities.has(entity)) {
         crdtEntities.set(entity, true)

@@ -23,6 +23,8 @@ jobs:
         run:  make build
       - name: test
         run:  make test
+      - name: benchmark
+        run:  make benchmark
       - name: test
         run:  make lint
       - name: Publish

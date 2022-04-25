@@ -4,7 +4,10 @@ LOCAL_ARG = --local --verbose --diagnostics
 endif
 
 test:
-	node_modules/.bin/jest --detectOpenHandles --silent=false --verbose --colors --runInBand $(TESTARGS)
+	node_modules/.bin/jest --detectOpenHandles --silent=false --verbose --colors --runInBand --testPathIgnorePatterns test/performance.spec.ts $(TESTARGS)
+
+benchmark:
+	node_modules/.bin/jest --detectOpenHandles --silent=false --verbose --colors --runInBand test/performance.spec.ts
 
 test-watch:
 	node_modules/.bin/jest --detectOpenHandles --colors --runInBand --watch $(TESTARGS)

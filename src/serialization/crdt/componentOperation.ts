@@ -23,7 +23,6 @@ export namespace PutComponentOperation {
     messageBuf: ByteBuffer
   ) {
     // reserve the beginning
-    const view = messageBuf.view()
     const startMessageOffset = messageBuf.incrementWriteOffset(
       WireMessage.HEADER_LENGTH + MESSAGE_LENGTH
     )
@@ -32,8 +31,8 @@ export namespace PutComponentOperation {
     componentDefinition.writeToByteBuffer(entityId, messageBuf)
     const messageLength =
       messageBuf.size() - startMessageOffset - WireMessage.HEADER_LENGTH
-
     // Write header
+    const view = messageBuf.view()
     view.setUint32(startMessageOffset, messageLength)
     view.setUint32(startMessageOffset + 4, WireMessage.HEADER_CURRENT_VERSION)
     view.setUint32(startMessageOffset + 8, WireMessage.Enum.PUT_COMPONENT)
