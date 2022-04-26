@@ -4,6 +4,7 @@
 
 ```ts
 
+import * as _m0 from 'protobufjs/minimal';
 import { Quaternion } from '@dcl/ecs-math';
 import { Vector3 } from '@dcl/ecs-math';
 
@@ -24,9 +25,7 @@ export function Engine(): {
             rotation: Quaternion.MutableQuaternion;
             scale: Vector3.MutableVector3;
         }>>;
-        BoxShape: ComponentDefinition<EcsType<BaseShape & {
-            uvs: number[];
-        }>>;
+        BoxShape: ComponentDefinition<EcsType<PBBoxShape>>;
     };
 };
 
@@ -50,7 +49,7 @@ export type PreEngine = ReturnType<typeof preEngine>;
 // src/engine/index.ts:137:23 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:137:23 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:137:23 - (ae-forgotten-export) The symbol "ComponentEcsType" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:150:14 - (ae-forgotten-export) The symbol "BaseShape" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:150:14 - (ae-forgotten-export) The symbol "PBBoxShape" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
