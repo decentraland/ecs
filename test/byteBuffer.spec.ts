@@ -72,4 +72,23 @@ describe('ByteBuffer tests', () => {
     expect(buf.bufferLength()).toBe(4)
     expect(buf.toBinary().toString()).toBe([0, 200, 255, 255].toString())
   })
+
+  it('fails using the view after a grow', () => {
+    const buf = createByteBuffer({
+      writing: {
+        buffer: new Uint8Array([0, 200, 0, 200]),
+        currentOffset: 2
+      }
+    })
+
+    expect(buf.buffer().byteLength).toBe(4)
+
+    // TODO: uncomment this line and test should pass
+    // const view = buf.view()
+    buf.writeUint32(0xfade)
+
+    expect(buf.buffer().byteLength).toBeGreaterThan(4)
+    // TODO: uncomment this line and test should pass
+    // expect(view.getUint32(2)).toBe(0xfade)
+  })
 })
