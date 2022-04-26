@@ -67,9 +67,12 @@ export function crdtSceneSystem(engine: PreEngine) {
       if (msg !== message) {
         PutComponentOperation.write(entity, msg.timestamp, component, buffer)
       } else {
-        // TODO lean: reading/writing vs writeBuffer bug
-        const bb = createByteBuffer()
-        bb.writeBuffer(message.data, false)
+        const bb = createByteBuffer({
+          reading: {
+            buffer: message.data,
+            currentOffset: 0
+          }
+        })
 
         component.upsertFromBinary(entity, bb)
         component.clearDirty()
