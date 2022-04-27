@@ -8,7 +8,10 @@ import {
   Int64,
   Int8,
   MapType,
-  String
+  String,
+  Optional,
+  Boolean,
+  Enum
 } from '../src/built-in-types'
 import { Engine } from '../src/engine'
 
@@ -43,7 +46,7 @@ describe('Engine tests', () => {
         entityCopied,
         buffer
       )
-      expect(updatedInteger.value).toBe(33)
+      expect(updatedInteger!.value).toBe(33)
     }
   })
 
@@ -67,7 +70,7 @@ describe('Engine tests', () => {
       const copiedFloat = FloatComponent.create(entityCopied, { value: 21.22 })
       expect(copiedFloat.value).toBe(21.22)
       const updatedFloat = FloatComponent.updateFromBinary(entityCopied, buffer)
-      expect(updatedFloat.value).toBe(testValue)
+      expect(updatedFloat!.value).toBe(testValue)
     }
   })
 
@@ -90,7 +93,7 @@ describe('Engine tests', () => {
     const copiedFloat = FloatComponent.create(entityCopied, { value: 'n' })
     expect(copiedFloat.value).toBe('n')
     const updatedFloat = FloatComponent.updateFromBinary(entityCopied, buffer)
-    expect(updatedFloat.value).toBe(testValue)
+    expect(updatedFloat!.value).toBe(testValue)
   })
 
   it('should serialize and parse a complex object, modify and be equal', () => {
@@ -263,5 +266,106 @@ describe('Engine tests', () => {
       253, 201, 154, 65, 19, 92, 41, 65, 35, 137, 55, 71, 32, 253, 51, 64, 166,
       217, 23, 69, 191, 0, 205
     ])
+  })
+
+  it('optional and boolean', () => {
+    const engine = Engine()
+    const entity = engine.addEntity() // 0
+    const CLASS_ID = 888
+
+    const TestComponent = engine.defineComponent(
+      CLASS_ID,
+      MapType({
+        optionalColor: Optional(
+          MapType({
+            r: Float32,
+            g: Float32,
+            b: Float32
+          })
+        ),
+        hasAlpha: Boolean
+      })
+    )
+
+    // const value1 = TestComponent.create(entity, {})
+    TestComponent.create(entity, {
+      hasAlpha: true
+    })
+
+    const entity2 = engine.addEntity()
+    TestComponent.create(entity2, {
+      hasAlpha: false,
+      optionalColor: { r: 1, g: 2, b: 3 }
+    })
+
+    const value2 = TestComponent.updateFromBinary(
+      entity2,
+      TestComponent.toBinary(entity)
+    )!
+
+    expect(value2.hasAlpha).toBe(true)
+    expect(value2.optionalColor).toBeUndefined()
+  })
+
+  it('enum integer', () => {
+    const engine = Engine()
+    const entity = engine.addEntity() // 0
+    const CLASS_ID = 888
+
+    enum ColorToNumber {
+      Red = 2,
+      Green = 0x33,
+      Pink = 0xff290323
+    }
+
+    const TestComponent = engine.defineComponent(
+      CLASS_ID,
+      Enum<ColorToNumber>(Int64)
+    )
+
+    // const value1 = TestComponent.create(entity, {})
+    TestComponent.create(entity, ColorToNumber.Pink)
+
+    const entity2 = engine.addEntity()
+    const initialValue = TestComponent.create(entity2, ColorToNumber.Green)
+    expect(initialValue).toBe(ColorToNumber.Green)
+
+    const value2 = TestComponent.updateFromBinary(
+      entity2,
+      TestComponent.toBinary(entity)
+    )!
+
+    expect(value2).toBe(ColorToNumber.Pink)
+  })
+
+  it('enum string', () => {
+    const engine = Engine()
+    const entity = engine.addEntity() // 0
+    const CLASS_ID = 888
+
+    enum ColorToString {
+      Red = '2',
+      Green = '0x33',
+      Pink = '0xff290323'
+    }
+
+    const TestComponent = engine.defineComponent(
+      CLASS_ID,
+      Enum<ColorToString>(String)
+    )
+
+    // const value1 = TestComponent.create(entity, {})
+    TestComponent.create(entity, ColorToString.Pink)
+
+    const entity2 = engine.addEntity()
+    const initialValue = TestComponent.create(entity2, ColorToString.Green)
+    expect(initialValue).toBe(ColorToString.Green)
+
+    const value2 = TestComponent.updateFromBinary(
+      entity2,
+      TestComponent.toBinary(entity)
+    )!
+
+    expect(value2).toBe(ColorToString.Pink)
   })
 })
