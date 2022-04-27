@@ -4,6 +4,7 @@
 
 ```ts
 
+import * as _m0 from 'protobufjs/minimal';
 import { Quaternion } from '@dcl/ecs-math';
 import { Vector3 } from '@dcl/ecs-math';
 
