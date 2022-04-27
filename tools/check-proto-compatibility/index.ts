@@ -20,27 +20,38 @@ async function main() {
     .map((filePath) => filePath.substring(0, filePath.length - 6))
 
   const protoComponentPromisesResult = await Promise.all(
-    protoComponents.map((component) =>
-      checkProtoComponent(definitionsPath, component)
-    )
+    protoComponents.map(async (component) => ({
+      returnType: await checkProtoComponent(definitionsPath, component),
+      component
+    }))
   )
 
-  const testPass = protoComponentPromisesResult.every(
-    (value) => value === ReturnValue.FileNotExists || value === ReturnValue.Ok
+  const failedTests = protoComponentPromisesResult.filter(
+    (value) =>
+      !(
+        value.returnType === ReturnValue.FileNotExists ||
+        value.returnType === ReturnValue.Ok
+      )
   )
   const newFiles = protoComponentPromisesResult.filter(
-    (value) => value === ReturnValue.FileNotExists
+    (value) => value.returnType === ReturnValue.FileNotExists
   )
 
   if (newFiles.length > 0) {
     console.warn(
-      `> There are ${newFiles.length} new components, check every thing is OK! (amount:${newFiles.length})`
+      `> There are ${
+        newFiles.length
+      } new components, check every thing is OK! (amount:${newFiles.length}):
+      ${newFiles.map((t) => t.component).join(' ')}
+      `
     )
   }
 
-  if (!testPass) {
+  if (failedTests.length) {
     throw new Error(
-      `At least one component doesn't pass the proto-compatibility-test`
+      `${failedTests
+        .map((t) => t.component)
+        .join(' ')} doesn't pass the proto-compatibility-test`
     )
   }
 }
