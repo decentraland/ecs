@@ -62,7 +62,7 @@ describe('Component operation tests', () => {
     PutComponentOperation.write(entityId, timestamp, sdk.Transform, bb)
 
     while (WireMessage.validate(bb)) {
-      const msgOne = PutComponentOperation.read(bb)
+      const msgOne = PutComponentOperation.read(bb)!
       expect(msgOne.version).toBe(WireMessage.HEADER_CURRENT_VERSION)
       expect(msgOne.length).toBe(40 + PutComponentOperation.MESSAGE_LENGTH)
       expect(msgOne.type).toBe(WireMessage.Enum.PUT_COMPONENT)
