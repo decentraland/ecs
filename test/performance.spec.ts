@@ -63,7 +63,7 @@ describe('Performance.', () => {
 
     console.log(EntitiesCreation)
     console.log(EngineUpdate)
-    expect(EntitiesCreation.duration).toBeLessThan(30)
-    expect(EngineUpdate.duration).toBeLessThan(30000)
+    expect(EntitiesCreation.duration).toBeLessThan(35)
+    expect(EngineUpdate.duration).toBeLessThan(35000)
   })
 })
