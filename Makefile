@@ -12,7 +12,10 @@ PROTOBUF_ZIP = protoc-$(PROTOBUF_VERSION)-linux-x86_64.zip
 endif
 
 test:
-	node_modules/.bin/jest --detectOpenHandles --silent=false --verbose --colors --runInBand $(TESTARGS)
+	node_modules/.bin/jest --detectOpenHandles --silent=false --verbose --colors --runInBand --testPathIgnorePatterns test/performance.spec.ts $(TESTARGS)
+
+benchmark:
+	node_modules/.bin/jest --detectOpenHandles --silent=false --verbose --colors --runInBand test/performance.spec.ts
 
 test-watch:
 	node_modules/.bin/jest --detectOpenHandles --colors --runInBand --watch $(TESTARGS)

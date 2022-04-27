@@ -1,38 +1,65 @@
-declare const entitySymbol: unique symbol
+import { EntityUtils } from './entity-utils'
 
+declare const entitySymbol: unique symbol
 export type Entity = number & { [entitySymbol]: true }
 
-function Entity(entity: number): Entity {
-  return entity as Entity
+export function EntityContainer() {
+  const staticEntity = Entity()
+  const dynamicEntity = Entity(true)
+  return {
+    generateEntity(dynamic: boolean = false): Entity {
+      if (dynamic) return dynamicEntity.generateEntity()
+      return staticEntity.generateEntity()
+    },
+    removeEntity(entity: Entity): void {
+      staticEntity.removeEntity(entity)
+      dynamicEntity.removeEntity(entity)
+    },
+    getUnusedEntities(): Set<Entity> {
+      return new Set([
+        ...staticEntity.getUnusedEntities(),
+        ...dynamicEntity.getUnusedEntities()
+      ])
+    },
+    getUsedEntities(): Set<Entity> {
+      return new Set([
+        ...staticEntity.getUsedEntities(),
+        ...dynamicEntity.getUsedEntities()
+      ])
+    }
+  }
 }
 
-type Config = { start: number; finish: number }
+function Entity(withOffset: boolean = false) {
+  function createEntity(entity: number): Entity {
+    return entity as Entity
+  }
 
-export function EntityContainer(configParam?: Config) {
-  const config: Config = configParam || { start: 0, finish: 1000 }
+  // TODO: getoffset from a server?
+  const offset = withOffset ? EntityUtils.getOffset() : 0
   const usedEntities: Set<Entity> = new Set()
   const unusedEntities: Set<Entity> = new Set()
 
   function generateEntity(): Entity {
     if (!unusedEntities.size && !usedEntities.size) {
-      const entity = Entity(config.start)
+      const entity = createEntity(offset)
       usedEntities.add(entity)
       return entity
     }
 
-    const iterator = unusedEntities[Symbol.iterator]()
-    const result = iterator.next()
-
-    if (result.done) {
-      const entity = Entity(Math.max(...usedEntities.values()) + 1)
-      if (entity >= config.finish) {
+    // TODO: what happens if we delete an entity
+    // and creates a new one in the same tick
+    const iterator = unusedEntities[Symbol.iterator]().next()
+    if (iterator.done) {
+      const entity = createEntity(Math.max(...usedEntities.values()) + 1)
+      if (entity >= EntityUtils.MAX_ENTITIES + offset) {
         throw new Error('Entity rate limit exceed')
       }
       usedEntities.add(entity)
       return entity
     }
 
-    const entity = result.value
+    const entity = iterator.value
     unusedEntities.delete(entity)
     usedEntities.add(entity)
 
@@ -40,13 +67,18 @@ export function EntityContainer(configParam?: Config) {
   }
 
   function removeEntity(entity: Entity) {
+    if (!usedEntities.has(entity)) return
     usedEntities.delete(entity)
     unusedEntities.add(entity)
   }
 
   return {
-    unusedEntities,
-    usedEntities,
+    getUnusedEntities() {
+      return new Set(unusedEntities)
+    },
+    getUsedEntities() {
+      return new Set(usedEntities)
+    },
     generateEntity,
     removeEntity
   }

@@ -46,7 +46,7 @@ export namespace WireMessage {
       return false
     }
 
-    const messageLength = buf.view().getUint32(buf.currentReadOffset())
+    const messageLength = buf.getUint32(buf.currentReadOffset())
     if (rem < messageLength + HEADER_LENGTH) {
       return false
     }
