@@ -11,7 +11,7 @@ import { crdtSceneSystem } from '../systems/crdt'
 /**
  * @alpha
  */
-function preEngine() {
+function baseEngine() {
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
   // TODO: find a way to make this work.
@@ -133,7 +133,7 @@ function preEngine() {
 /**
  * @alpha
  */
-export type PreEngine = ReturnType<typeof preEngine>
+export type baseEngine = ReturnType<typeof baseEngine>
 
 // TODO Fix this type
 /**
@@ -163,7 +163,7 @@ export type Engine = {
  * @public
  */
 export function Engine(): Engine {
-  const engine = preEngine()
+  const engine = baseEngine()
   const crdtSystem = crdtSceneSystem(engine)
   const baseComponents = defineSdkComponents(engine)
 

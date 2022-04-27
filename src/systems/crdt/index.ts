@@ -1,6 +1,6 @@
 import { Message, crdtProtocol } from '@dcl/crdt'
 
-import type { PreEngine } from '../../engine'
+import type { baseEngine } from '../../engine'
 import { Entity } from '../../engine/entity'
 import EntityUtils from '../../engine/entity-utils'
 import { createByteBuffer } from '../../serialization/ByteBuffer'
@@ -14,8 +14,8 @@ import CrdtUtils from './utils'
  * What about when we remove the SyncComponent ? Should we notify all the clients? How ?
  * Where do we create the transport and process the received messages?
  */
-export function crdtSceneSystem(engine: PreEngine) {
-  const crdtClient = crdtProtocol<Uint8Array>('scene-id-crdt')
+export function crdtSceneSystem(engine: baseEngine) {
+  const crdtClient = crdtProtocol<Uint8Array>()
   const messages: Message<Uint8Array>[] = []
   const crdtEntities = new Map<Entity, boolean>()
 
