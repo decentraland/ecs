@@ -1,7 +1,7 @@
 import * as BoxShape from './BoxShape'
 import { Engine } from '../../engine'
 
-export function defineFlatbufferComponents({
+export function defineProtocolBufferComponents({
   defineComponent
 }: Pick<Engine, 'defineComponent'>) {
   return {

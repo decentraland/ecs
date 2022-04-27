@@ -19,6 +19,10 @@ jobs:
           node-version: 16.x
       - name: install
         run: make install
+      - name: build tools
+        run:  make build-tools
+      - name: test-generated-components
+        run:  make test-components
       - name: build
         run:  make build
       - name: test
