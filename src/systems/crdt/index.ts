@@ -15,7 +15,7 @@ import CrdtUtils from './utils'
  * Where do we create the transport and process the received messages?
  */
 export function crdtSceneSystem(engine: PreEngine) {
-  const crdtClient = crdtProtocol<Uint8Array>('scene-id-crdt')
+  const crdtClient = crdtProtocol<Uint8Array>()
   const messages: Message<Uint8Array>[] = []
   const crdtEntities = new Map<Entity, boolean>()
 
