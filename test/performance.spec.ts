@@ -4,20 +4,21 @@ describe('Performance.', () => {
   it('should run 10k iterations', () => {
     const { engine, components } = SandBox.create({ length: 1 })[0]
     const { Transform } = engine.baseComponents
+    const NUM_ENTITIES = 1000
+    const NUM_ITERATIONS = 1000
+
     performance.mark('create-entities')
-    for (const _ of Array.from({ length: 1000 })) {
+    for (let key = 0; key <= NUM_ENTITIES; key++) {
       const entity = engine.addEntity()
 
       Transform.create(entity, SandBox.DEFAULT_POSITION)
 
-      if (Math.random() > 0.5) {
+      if (key % 2) {
         components.Position.create(entity, {
           x: Math.random() * 10 + 1,
           y: Math.random() * 24 + 1
         })
-      }
-
-      if (Math.random() < 0.5) {
+      } else {
         components.Door.create(entity, { open: (Math.random() * 10) | 0 })
       }
     }
@@ -49,8 +50,8 @@ describe('Performance.', () => {
     engine.addSystem(transformSystem)
 
     performance.mark('update')
-    for (const _ of Array.from({ length: 1000 })) {
-      engine.update(1)
+    for (let dt = 0; dt <= NUM_ITERATIONS; dt++) {
+      engine.update(dt)
     }
     performance.mark('end-update')
 
@@ -63,6 +64,6 @@ describe('Performance.', () => {
     console.log(EntitiesCreation)
     console.log(EngineUpdate)
     expect(EntitiesCreation.duration).toBeLessThan(30)
-    expect(EngineUpdate.duration).toBeLessThan(31000)
+    expect(EngineUpdate.duration).toBeLessThan(30000)
   })
 })
