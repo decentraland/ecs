@@ -48,7 +48,7 @@ export namespace SandBox {
       client.ws.send = (data) => {
         clients.forEach(async (c) => {
           await wait(WS_SEND_DELAY)
-          c.id !== client.id && c.ws.onmessage({ data } as MessageEvent)
+          c.id !== client.id && c.ws.onmessage!({ data } as MessageEvent)
         })
       }
     })
