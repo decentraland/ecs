@@ -1,6 +1,6 @@
 import { EcsType } from '../../built-in-types/EcsType'
 import { ByteBuffer } from '../../serialization/ByteBuffer'
-import { PBBoxShape } from '../generated/pb/BoxShape'
+import { PBBoxShape } from './pb/BoxShape'
 
 export const COMPONENT_ID = 13
 
