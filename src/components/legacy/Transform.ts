@@ -11,37 +11,35 @@ type Transform = {
 export const Transform: EcsType<Transform> = {
   serialize(value: Transform, builder: ByteBuffer): void {
     const ptr = builder.incrementWriteOffset(40)
-    const view = builder.view()
-    view.setFloat32(ptr, value.position.x)
-    view.setFloat32(ptr + 4, value.position.y)
-    view.setFloat32(ptr + 8, value.position.z)
-    view.setFloat32(ptr + 12, value.rotation.x)
-    view.setFloat32(ptr + 16, value.rotation.y)
-    view.setFloat32(ptr + 20, value.rotation.z)
-    view.setFloat32(ptr + 24, value.rotation.w)
-    view.setFloat32(ptr + 28, value.scale.x)
-    view.setFloat32(ptr + 32, value.scale.y)
-    view.setFloat32(ptr + 36, value.scale.z)
+    builder.setFloat32(ptr, value.position.x)
+    builder.setFloat32(ptr + 4, value.position.y)
+    builder.setFloat32(ptr + 8, value.position.z)
+    builder.setFloat32(ptr + 12, value.rotation.x)
+    builder.setFloat32(ptr + 16, value.rotation.y)
+    builder.setFloat32(ptr + 20, value.rotation.z)
+    builder.setFloat32(ptr + 24, value.rotation.w)
+    builder.setFloat32(ptr + 28, value.scale.x)
+    builder.setFloat32(ptr + 32, value.scale.y)
+    builder.setFloat32(ptr + 36, value.scale.z)
   },
   deserialize(reader: ByteBuffer): Transform {
-    const view = reader.view()
     const ptr = reader.incrementReadOffset(40)
     return {
       position: Vector3.create(
-        view.getFloat32(ptr),
-        view.getFloat32(ptr + 4),
-        view.getFloat32(ptr + 8)
+        reader.getFloat32(ptr),
+        reader.getFloat32(ptr + 4),
+        reader.getFloat32(ptr + 8)
       ),
       rotation: Quaternion.create(
-        view.getFloat32(ptr + 12),
-        view.getFloat32(ptr + 16),
-        view.getFloat32(ptr + 20),
-        view.getFloat32(ptr + 24)
+        reader.getFloat32(ptr + 12),
+        reader.getFloat32(ptr + 16),
+        reader.getFloat32(ptr + 20),
+        reader.getFloat32(ptr + 24)
       ),
       scale: Vector3.create(
-        view.getFloat32(ptr + 28),
-        view.getFloat32(ptr + 32),
-        view.getFloat32(ptr + 36)
+        reader.getFloat32(ptr + 28),
+        reader.getFloat32(ptr + 32),
+        reader.getFloat32(ptr + 36)
       )
     }
   }
