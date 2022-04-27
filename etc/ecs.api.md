@@ -13,6 +13,7 @@ export function Engine(): Engine;
 // @public (undocumented)
 export type Engine = {
     addEntity(dynamic?: boolean): Entity;
+    addDynamicEntity(): Entity;
     removeEntity(entity: Entity): void;
     addSystem(system: Update): void;
     defineComponent<T extends EcsType>(componentId: number, spec: T): ComponentDefinition<T>;
@@ -30,12 +31,12 @@ export type PreEngine = ReturnType<typeof preEngine>;
 
 // Warnings were encountered during analysis:
 //
-// src/engine/index.ts:138:3 - (ae-forgotten-export) The symbol "Entity" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:140:3 - (ae-forgotten-export) The symbol "Update" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:141:3 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:141:3 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:145:3 - (ae-forgotten-export) The symbol "ComponentEcsType" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:153:3 - (ae-forgotten-export) The symbol "defineSdkComponents" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:143:3 - (ae-forgotten-export) The symbol "Entity" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:146:3 - (ae-forgotten-export) The symbol "Update" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:147:3 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:147:3 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:151:3 - (ae-forgotten-export) The symbol "ComponentEcsType" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:159:3 - (ae-forgotten-export) The symbol "defineSdkComponents" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
