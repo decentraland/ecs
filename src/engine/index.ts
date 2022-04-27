@@ -14,7 +14,8 @@ import { crdtSceneSystem } from '../systems/crdt'
 function preEngine() {
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
-  // TODO: find a way to make this work. Maybe a proxy/callback to be up-to-date
+  // TODO: find a way to make this work.
+  // Maybe a proxy/callback to be up-to-date
   const entitiesComponent = new Map<
     number,
     Set<ComponentDefinition<any>['_id']>
@@ -28,10 +29,14 @@ function preEngine() {
     systems.add(fn)
   }
 
-  function addEntity() {
-    const entity = entityContainer.generateEntity()
+  function addEntity(dynamic: boolean = false) {
     // entitiesCompnonent.set(entity, new Set())
+    const entity = entityContainer.generateEntity(dynamic)
     return entity
+  }
+
+  function addDynamicEntity() {
+    return addEntity(true)
   }
 
   function removeEntity(entity: Entity) {
@@ -59,8 +64,14 @@ function preEngine() {
 
   function getComponent<T extends EcsType>(
     componentId: number
-  ): ComponentDefinition<T> | undefined {
-    return componentsDefinition.get(componentId)
+  ): ComponentDefinition<T> {
+    const component = componentsDefinition.get(componentId)
+    if (!component) {
+      throw new Error(
+        'Component not found. You need to declare the components at the beginnig of the engine declaration'
+      )
+    }
+    return component
   }
 
   function* mutableGroupOf<
@@ -109,6 +120,7 @@ function preEngine() {
     componentsDefinition,
     systems,
     addEntity,
+    addDynamicEntity,
     removeEntity,
     addSystem,
     defineComponent,
@@ -127,21 +139,36 @@ export type PreEngine = ReturnType<typeof preEngine>
 /**
  * @public
  */
-export type Engine = PreEngine & {
+export type Engine = {
+  addEntity(dynamic?: boolean): Entity
+  addDynamicEntity(): Entity
+  removeEntity(entity: Entity): void
+  addSystem(system: Update): void
+  defineComponent<T extends EcsType>(
+    componentId: number,
+    spec: T
+  ): ComponentDefinition<T>
+  mutableGroupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(
+    ...components: T
+  ): Iterable<[Entity, ...ComponentEcsType<T>]>
+  groupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(
+    ...components: T
+  ): Iterable<[Entity, ...Readonly<ComponentEcsType<T>>]>
+  getComponent<T extends EcsType>(componentId: number): ComponentDefinition<T>
+  update(dt: number): void
   baseComponents: ReturnType<typeof defineSdkComponents>
 }
 
 /**
  * @public
  */
-export function Engine() {
+export function Engine(): Engine {
   const engine = preEngine()
   const crdtSystem = crdtSceneSystem(engine)
   const baseComponents = defineSdkComponents(engine)
 
   function update(dt: number) {
     crdtSystem.processMessages()
-
     for (const system of engine.systems) {
       system(dt)
     }
@@ -158,7 +185,6 @@ export function Engine() {
         dirtySet.get(entity)!.add(classId)
       }
     }
-
     crdtSystem.send(dirtySet)
 
     for (const [_classId, definition] of engine.componentsDefinition) {
@@ -168,6 +194,7 @@ export function Engine() {
 
   return {
     addEntity: engine.addEntity,
+    addDynamicEntity: engine.addDynamicEntity,
     removeEntity: engine.removeEntity,
     addSystem: engine.addSystem,
     defineComponent: engine.defineComponent,

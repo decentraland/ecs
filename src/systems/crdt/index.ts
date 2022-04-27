@@ -1,6 +1,8 @@
 import { Message, crdtProtocol } from '@dcl/crdt'
+
 import type { PreEngine } from '../../engine'
 import { Entity } from '../../engine/entity'
+import EntityUtils from '../../engine/entity-utils'
 import { createByteBuffer } from '../../serialization/ByteBuffer'
 import { PutComponentOperation } from '../../serialization/crdt/componentOperation'
 import WireMessage from '../../serialization/wireMessage'
@@ -15,8 +17,9 @@ import CrdtUtils from './utils'
 export function crdtSceneSystem(engine: PreEngine) {
   const crdtClient = crdtProtocol<Uint8Array>('scene-id-crdt')
   const messages: Message<Uint8Array>[] = []
-  const transport = createTransport()
+  const crdtEntities = new Map<Entity, boolean>()
 
+  const transport = createTransport()
   transport.onmessage = parseChunkMessage
 
   function parseChunkMessage(chunkMessage: MessageEvent<Uint8Array>) {
@@ -56,12 +59,6 @@ export function crdtSceneSystem(engine: PreEngine) {
       const msg = crdtClient.processMessage(message)
       const component = engine.getComponent(classId)
 
-      if (!component) {
-        throw new Error(
-          'Component not found. You need to declare the components at the beginnig of the engine declaration'
-        )
-      }
-
       // CRDT outdated message. Resend this message through the wire
       // TODO: perf transactor
       if (msg !== message) {
@@ -86,13 +83,14 @@ export function crdtSceneSystem(engine: PreEngine) {
 
   function send(dirtyMap: Map<Entity, Set<number>>) {
     const buffer = createByteBuffer()
-
     for (const [entity, componentsId] of dirtyMap) {
+      if (EntityUtils.isStaticEntity(entity) && !crdtEntities.has(entity)) {
+        crdtEntities.set(entity, true)
+        continue
+      }
+      crdtEntities.set(entity, true)
       for (const componentId of componentsId) {
-        const component = engine.componentsDefinition.get(componentId)
-        if (!component) {
-          throw new Error('Component not found')
-        }
+        const component = engine.getComponent(componentId)
         const key = CrdtUtils.getKey(entity, componentId)
         const event = crdtClient.createEvent(
           key,
@@ -101,6 +99,7 @@ export function crdtSceneSystem(engine: PreEngine) {
         PutComponentOperation.write(entity, event.timestamp, component, buffer)
       }
     }
+
     if (buffer.size()) {
       transport.send(buffer.toBinary())
     }
@@ -122,7 +121,7 @@ export function crdtSceneSystem(engine: PreEngine) {
 //   for (const component of engine.getEntityComponents(entity)) {
 //     // If its a new entity, we should send all the components.
 //     // Otherwise, we send only the updates (dirty)
-//     if (!entitiesMap.has(entity) || component.isDirty(entity)) {
+//     if (!crdtEntities.has(entity) || component.isDirty(entity)) {
 //       const event = crdtClient.createEvent(
 //         getKey(entity, component._id),
 //         component.toBinary(entity)
@@ -131,5 +130,5 @@ export function crdtSceneSystem(engine: PreEngine) {
 //       return
 //     }
 //   }
-//   entitiesMap.add(entity)
+//   crdtEntities.add(entity)
 // }
