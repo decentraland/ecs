@@ -1,6 +1,6 @@
 const ecsFileProtocolBuffer = `import { EcsType } from '../../built-in-types/EcsType'
 import { ByteBuffer } from '../../serialization/ByteBuffer'
-import { PBComponent } from '../generated/pb/Component'
+import { PBComponent } from './pb/Component'
 
 export const COMPONENT_ID = INVALID_COMPONENT_ID
 
