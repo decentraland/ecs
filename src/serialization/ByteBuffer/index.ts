@@ -11,109 +11,66 @@ function getNextSize(currentSize: number, intendedSize: number) {
 }
 
 /**
- * ByteBuffer is a wrapper of DataView which also adds a read and write offset.
- *  Also in a write operation it resizes the buffer is being used if it needs.
+ * @param writing - writing option, see object specs.
+ * @param reading - reading option, see object specs.
+ * @param initialCapacity - Initial capacity of buffer to allocate, ignored if you use writing or reading options
  */
-export interface ByteBuffer {
-  /**
-   * @returns The total number of bytes writen in the buffer.
-   */
-  size: () => number
-
-  /**
-   * @returns the reference to used DataView
-   */
-  view: () => DataView
-
-  /**
-   * @returns The subarray from 0 to offset.
-   */
-  toBinary: () => Uint8Array
-
-  /**
-   * @returns The entire buffer.
-   */
-  buffer: () => Uint8Array
-
-  /**
-   * @returns The capacity of the current buffer
-   */
-  bufferLength: () => number
-
-  /**
-   * @returns How many bytes are available to read.
-   */
-  remainingBytes: () => number
-
-  /**
-   * @returns The current read offset.
-   */
-  currentReadOffset: () => number
-
-  // Read methods
-  incrementReadOffset: (amount: number) => number
-  readBuffer: () => Uint8Array
-  readFloat32: () => number
-  readFloat64: () => number
-  readInt8: () => number
-  readInt16: () => number
-  readInt32: () => number
-  readInt64: () => bigint
-  readUint8: () => number
-  readUint16: () => number
-  readUint32: () => number
-  readUint64: () => bigint
-
-  // Write methods
-
-  /**
-   * Increment offset
-   * @param amount - how many bytes
-   * @returns The offset when this reserving starts.
-   */
-  incrementWriteOffset: (amount: number) => number
-
-  writeBuffer: (value: Uint8Array, writeLength?: boolean) => void
-  writeFloat32: (value: number) => void
-  writeFloat64: (value: number) => void
-  writeInt8: (value: number) => void
-  writeInt16: (value: number) => void
-  writeInt32: (value: number) => void
-  writeInt64: (value: bigint) => void
-  writeUint8: (value: number) => void
-  writeUint16: (value: number) => void
-  writeUint32: (value: number) => void
-  writeUint64: (value: bigint) => void
-}
-
 export interface CreateByteBufferOptions {
+  /**
+   * @param buffer - a buffer already allocated to read from there.
+   * @param currentOffset - set the cursor where begins to read. Default 0
+   * @param length - delimite where the valid data ends. Default: buffer.length
+   */
   reading?: {
     buffer: Uint8Array
     length?: number
     currentOffset: number
   }
+
+  /**
+   * @param buffer - a buffer already allocated to write there.
+   * @param currentOffset - set the cursor to not start writing from the begin of it. Default 0
+   */
   writing?: {
     buffer: Uint8Array
     currentOffset?: number
   }
+
   initialCapacity?: number
 }
 
 const defaultInitialCapacity = 10240
 
-export function createByteBuffer(
-  options: CreateByteBufferOptions = {}
-): ByteBuffer {
-  const { writing, reading } = options
-  let buffer =
-    writing?.buffer ||
-    reading?.buffer ||
-    new Uint8Array(options.initialCapacity || defaultInitialCapacity)
-  let view: DataView = new DataView(buffer.buffer)
+/**
+ * ByteBuffer is a wrapper of DataView which also adds a read and write offset.
+ *  Also in a write operation it resizes the buffer is being used if it needs.
+ *
+ * - Use read and write function to generate or consume data.
+ * - Use set and get only if you are sure that you're doing.
+ */
+export function createByteBuffer(options: CreateByteBufferOptions = {}) {
+  const initialROffset: number = options.reading?.currentOffset || 0
+  let initialBuffer: Uint8Array | null = null
+  let initialWOffset: number = 0
 
-  let woffset: number =
-    writing?.currentOffset || reading?.length || reading?.buffer.length || 0
-  let roffset: number = reading?.currentOffset || 0
+  if (options.writing) {
+    initialBuffer = options.writing.buffer
+    if (options.writing.currentOffset) {
+      initialWOffset = options.writing.currentOffset
+    }
+  } else if (options.reading) {
+    initialBuffer = options.reading.buffer
+    initialWOffset = options.reading.length || options.reading.buffer.length
+  } else {
+    initialBuffer = new Uint8Array(
+      options.initialCapacity || defaultInitialCapacity
+    )
+  }
+
+  let buffer: Uint8Array = initialBuffer!
+  let view: DataView = new DataView(buffer.buffer, buffer.byteOffset)
+  let woffset: number = initialWOffset
+  let roffset: number = initialROffset
 
   /**
    * Increement the write offset and resize the buffer if it needs.
@@ -145,16 +102,29 @@ export function createByteBuffer(
   }
 
   return {
-    // General purpose
+    /**
+     * @returns The entire current DataView.
+     * @deprecated The root object returned has all functions available in Dataview
+     * WARNING: if the buffer grows, the view had changed itself,
+     *  and the reference will be a invalid one.
+     */
     view(): DataView {
       return view
     },
 
-    buffer() {
+    /**
+     * @returns The entire current Uint8Array.
+     *
+     * WARNING: if the buffer grows, the view had changed itself,
+     *  and the reference will be a invalid one.
+     */
+    buffer(): Uint8Array {
       return buffer
     },
-
-    bufferLength() {
+    /**
+     * @returns The capacity of the current buffer
+     */
+    bufferLength(): number {
       return buffer.length
     },
 
@@ -165,11 +135,16 @@ export function createByteBuffer(
     incrementReadOffset(amount: number): number {
       return roAdd(amount)
     },
-
+    /**
+     * @returns The current read offset.
+     */
     currentReadOffset(): number {
       return roffset
     },
 
+    /**
+     * @returns How many bytes are available to read.
+     */
     remainingBytes(): number {
       return woffset - roffset
     },
@@ -222,15 +197,24 @@ export function createByteBuffer(
     /**
      * Writing purpose
      */
-
+    /**
+     * Increment offset
+     * @param amount - how many bytes
+     * @returns The offset when this reserving starts.
+     */
     incrementWriteOffset(amount: number): number {
       return woAdd(amount)
     },
 
+    /**
+     * @returns The total number of bytes writen in the buffer.
+     */
     size(): number {
       return woffset
     },
-
+    /**
+     * @returns The subarray from 0 to offset.
+     */
     toBinary() {
       return buffer.subarray(0, woffset)
     },
@@ -292,6 +276,89 @@ export function createByteBuffer(
     writeUint64(value: bigint): void {
       const o = woAdd(8)
       view.setBigUint64(o, value)
+    },
+
+    // Dataview Proxy
+    getFloat32(offset: number): number {
+      return view.getFloat32(offset)
+    },
+
+    getFloat64(offset: number): number {
+      return view.getFloat64(offset)
+    },
+
+    getInt8(offset: number): number {
+      return view.getInt8(offset)
+    },
+
+    getInt16(offset: number): number {
+      return view.getInt16(offset)
+    },
+
+    getInt32(offset: number): number {
+      return view.getInt32(offset)
+    },
+
+    getInt64(offset: number): bigint {
+      return view.getBigInt64(offset)
+    },
+
+    getUint8(offset: number): number {
+      return view.getUint8(offset)
+    },
+
+    getUint16(offset: number): number {
+      return view.getUint16(offset)
+    },
+
+    getUint32(offset: number): number {
+      return view.getUint32(offset)
+    },
+
+    getUint64(offset: number): bigint {
+      return view.getBigUint64(offset)
+    },
+
+    setFloat32(offset: number, value: number): void {
+      view.setFloat32(offset, value)
+    },
+
+    setFloat64(offset: number, value: number): void {
+      view.setFloat64(offset, value)
+    },
+
+    setInt8(offset: number, value: number): void {
+      view.setInt8(offset, value)
+    },
+
+    setInt16(offset: number, value: number): void {
+      view.setInt16(offset, value)
+    },
+
+    setInt32(offset: number, value: number): void {
+      view.setInt32(offset, value)
+    },
+
+    setInt64(offset: number, value: bigint): void {
+      view.setBigInt64(offset, value)
+    },
+
+    setUint8(offset: number, value: number): void {
+      view.setUint8(offset, value)
+    },
+
+    setUint16(offset: number, value: number): void {
+      view.setUint16(offset, value)
+    },
+
+    setUint32(offset: number, value: number): void {
+      view.setUint32(offset, value)
+    },
+
+    setUint64(offset: number, value: bigint): void {
+      view.setBigUint64(offset, value)
     }
   }
 }
+
+export type ByteBuffer = ReturnType<typeof createByteBuffer>

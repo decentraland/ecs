@@ -73,6 +73,36 @@ describe('ByteBuffer tests', () => {
     expect(buf.toBinary().toString()).toBe([0, 200, 255, 255].toString())
   })
 
+  it('not fail using the view wrapper after a grow', () => {
+    const buf = createByteBuffer({
+      writing: {
+        buffer: new Uint8Array([0, 200, 0, 200]),
+        currentOffset: 2
+      }
+    })
+
+    expect(buf.buffer().byteLength).toBe(4)
+
+    buf.writeUint32(0xfade)
+
+    expect(buf.buffer().byteLength).toBeGreaterThan(4)
+    expect(buf.getUint32(2)).toBe(0xfade)
+  })
+
+  it('sub array offset', () => {
+    const arr = new Uint8Array(1024)
+    arr[1] = 0xfa
+    arr[3] = 0xde
+
+    const buf = createByteBuffer({
+      writing: {
+        buffer: arr.subarray(512),
+        currentOffset: 0
+      }
+    })
+    expect(buf.getUint32(0)).toBe(0)
+  })
+
   it('fails using the view after a grow', () => {
     const buf = createByteBuffer({
       writing: {
