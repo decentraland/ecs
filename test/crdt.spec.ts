@@ -34,7 +34,7 @@ function createSandbox({ length }: { length: number }) {
   clients.forEach((client) => {
     client.ws.send = (data) => {
       clients.forEach(
-        (c) => c.id !== client.id && c.ws.onmessage({ data } as MessageEvent)
+        (c) => c.id !== client.id && c.ws.onmessage!({ data } as MessageEvent)
       )
     }
   })
