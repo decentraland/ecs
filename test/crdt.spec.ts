@@ -29,7 +29,7 @@ describe('CRDT tests', () => {
 
   it('Send ONLY dirty components via trasnport and spy on send messages', () => {
     const { engine, spySend } = SandBox.create({ length: 1 })[0]
-    const entityA = engine.addEntity(true)
+    const entityA = engine.addDynamicEntity()
     const { Transform } = engine.baseComponents
     const Test = engine.getComponent(SandBox.Position.id)
 
@@ -61,7 +61,7 @@ describe('CRDT tests', () => {
   it('should sent new entity through the wire and process it in the other engine', async () => {
     const [clientA, clientB] = SandBox.create({ length: 12 })
 
-    const entityA = clientA.engine.addEntity(true)
+    const entityA = clientA.engine.addDynamicEntity()
     const { Transform } = clientA.engine.baseComponents
     const TransformB = clientB.engine.baseComponents.Transform
     const TestA = clientA.engine.getComponent(SandBox.Position.id)
@@ -121,7 +121,7 @@ describe('CRDT tests', () => {
     Transform.mutable(entity).position.x = 10
 
     // Create a dynamic entity
-    const dynamicEntity = clientA.engine.addEntity(true)
+    const dynamicEntity = clientA.engine.addDynamicEntity()
     DoorComponent.create(dynamicEntity, { open: 1 })
     const randomGuyWin = (Math.random() * CLIENT_LENGTH - 1) | 0
     otherClients.forEach(({ engine }, index) => {

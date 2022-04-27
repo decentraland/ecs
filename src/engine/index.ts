@@ -35,6 +35,10 @@ function preEngine() {
     return entity
   }
 
+  function addDynamicEntity() {
+    return addEntity(true)
+  }
+
   function removeEntity(entity: Entity) {
     // TODO: Remove all the components of that entity
     for (const [, component] of componentsDefinition) {
@@ -116,6 +120,7 @@ function preEngine() {
     componentsDefinition,
     systems,
     addEntity,
+    addDynamicEntity,
     removeEntity,
     addSystem,
     defineComponent,
@@ -136,6 +141,7 @@ export type PreEngine = ReturnType<typeof preEngine>
  */
 export type Engine = {
   addEntity(dynamic?: boolean): Entity
+  addDynamicEntity(): Entity
   removeEntity(entity: Entity): void
   addSystem(system: Update): void
   defineComponent<T extends EcsType>(
@@ -188,6 +194,7 @@ export function Engine(): Engine {
 
   return {
     addEntity: engine.addEntity,
+    addDynamicEntity: engine.addDynamicEntity,
     removeEntity: engine.removeEntity,
     addSystem: engine.addSystem,
     defineComponent: engine.defineComponent,
