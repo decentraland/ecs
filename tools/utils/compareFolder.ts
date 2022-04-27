@@ -32,8 +32,9 @@ export function compareFolders(folderA: string, folderB: string) {
       const fileContentB = readFileSync(path.resolve(folderB, file)).toString()
       if (fileContentA !== fileContentB) {
         console.error(
-          `The file ${file} has a difference. Please run \`make build-components\``
+          `The file ${file} has a difference. Please run \`make build-components\` and commit it.`
         )
+        ok = false
       }
     }
   }
