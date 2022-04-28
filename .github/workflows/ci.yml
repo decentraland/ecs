@@ -18,7 +18,11 @@ jobs:
         with:
           node-version: 16.x
       - name: install
-        run:  npm install
+        run: make install
+      - name: build tools
+        run:  make build-tools
+      - name: test-generated-components
+        run:  make test-generated-components
       - name: build
         run:  make build
       - name: test

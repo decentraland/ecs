@@ -9,7 +9,11 @@
     "type": "git",
     "url": "git+https://github.com/decentraland/ecs.git"
   },
-  "keywords": ["dcl", "ecs", "decentraland-ecs"],
+  "keywords": [
+    "dcl",
+    "ecs",
+    "decentraland-ecs"
+  ],
   "author": "DCL",
   "license": "Apache-2.0",
   "bugs": {
@@ -19,9 +23,13 @@
   "devDependencies": {
     "@dcl/eslint-config": "^1.0.3",
     "@microsoft/api-extractor": "^7.23.0",
+    "@types/fs-extra": "^9.0.13",
     "@types/jest": "^27.4.1",
+    "fs-extra": "^10.1.0",
     "jest": "^27.5.1",
     "jest-matcher-deep-close-to": "^3.0.2",
+    "node-fetch": "^2.6.7",
+    "proto-compatibility-tool": "^1.0.0",
     "ts-jest": "^27.1.4",
     "ts-proto": "^1.110.4",
     "typescript": "^4.6.3"

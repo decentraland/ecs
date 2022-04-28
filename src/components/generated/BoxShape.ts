@@ -1,12 +1,13 @@
-import { EcsType } from '../../../built-in-types/EcsType'
-import { ByteBuffer } from '../../../serialization/ByteBuffer'
-import { PBBoxShape } from './BoxShape'
+import { EcsType } from '../../built-in-types/EcsType'
+import { ByteBuffer } from '../../serialization/ByteBuffer'
+import { PBBoxShape } from './pb/BoxShape'
+
+export const COMPONENT_ID = 13
 
 export const BoxShape: EcsType<PBBoxShape> = {
   serialize(value: PBBoxShape, builder: ByteBuffer): void {
     const writer = PBBoxShape.encode(value)
     const buffer = new Uint8Array(writer.finish(), 0, writer.len)
-
     builder.writeBuffer(buffer)
   },
   deserialize(reader: ByteBuffer): PBBoxShape {
