@@ -1,3 +1,3 @@
-export enum CLASS_ID {
+export enum COMPONENT_ID {
   SYNC = 1000
 }

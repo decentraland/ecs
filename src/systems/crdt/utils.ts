@@ -3,15 +3,18 @@ import { ComponentDefinition } from '../../engine/component'
 import { Entity } from '../../engine/entity'
 
 export namespace CrdtUtils {
-  export type ClassID = ComponentDefinition['_id']
+  export type ComponentID = ComponentDefinition['_id']
 
-  export function parseKey(key: string): [Entity, ClassID] {
-    const [entity, classId] = key.split('.').map(Number) as [Entity, ClassID]
-    return [entity, classId]
+  export function parseKey(key: string): [Entity, ComponentID] {
+    const [entity, componentId] = key.split('.').map(Number) as [
+      Entity,
+      ComponentID
+    ]
+    return [entity, componentId]
   }
 
-  export function getKey(entity: Entity, classId: ClassID): string {
-    return `${entity}.${classId}`
+  export function getKey(entity: Entity, componentId: ComponentID): string {
+    return `${entity}.${componentId}`
   }
 
   export enum SynchronizedEntityType {

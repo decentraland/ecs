@@ -28,14 +28,16 @@ export namespace WireMessage {
     MAX_MESSAGE_TYPE
   }
 
+  /**
+   * @param length - Uint32 the length of all message (including the header)
+   * @param type - define the function which handles the data
+   */
   export type Header = {
     length: Uint32
-    version: Uint32
     type: Uint32
   }
 
-  export const HEADER_LENGTH = 12
-  export const HEADER_CURRENT_VERSION: number = 1
+  export const HEADER_LENGTH = 8
   /**
    * Validate if the message incoming is completed
    * @param buf
@@ -47,7 +49,7 @@ export namespace WireMessage {
     }
 
     const messageLength = buf.getUint32(buf.currentReadOffset())
-    if (rem < messageLength + HEADER_LENGTH) {
+    if (rem < messageLength) {
       return false
     }
 
@@ -61,7 +63,6 @@ export namespace WireMessage {
 
     return {
       length: buf.readUint32(),
-      version: buf.readUint32(),
       type: buf.readUint32() as Enum
     }
   }
