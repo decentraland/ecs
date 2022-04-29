@@ -1,42 +1,52 @@
 
-# Intro
+Component serialization is part of the component definition. As we saw in the previous
+section, the serialization indicates how the component will be packed and will navigate by the different
+transports that can exist. The most common pipe is the communication between the scene and the renderer.
+The renderer creates the representation in the 3D world interpreting each data of each component (and each entity).
 
-TODO 
+## Component defined by the Engine
+The core engine of the ECS has the basic and variety of tools to make amazing things.
+These components need to be maintainable over time, and always keep both backward and
+forward compatibility. One scenario: 
+1. Assuming that the renderer has the latest version of 
+the components, the scene **(A)** with ECS 7.0.0 and scene **(B)** with ECS 7.3.1 
+2. In scene **(B)** there is no problem.
+3. With scene **(A)**, the renderer has to be able to parse old components and send old components.
 
-## Raw types
+The definition itself of the core components is using Protocol Buffer and they are in 
+src/component/definitions. The PB serialization is a powerful tool to work with these compatibility topics.
 
-It consists of directly writing in the buffer to be sent through the wire. Ideally to types that
-probably never change and need to be fast. E.g: transform component
+- Making a new component is just adding the .proto file.
+- Modifying a component is just modifying it and let sure that the pipeline pass, which indicates that you are keeping the compatibility.
 
-TODO:
-- typescript
-- c#
-- json definition?
+### The special component
+We have a special treat with the Transform component. It contains the position, scale, and
+rotation of an Entity and it's often changing. Using protocol buffer here might be overkill
+since components definition never change and the values can be copied 1-1 in memory.
+The definition of this component is in src/components/definitions/Transform.md
 
-## Built-in-types
+## Component defined by the Creator
 
-It's possible to build complex data structure with built-in-types. This has a low
-the capacity of maintainability just as raw types, but it's fast and another layer behind can be
-built to improve its maintainability. E.g: user defined component (because it's easy to use)
+The creators can define their own components, no matters how complex they are. But, 
+the maintainability lies with them. The options are limited only by the imagination, although we can suggest use built-in-types.  
 
-Without keys, almost raw types.
-TODO:
-- typescript
-- c#
-- json definition?
+### Built-in-types (WIP)
 
+This maps directly with the EcsType used in the ECS 7.
 
-## Flat Buffers
-Flatbuffer has many language supports, it's fast and it has tools for forward-backwards compatibility.
-- typescript: flatbuffer compiler auto-generation and post processing
-- c#: flatbuffer compiler auto-generation and post processing
-- json definition: flatbuffer compiler auto-generation
+Defines the flow and how to serialize:
+- **MapType**
+- **ArrayType**
+- **Optional**
+- **Enum**
 
-The goal of post processing is to auto-generated a data-type for typescript and C#
-TODO
-
-### Generation and maintain
-TODO
-
-### Tests
-TODO
+Define the primitive data to serialize:
+- Int8
+- Int16
+- Int32
+- Int64
+- Float32
+- Float64
+- Boolean
+- String
+- Enum
