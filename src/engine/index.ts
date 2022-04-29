@@ -177,17 +177,17 @@ export function Engine(): Engine {
     // Should we add some dirtyIteratorSet at engine level so we dont have
     // to iterate all the component definitions to get the dirty ones ?
     const dirtySet = new Map<Entity, Set<number>>()
-    for (const [classId, definition] of engine.componentsDefinition) {
+    for (const [componentId, definition] of engine.componentsDefinition) {
       for (const entity of definition.dirtyIterator()) {
         if (!dirtySet.has(entity)) {
           dirtySet.set(entity, new Set())
         }
-        dirtySet.get(entity)!.add(classId)
+        dirtySet.get(entity)!.add(componentId)
       }
     }
     crdtSystem.send(dirtySet)
 
-    for (const [_classId, definition] of engine.componentsDefinition) {
+    for (const [_componentId, definition] of engine.componentsDefinition) {
       definition.clearDirty()
     }
   }

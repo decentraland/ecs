@@ -29,11 +29,11 @@ describe('Engine tests', () => {
     const entity = engine.addEntity()
     const entityCopied = engine.addEntity()
     const toTest = [Int16, Int32, Int8]
-    let CLASS_ID = 888
+    let COMPONENT_ID = 888
 
     for (const t of toTest) {
       const IntegerComponent = engine.defineComponent(
-        CLASS_ID++,
+        COMPONENT_ID++,
         MapType({ value: t })
       )
       const myInteger = IntegerComponent.create(entity, { value: 33 })
@@ -55,12 +55,12 @@ describe('Engine tests', () => {
     const entity = engine.addEntity()
     const entityCopied = engine.addEntity()
     const toTest = [Float32, Float64]
-    let CLASS_ID = 888
+    let COMPONENT_ID = 888
     const testValue = 2.0
 
     for (const t of toTest) {
       const FloatComponent = engine.defineComponent(
-        CLASS_ID++,
+        COMPONENT_ID++,
         MapType({ value: t })
       )
       const myFloat = FloatComponent.create(entity, { value: testValue })
@@ -79,11 +79,11 @@ describe('Engine tests', () => {
     const entity = engine.addEntity()
     const entityCopied = engine.addEntity()
 
-    let CLASS_ID = 888
+    let COMPONENT_ID = 888
     const testValue = 'testing an string'
 
     const FloatComponent = engine.defineComponent(
-      CLASS_ID++,
+      COMPONENT_ID++,
       MapType({ value: String })
     )
     const myFloat = FloatComponent.create(entity, { value: testValue })
@@ -99,7 +99,7 @@ describe('Engine tests', () => {
   it('should serialize and parse a complex object, modify and be equal', () => {
     const engine = Engine()
     const myEntity = engine.addEntity()
-    const CLASS_ID = 888
+    const COMPONENT_ID = 888
 
     const ItemType = MapType({
       itemId: Int32,
@@ -114,7 +114,7 @@ describe('Engine tests', () => {
     })
 
     const PlayerComponent = engine.defineComponent(
-      CLASS_ID,
+      COMPONENT_ID,
       MapType({
         name: String,
         description: String,
@@ -180,10 +180,10 @@ describe('Engine tests', () => {
     const engine = Engine()
     const entityFilled = engine.addEntity() // 0
     const entityEmpty = engine.addEntity() // 1
-    const CLASS_ID = 888
+    const COMPONENT_ID = 888
 
     const TestComponentType = engine.defineComponent(
-      CLASS_ID,
+      COMPONENT_ID,
       MapType({
         a: Int32,
         b: Int32,
@@ -227,13 +227,13 @@ describe('Engine tests', () => {
     const zeroObjectValues: Record<string, number> = {}
 
     for (i = 0; i < A.length; i++) {
-      const CLASS_ID = 888 + i + 1
+      const COMPONENT_ID = 888 + i + 1
       const key = A[i]
       vectorType[key] = Int32
       objectValues[key] = 50 + i
       zeroObjectValues[key] = 0
       const TestComponentType = engine.defineComponent(
-        CLASS_ID,
+        COMPONENT_ID,
         MapType(vectorType)
       )
 
@@ -250,9 +250,9 @@ describe('Engine tests', () => {
   it('force encode float struct of transform', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const CLASS_ID = 888
+    const COMPONENT_ID = 888
 
-    const TransformComponent = engine.defineComponent(CLASS_ID, Transform)
+    const TransformComponent = engine.defineComponent(COMPONENT_ID, Transform)
     const _myTransform = TransformComponent.create(entity, {
       position: { x: 111.1, y: 222.22, z: 333.33 },
       scale: { x: 41213.2, y: 5.214, z: 6112.1 },
@@ -271,10 +271,10 @@ describe('Engine tests', () => {
   it('optional and boolean', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const CLASS_ID = 888
+    const COMPONENT_ID = 888
 
     const TestComponent = engine.defineComponent(
-      CLASS_ID,
+      COMPONENT_ID,
       MapType({
         optionalColor: Optional(
           MapType({
@@ -310,7 +310,7 @@ describe('Engine tests', () => {
   it('enum integer', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const CLASS_ID = 888
+    const COMPONENT_ID = 888
 
     enum ColorToNumber {
       Red = 2,
@@ -319,7 +319,7 @@ describe('Engine tests', () => {
     }
 
     const TestComponent = engine.defineComponent(
-      CLASS_ID,
+      COMPONENT_ID,
       Enum<ColorToNumber>(Int64)
     )
 
@@ -341,7 +341,7 @@ describe('Engine tests', () => {
   it('enum string', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const CLASS_ID = 888
+    const COMPONENT_ID = 888
 
     enum ColorToString {
       Red = '2',
@@ -350,7 +350,7 @@ describe('Engine tests', () => {
     }
 
     const TestComponent = engine.defineComponent(
-      CLASS_ID,
+      COMPONENT_ID,
       Enum<ColorToString>(String)
     )
 

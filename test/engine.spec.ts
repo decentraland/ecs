@@ -159,17 +159,17 @@ describe('Engine tests', () => {
 
   it('should throw an error if the component class id already exists', () => {
     const engine = Engine()
-    const CLASS_ID = 888
-    engine.defineComponent(CLASS_ID, PositionType)
-    const Velocity = () => engine.defineComponent(CLASS_ID, VelocityType)
+    const COMPONENT_ID = 888
+    engine.defineComponent(COMPONENT_ID, PositionType)
+    const Velocity = () => engine.defineComponent(COMPONENT_ID, VelocityType)
     expect(Velocity).toThrowError()
   })
 
   it('should return mutable obj if use component.mutable()', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
-    const CLASS_ID = 888
-    const Position = engine.defineComponent(CLASS_ID, PositionType)
+    const COMPONENT_ID = 888
+    const Position = engine.defineComponent(COMPONENT_ID, PositionType)
     Position.create(entity, { x: 10 })
     Position.mutable(entity).x = 8888
     expect(Position.getFrom(entity)).toStrictEqual({ x: 8888 })
@@ -179,9 +179,9 @@ describe('Engine tests', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const entityB = engine.addEntity() // 0
-    const CLASS_ID = 888
-    const Position = engine.defineComponent(CLASS_ID, PositionType)
-    const Velocity = engine.defineComponent(CLASS_ID + 1, VelocityType)
+    const COMPONENT_ID = 888
+    const Position = engine.defineComponent(COMPONENT_ID, PositionType)
+    const Velocity = engine.defineComponent(COMPONENT_ID + 1, VelocityType)
     Position.create(entity, { x: 10 })
     Position.create(entityB, { x: 20 })
     Velocity.create(entity, { y: 20 })
@@ -200,10 +200,10 @@ describe('Engine tests', () => {
     const engine = Engine()
     const entityA = engine.addEntity()
     const entityB = engine.addEntity()
-    const CLASS_ID = 888
-    const Position = engine.defineComponent(CLASS_ID, PositionType)
-    const Position2 = engine.defineComponent(CLASS_ID + 1, PositionType)
-    const Velocity = engine.defineComponent(CLASS_ID + 2, VelocityType)
+    const COMPONENT_ID = 888
+    const Position = engine.defineComponent(COMPONENT_ID, PositionType)
+    const Position2 = engine.defineComponent(COMPONENT_ID + 1, PositionType)
+    const Velocity = engine.defineComponent(COMPONENT_ID + 2, VelocityType)
     Position.create(entityA, { x: 0 })
     Position2.create(entityA, { x: 8 })
     Velocity.create(entityA, { y: 1 })
@@ -225,9 +225,9 @@ describe('Engine tests', () => {
     const engine = Engine()
     const entityA = engine.addEntity()
     const entityB = engine.addEntity()
-    const CLASS_ID = Math.random() | 0
-    const Position = engine.defineComponent(CLASS_ID, PositionType)
-    const Velocity = engine.defineComponent(CLASS_ID + 2, VelocityType)
+    const COMPONENT_ID = Math.random() | 0
+    const Position = engine.defineComponent(COMPONENT_ID, PositionType)
+    const Velocity = engine.defineComponent(COMPONENT_ID + 2, VelocityType)
     Position.create(entityA, { x: 0 })
     Velocity.create(entityA, { y: 1 })
     Velocity.create(entityB, { y: 10 })
@@ -249,9 +249,9 @@ describe('Engine tests', () => {
     const entityA = engine.addEntity()
     const entityB = engine.addEntity()
     const entityC = engine.addEntity()
-    const CLASS_ID = Math.random() | 0
-    const Position = engine.defineComponent(CLASS_ID, PositionType)
-    const Velocity = engine.defineComponent(CLASS_ID + 2, VelocityType)
+    const COMPONENT_ID = Math.random() | 0
+    const Position = engine.defineComponent(COMPONENT_ID, PositionType)
+    const Velocity = engine.defineComponent(COMPONENT_ID + 2, VelocityType)
     Position.create(entityA, { x: 0 })
     Position.create(entityB, { x: 1 })
     Position.create(entityC, { x: 2 })
@@ -276,9 +276,9 @@ describe('Engine tests', () => {
     const entityA = engine.addEntity()
     const entityB = engine.addEntity()
     const entityC = engine.addEntity()
-    const CLASS_ID = Math.random() | 0
-    const Position = engine.defineComponent(CLASS_ID, PositionType)
-    const Velocity = engine.defineComponent(CLASS_ID + 2, VelocityType)
+    const COMPONENT_ID = Math.random() | 0
+    const Position = engine.defineComponent(COMPONENT_ID, PositionType)
+    const Velocity = engine.defineComponent(COMPONENT_ID + 2, VelocityType)
     Position.create(entityA, { x: 0 })
     Position.create(entityB, { x: 1 })
     Position.create(entityC, { x: 2 })

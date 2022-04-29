@@ -1,7 +1,7 @@
 import { Engine } from '../../engine'
 import { defineProtocolBufferComponents } from '../generated'
 import { Transform as LegacyTransform } from './Transform'
-import { LEGACY_CLASS_ID as ID } from './types'
+import { LEGACY_COMPONENT_ID as ID } from './types'
 
 export function defineLegacyComponents({
   defineComponent
