@@ -18,26 +18,6 @@ describe('Component operation tests', () => {
     expect(WireMessage.validate(buf)).toBe(false)
   })
 
-  it('serialize and process a PutComenentOperation', () => {
-    const newEngine = Engine()
-    const sdk = newEngine.baseComponents
-    const entityId = newEngine.addEntity()
-    sdk.Transform.create(entityId, {
-      position: Vector3.create(1, 1, 1),
-      scale: Vector3.create(1, 1, 1),
-      rotation: Quaternion.create(1, 1, 1, 1)
-    })
-
-    const bb = createByteBuffer()
-    PutComponentOperation._writePutComponent(
-      entityId,
-      1,
-      sdk.Transform._id,
-      sdk.Transform.toBinary(entityId).toBinary(),
-      bb
-    )
-  })
-
   it('serialize and process two PutComenentOperation message', () => {
     const newEngine = Engine()
     const sdk = newEngine.baseComponents
@@ -63,8 +43,11 @@ describe('Component operation tests', () => {
 
     while (WireMessage.validate(bb)) {
       const msgOne = PutComponentOperation.read(bb)!
-      expect(msgOne.version).toBe(WireMessage.HEADER_CURRENT_VERSION)
-      expect(msgOne.length).toBe(40 + PutComponentOperation.MESSAGE_LENGTH)
+      expect(msgOne.length).toBe(
+        40 +
+          PutComponentOperation.MESSAGE_HEADER_LENGTH +
+          WireMessage.HEADER_LENGTH
+      )
       expect(msgOne.type).toBe(WireMessage.Enum.PUT_COMPONENT)
       sdk.Transform.upsertFromBinary(entityId2, bb)
     }

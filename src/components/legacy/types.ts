@@ -1,7 +1,7 @@
 /**
  * @public
  */
-export enum LEGACY_CLASS_ID {
+export enum LEGACY_COMPONENT_ID {
   TRANSFORM = 1,
   UUID_CALLBACK = 8,
   BOX_SHAPE = 16,
