@@ -6,7 +6,7 @@ import EntityUtils from '../../engine/entity-utils'
 import { createByteBuffer } from '../../serialization/ByteBuffer'
 import { PutComponentOperation } from '../../serialization/crdt/componentOperation'
 import WireMessage from '../../serialization/wireMessage'
-import { createTransport } from './transport'
+import { createWsTransport, Transport } from './transport'
 import CrdtUtils from './utils'
 
 /**
@@ -14,18 +14,17 @@ import CrdtUtils from './utils'
  * What about when we remove the SyncComponent ? Should we notify all the clients? How ?
  * Where do we create the transport and process the received messages?
  */
-export function crdtSceneSystem(engine: PreEngine) {
+export function crdtSceneSystem(engine: PreEngine, useTransport?: Transport) {
   const crdtClient = crdtProtocol<Uint8Array>()
   const messages: Message<Uint8Array>[] = []
   const crdtEntities = new Map<Entity, boolean>()
 
-  const transport = createTransport()
-  transport.onmessage = parseChunkMessage
+  const transport = useTransport || createWsTransport()
+  transport.onData(parseChunkMessage)
 
-  function parseChunkMessage(chunkMessage: MessageEvent<Uint8Array>) {
-    if (!chunkMessage.data?.length) return
+  function parseChunkMessage(data: Uint8Array) {
     const buffer = createByteBuffer({
-      reading: { buffer: chunkMessage.data, currentOffset: 0 }
+      reading: { buffer: data, currentOffset: 0 }
     })
 
     while (WireMessage.validate(buffer)) {
