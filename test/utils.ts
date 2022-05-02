@@ -26,7 +26,18 @@ export namespace SandBox {
   export function create({ length }: { length: number }) {
     const clients = Array.from({ length }).map((_, index) => {
       const ws = new globalThis.WebSocket(`ws://url-${index}`)
-      jest.spyOn(transport, 'createTransport').mockReturnValue(ws)
+
+      jest.spyOn(transport, 'createWsTransport').mockReturnValue({
+        send: (data: Uint8Array) => {
+          ws.send(data)
+        },
+        onData: (cb: (data: Uint8Array) => void) => {
+          ws.onmessage = (chunkMessage: MessageEvent<Uint8Array>) => {
+            if (!chunkMessage.data?.length) return
+            cb(chunkMessage.data)
+          }
+        }
+      })
       const engine = Engine()
 
       const Position = engine.defineComponent(
