@@ -1,5 +1,5 @@
 import * as BoxShape from './BoxShape'
-import { Engine } from '../../engine'
+import { Engine } from '../../engine/index'
 
 export function defineProtocolBufferComponents({
   defineComponent
