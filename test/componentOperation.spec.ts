@@ -52,4 +52,9 @@ describe('Component operation tests', () => {
       sdk.Transform.upsertFromBinary(entityId2, bb)
     }
   })
+
+  it('should return null if it has an invalid header', () => {
+    const buf = createByteBuffer()
+    expect(PutComponentOperation.read(buf)).toBe(null)
+  })
 })

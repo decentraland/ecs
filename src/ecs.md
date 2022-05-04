@@ -20,9 +20,9 @@ type ComponentDefinition<T extends Spec> = {
   /** @deprecated */
   new(): {}
   removeFrom(entity: Entity): void
-  getFrom(entity: Entity): Readonly<Result<T>>
+  getFrom(entity: Entity): DeepReadonly<Result<T>>
 
-  getOrNull(entity: Entity): Readonly<Result<T>> | null
+  getOrNull(entity: Entity): DeepReadonly<Result<T>> | null
 
   // adds this component to the list "to be reviewed next frame"
   put(entity: Entity, val: Result<T>): Result<T>

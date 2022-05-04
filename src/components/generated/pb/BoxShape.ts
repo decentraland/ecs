@@ -1,5 +1,4 @@
 /* eslint-disable */
-import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "decentraland.ecs";
@@ -75,81 +74,4 @@ export const PBBoxShape = {
     }
     return message;
   },
-
-  fromJSON(object: any): PBBoxShape {
-    return {
-      withCollisions: isSet(object.withCollisions)
-        ? Boolean(object.withCollisions)
-        : false,
-      isPointerBlocker: isSet(object.isPointerBlocker)
-        ? Boolean(object.isPointerBlocker)
-        : false,
-      visible: isSet(object.visible) ? Boolean(object.visible) : false,
-      uvs: Array.isArray(object?.uvs)
-        ? object.uvs.map((e: any) => Number(e))
-        : [],
-    };
-  },
-
-  toJSON(message: PBBoxShape): unknown {
-    const obj: any = {};
-    message.withCollisions !== undefined &&
-      (obj.withCollisions = message.withCollisions);
-    message.isPointerBlocker !== undefined &&
-      (obj.isPointerBlocker = message.isPointerBlocker);
-    message.visible !== undefined && (obj.visible = message.visible);
-    if (message.uvs) {
-      obj.uvs = message.uvs.map((e) => e);
-    } else {
-      obj.uvs = [];
-    }
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PBBoxShape>, I>>(
-    object: I
-  ): PBBoxShape {
-    const message = createBasePBBoxShape();
-    message.withCollisions = object.withCollisions ?? false;
-    message.isPointerBlocker = object.isPointerBlocker ?? false;
-    message.visible = object.visible ?? false;
-    message.uvs = object.uvs?.map((e) => e) || [];
-    return message;
-  },
 };
-
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
-
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;
-
-type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<
-        Exclude<keyof I, KeysOfUnion<P>>,
-        never
-      >;
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
-
-function isSet(value: any): boolean {
-  return value !== null && value !== undefined;
-}

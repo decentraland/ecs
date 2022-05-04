@@ -63,7 +63,7 @@ async function main() {
       generatedPath
     }))
   ) {
-    throw new Error('asd')
+    throw new Error('Failed to generate protocol buffer')
   }
 
   for (const component of components) {

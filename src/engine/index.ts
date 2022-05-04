@@ -1,12 +1,12 @@
+import { defineSdkComponents } from '../components'
+import { crdtSceneSystem } from '../systems/crdt'
 import { Entity, EntityContainer } from './entity'
 import {
   ComponentDefinition,
   defineComponent as defComponent
 } from './component'
-import { ComponentEcsType, Update } from './types'
+import { ComponentEcsType, Update, DeepReadonly } from './types'
 import { EcsType } from '../built-in-types'
-import { defineSdkComponents } from '../components'
-import { crdtSceneSystem } from '../systems/crdt'
 
 /**
  * @alpha
@@ -87,11 +87,11 @@ function preEngine() {
 
   function* groupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(
     ...components: T
-  ): Iterable<[Entity, ...Readonly<ComponentEcsType<T>>]> {
+  ): Iterable<[Entity, ...DeepReadonly<ComponentEcsType<T>>]> {
     for (const [entity, ...groupComp] of getComponentDefGroup(...components)) {
       yield [entity, ...groupComp.map((c) => c.getFrom(entity))] as [
         Entity,
-        ...Readonly<ComponentEcsType<T>>
+        ...DeepReadonly<ComponentEcsType<T>>
       ]
     }
   }
@@ -153,7 +153,7 @@ export type Engine = {
   ): Iterable<[Entity, ...ComponentEcsType<T>]>
   groupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(
     ...components: T
-  ): Iterable<[Entity, ...Readonly<ComponentEcsType<T>>]>
+  ): Iterable<[Entity, ...DeepReadonly<ComponentEcsType<T>>]>
   getComponent<T extends EcsType>(componentId: number): ComponentDefinition<T>
   update(dt: number): void
   baseComponents: ReturnType<typeof defineSdkComponents>

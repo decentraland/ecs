@@ -19,7 +19,7 @@ export type Engine = {
     addSystem(system: Update): void;
     defineComponent<T extends EcsType>(componentId: number, spec: T): ComponentDefinition<T>;
     mutableGroupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(...components: T): Iterable<[Entity, ...ComponentEcsType<T>]>;
-    groupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(...components: T): Iterable<[Entity, ...Readonly<ComponentEcsType<T>>]>;
+    groupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(...components: T): Iterable<[Entity, ...DeepReadonly<ComponentEcsType<T>>]>;
     getComponent<T extends EcsType>(componentId: number): ComponentDefinition<T>;
     update(dt: number): void;
     baseComponents: ReturnType<typeof defineSdkComponents>;
@@ -37,6 +37,7 @@ export type PreEngine = ReturnType<typeof preEngine>;
 // src/engine/index.ts:147:3 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:147:3 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:151:3 - (ae-forgotten-export) The symbol "ComponentEcsType" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:154:3 - (ae-forgotten-export) The symbol "DeepReadonly" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:159:3 - (ae-forgotten-export) The symbol "defineSdkComponents" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
