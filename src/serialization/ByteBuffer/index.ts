@@ -103,16 +103,6 @@ export function createByteBuffer(options: CreateByteBufferOptions = {}) {
 
   return {
     /**
-     * @returns The entire current DataView.
-     * @deprecated The root object returned has all functions available in Dataview
-     * WARNING: if the buffer grows, the view had changed itself,
-     *  and the reference will be a invalid one.
-     */
-    view(): DataView {
-      return view
-    },
-
-    /**
      * @returns The entire current Uint8Array.
      *
      * WARNING: if the buffer grows, the view had changed itself,

@@ -21,7 +21,6 @@ describe('Generated BoxShape ProtoBuf', () => {
       uvs: [-1, -2.1, 12837127371]
     })
     const buffer = BoxShape.toBinary(entity)
-    console.log(buffer.toBinary())
     BoxShape.updateFromBinary(entityB, buffer)
 
     expect(_boxShape).toBeDeepCloseTo(BoxShape.getFrom(entityB) as any)
