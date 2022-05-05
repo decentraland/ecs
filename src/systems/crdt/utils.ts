@@ -25,6 +25,12 @@ export namespace CrdtUtils {
     // synchronizes entities needed by the renderer
     RENDERER
   }
+
+  export function rendererStream() {}
+
+  export function allStream() {}
+
+  export function syncSream() {}
 }
 export default CrdtUtils
 
