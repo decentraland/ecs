@@ -2,6 +2,8 @@ import { Vector3 } from '@dcl/ecs-math'
 import { Engine } from '../src/engine'
 import { Entity } from '../src/engine/entity'
 import EntityUtils from '../src/engine/entity-utils'
+import { createByteBuffer } from '../src/serialization/ByteBuffer'
+import { PutComponentOperation } from '../src/serialization/crdt/componentOperation'
 import { wait, SandBox } from './utils'
 
 describe('CRDT tests', () => {
@@ -148,5 +150,31 @@ describe('CRDT tests', () => {
       const doorValue = getDoorComponent(engine).getFrom(dynamicEntity).open
       expect(doorValue).toBe(DOOR_VALUE)
     })
+  })
+  it('should resend a crdt message if its outdated', () => {
+    const [{ engine, ws, spySend }] = SandBox.create({ length: 1 })
+    const entity = engine.addEntity()
+    engine.baseComponents.Transform.create(entity, SandBox.DEFAULT_POSITION)
+    engine.update(1)
+    engine.baseComponents.Transform.mutable(entity).position.x = 8
+    engine.update(1)
+    const buffer = createByteBuffer()
+    PutComponentOperation.write(
+      entity,
+      0,
+      engine.baseComponents.Transform,
+      buffer
+    )
+    jest.resetAllMocks()
+    const spyWrite = jest.spyOn(PutComponentOperation, 'write')
+    ws.onmessage!({ data: buffer.toBinary() } as MessageEvent<any>)
+    engine.update(1)
+
+    expect(spySend).toBeCalledTimes(1)
+    expect(spyWrite).toBeCalledTimes(1)
+
+    jest.resetAllMocks()
+    ws.onmessage!({} as MessageEvent<any>)
+    expect(spySend).toBeCalledTimes(0)
   })
 })

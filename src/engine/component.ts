@@ -1,7 +1,8 @@
 import { EcsType } from '../built-in-types'
 import { ByteBuffer, createByteBuffer } from '../serialization/ByteBuffer'
 import { Entity } from './entity'
-import { readonly } from './utils'
+import { deepReadonly } from './utils'
+import { DeepReadonly } from './types'
 
 export type EcsResult<T extends EcsType> = T extends EcsType
   ? ReturnType<T['deserialize']>
@@ -12,9 +13,9 @@ export type ComponentType<T extends EcsType> = EcsResult<T>
 export type ComponentDefinition<T extends EcsType = EcsType<any>> = {
   _id: number
   has(entity: Entity): boolean
-  getFrom(entity: Entity): Readonly<ComponentType<T>>
+  getFrom(entity: Entity): DeepReadonly<ComponentType<T>>
 
-  getOrNull(entity: Entity): Readonly<ComponentType<T>> | null
+  getOrNull(entity: Entity): DeepReadonly<ComponentType<T>> | null
 
   // adds this component to the list "to be reviewed next frame"
   create(entity: Entity, val: ComponentType<T>): ComponentType<T>
@@ -61,18 +62,20 @@ export function defineComponent<T extends EcsType>(
       dirtyIterator.add(entity)
       return component || null
     },
-    getOrNull: function (entity: Entity): Readonly<ComponentType<T>> | null {
+    getOrNull: function (
+      entity: Entity
+    ): DeepReadonly<ComponentType<T>> | null {
       const component = data.get(entity)
-      return component ? readonly(component) : null
+      return component ? deepReadonly(component) : null
     },
-    getFrom: function (entity: Entity): Readonly<ComponentType<T>> {
+    getFrom: function (entity: Entity): DeepReadonly<ComponentType<T>> {
       const component = data.get(entity)
       if (!component) {
         throw new Error(
           `[getFrom] Component ${componentId} for ${entity} not found`
         )
       }
-      return readonly(component)
+      return deepReadonly(component)
     },
     create: function (
       entity: Entity,

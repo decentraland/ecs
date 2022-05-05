@@ -29,8 +29,7 @@ export function crdtSceneSystem(engine: PreEngine) {
     })
 
     while (WireMessage.validate(buffer)) {
-      const message = PutComponentOperation.read(buffer)
-      if (!message) return
+      const message = PutComponentOperation.read(buffer)!
 
       const { entityId, componentId, data, timestamp } = message
       messages.push({
@@ -58,7 +57,6 @@ export function crdtSceneSystem(engine: PreEngine) {
       const [entity, componentId] = CrdtUtils.parseKey(message.key)
       const msg = crdtClient.processMessage(message)
       const component = engine.getComponent(componentId)
-
       // CRDT outdated message. Resend this message through the wire
       // TODO: perf transactor
       if (msg !== message) {
