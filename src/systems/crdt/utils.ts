@@ -1,4 +1,3 @@
-// import { getComponentIds } from '../../components'
 import { ComponentDefinition } from '../../engine/component'
 import { Entity } from '../../engine/entity'
 
@@ -18,8 +17,6 @@ export namespace CrdtUtils {
   }
 
   export enum SynchronizedEntityType {
-    // synchronizes all entities without filter. used for renderers
-    ALL,
     // synchronizes entities with the NetworkSynchronized component only, used for networked games
     NETWORKED,
     // synchronizes entities needed by the renderer
@@ -32,6 +29,7 @@ export namespace CrdtUtils {
 
   export function syncSream() {}
 }
+
 export default CrdtUtils
 
 // TODO: next version split between diff types of transports/crdts.
