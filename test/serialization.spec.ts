@@ -127,11 +127,6 @@ describe('Serialization Types', () => {
       level: 1,
       hp: 0.0,
       position: { x: 1.0, y: 50.0, z: 50.0 },
-      transform: {
-        position: { x: 11.11, y: 22.222, z: 33.33 },
-        scale: { x: 44.44, y: 55.55, z: 66.66 },
-        rotation: { x: 77.77, y: 88.88, z: 99.99, w: 110.11011 }
-      },
       targets: [],
       items: []
     }
