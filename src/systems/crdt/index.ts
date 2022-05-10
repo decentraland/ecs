@@ -15,15 +15,23 @@ import CrdtUtils from './utils'
  * Where do we create the transport and process the received messages?
  */
 export function crdtSceneSystem(engine: PreEngine) {
+  // CRDT client
   const crdtClient = crdtProtocol<Uint8Array>()
+  // Queue of messages to be proccessed at next tick
   const messages: Message<Uint8Array>[] = []
+  // Entities already processed by crdt
   const crdtEntities = new Map<Entity, boolean>()
 
-  const transport = createTransport()
-  transport.onmessage = parseChunkMessage
+  const transport = createTransport({ onData: parseChunkMessage })
 
+  /**
+   * Receives a chunk of binary messages and stores all the valid
+   * Component Operation Messages at messages queue
+   * @param chunkMessage A chunk of binary messages
+   */
   function parseChunkMessage(chunkMessage: MessageEvent<Uint8Array>) {
     if (!chunkMessage.data?.length) return
+
     const buffer = createByteBuffer({
       reading: { buffer: chunkMessage.data, currentOffset: 0 }
     })
@@ -40,6 +48,10 @@ export function crdtSceneSystem(engine: PreEngine) {
     }
   }
 
+  /**
+   * Return and clear the messaes queue
+   * @returns messages recieved by the transport to process on the next tick
+   */
   function getMessages() {
     const messagesToProcess = Array.from(messages)
     messages.length = 0
@@ -47,7 +59,8 @@ export function crdtSceneSystem(engine: PreEngine) {
   }
 
   /**
-   * This messages will be processed on every tick.
+   * This fn will be called on every tick.
+   * Process all the messages queue received by the transport
    */
   function processMessages() {
     const buffer = createByteBuffer()
@@ -55,8 +68,9 @@ export function crdtSceneSystem(engine: PreEngine) {
 
     for (const message of messagesToProcess) {
       const [entity, componentId] = CrdtUtils.parseKey(message.key)
-      const msg = crdtClient.processMessage(message)
       const component = engine.getComponent(componentId)
+      const msg = crdtClient.processMessage(message)
+
       // CRDT outdated message. Resend this message through the wire
       // TODO: perf transactor
       if (msg !== message) {
@@ -79,14 +93,13 @@ export function crdtSceneSystem(engine: PreEngine) {
     }
   }
 
+  /**
+   * Iterates the dirty map and generates crdt messages to be send
+   * @param dirtyMap a map of { entities: [componentId] }
+   */
   function send(dirtyMap: Map<Entity, Set<number>>) {
     const buffer = createByteBuffer()
     for (const [entity, componentsId] of dirtyMap) {
-      if (EntityUtils.isStaticEntity(entity) && !crdtEntities.has(entity)) {
-        crdtEntities.set(entity, true)
-        continue
-      }
-      crdtEntities.set(entity, true)
       for (const componentId of componentsId) {
         const component = engine.getComponent(componentId)
         const key = CrdtUtils.getKey(entity, componentId)
@@ -94,8 +107,16 @@ export function crdtSceneSystem(engine: PreEngine) {
           key,
           component.toBinary(entity).toBinary()
         )
-        PutComponentOperation.write(entity, event.timestamp, component, buffer)
+        if (!EntityUtils.isStaticEntity(entity) || crdtEntities.has(entity)) {
+          PutComponentOperation.write(
+            entity,
+            event.timestamp,
+            component,
+            buffer
+          )
+        }
       }
+      crdtEntities.set(entity, true)
     }
 
     if (buffer.size()) {
