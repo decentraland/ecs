@@ -27,7 +27,7 @@ export const Transform: EcsType<Transform> = {
     builder.setUint32(ptr + 40, value.parent)
   },
   deserialize(reader: ByteBuffer): Transform {
-    const ptr = reader.incrementReadOffset(40)
+    const ptr = reader.incrementReadOffset(44)
     return {
       position: Vector3.create(
         reader.getFloat32(ptr),

@@ -384,7 +384,7 @@ describe('Serialization Types', () => {
     }
   })
 
-  it('should serialize Transform as a struct', () => {
+  it('should serialize Transform (old without parent, and with ecstypes) as a struct', () => {
     const engine = Engine()
     const entity = engine.addEntity() // 0
     const COMPONENT_ID = 888
