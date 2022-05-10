@@ -1,5 +1,6 @@
 import { Quaternion, Vector3 } from '@dcl/ecs-math'
 import { Engine } from '../../src/engine'
+import { Entity } from '../../src/engine/entity'
 
 describe('Legacy component tests', () => {
   it('cube example scene', () => {
@@ -19,7 +20,8 @@ describe('Legacy component tests', () => {
       sdk.Transform.create(newCubeEntity, {
         position: Vector3.create(x, y, z),
         scale: Vector3.One(),
-        rotation: Quaternion.Identity()
+        rotation: Quaternion.Identity(),
+        parent: 0 as Entity
       })
 
       return newCubeEntity

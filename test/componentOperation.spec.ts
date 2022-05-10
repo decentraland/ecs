@@ -1,5 +1,6 @@
 import { Quaternion, Vector3 } from '@dcl/ecs-math'
 import { Engine } from '../src/engine'
+import { Entity } from '../src/engine/entity'
 import { createByteBuffer } from '../src/serialization/ByteBuffer'
 import { PutComponentOperation } from '../src/serialization/crdt/componentOperation'
 import WireMessage from '../src/serialization/wireMessage'
@@ -29,7 +30,8 @@ describe('Component operation tests', () => {
     const mutableTransform = sdk.Transform.create(entityId, {
       position: Vector3.create(1, 1, 1),
       scale: Vector3.create(1, 1, 1),
-      rotation: Quaternion.create(1, 1, 1, 1)
+      rotation: Quaternion.create(1, 1, 1, 1),
+      parent: 0 as Entity
     })
 
     const bb = createByteBuffer()
@@ -44,7 +46,7 @@ describe('Component operation tests', () => {
     while (WireMessage.validate(bb)) {
       const msgOne = PutComponentOperation.read(bb)!
       expect(msgOne.length).toBe(
-        40 +
+        44 +
           PutComponentOperation.MESSAGE_HEADER_LENGTH +
           WireMessage.HEADER_LENGTH
       )
