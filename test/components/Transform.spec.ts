@@ -1,8 +1,13 @@
 import { Quaternion, Vector3 } from '@dcl/ecs-math'
+import { TRANSFORM_LENGTH } from '../../src/components/legacy/Transform'
 import { Engine } from '../../src/engine'
 import { Entity } from '../../src/engine/entity'
 
 describe('Transform component', () => {
+  it('should transform length 44 bytes ', () => {
+    expect(TRANSFORM_LENGTH).toBe(44)
+  })
+
   it('should serialize Transform with 44 bytes', () => {
     const newEngine = Engine()
     const { Transform } = newEngine.baseComponents
@@ -21,7 +26,7 @@ describe('Transform component', () => {
       248, 84, 0, 0, 0, 0, 63, 53, 4, 243, 64, 73, 15, 219, 64, 45, 248, 84, 64,
       19, 93, 142, 7, 91, 205, 21
     ])
-    expect(buffer.toBinary().length).toBe(44)
+    expect(buffer.toBinary().length).toBe(TRANSFORM_LENGTH)
   })
   it('should serialize/deserialize Transform', () => {
     const newEngine = Engine()
