@@ -7,7 +7,7 @@ type Transform = {
   position: Vector3.MutableVector3
   rotation: Quaternion.MutableQuaternion
   scale: Vector3.MutableVector3
-  parent: Entity
+  parent?: Entity
 }
 
 export const TRANSFORM_LENGTH = 44
@@ -26,7 +26,7 @@ export const Transform: EcsType<Transform> = {
     builder.setFloat32(ptr + 28, value.scale.x)
     builder.setFloat32(ptr + 32, value.scale.y)
     builder.setFloat32(ptr + 36, value.scale.z)
-    builder.setUint32(ptr + 40, value.parent)
+    builder.setUint32(ptr + 40, value.parent || 0)
   },
   deserialize(reader: ByteBuffer): Transform {
     const ptr = reader.incrementReadOffset(TRANSFORM_LENGTH)

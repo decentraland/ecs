@@ -17,11 +17,6 @@ import { Engine } from '../src/engine'
 
 const Vector3 = MapType({ x: Float32, y: Float32, z: Float32 })
 const Quaternion = MapType({ x: Float32, y: Float32, z: Float32, w: Float32 })
-const Transform = MapType({
-  position: Vector3,
-  rotation: Quaternion,
-  scale: Vector3
-})
 
 describe('Serialization Types', () => {
   it('should serialize Ints', () => {
@@ -121,7 +116,6 @@ describe('Serialization Types', () => {
         level: Int32,
         hp: Float32,
         position: Vector3,
-        transform: Transform,
         targets: ArrayType(Vector3),
         items: ArrayType(ItemType)
       })
@@ -382,26 +376,5 @@ describe('Serialization Types', () => {
         TestComponentType.getFrom(entityCopied)
       )
     }
-  })
-
-  it('should serialize Transform (old without parent, and with ecstypes) as a struct', () => {
-    const engine = Engine()
-    const entity = engine.addEntity() // 0
-    const COMPONENT_ID = 888
-
-    const TransformComponent = engine.defineComponent(COMPONENT_ID, Transform)
-    TransformComponent.create(entity, {
-      position: { x: 111.1, y: 222.22, z: 333.33 },
-      scale: { x: 41213.2, y: 5.214, z: 6112.1 },
-      rotation: { x: 711.1, y: 8121.2, z: 9.21, w: 10.221 }
-    })
-
-    const buffer = TransformComponent.toBinary(entity)
-    expect(buffer.size()).toBe(40)
-    expect(Array.from(buffer.toBinary())).toStrictEqual([
-      66, 222, 51, 51, 67, 94, 56, 82, 67, 166, 170, 61, 68, 49, 198, 102, 69,
-      253, 201, 154, 65, 19, 92, 41, 65, 35, 137, 55, 71, 32, 253, 51, 64, 166,
-      217, 23, 69, 191, 0, 205
-    ])
   })
 })
