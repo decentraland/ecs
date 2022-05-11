@@ -8,6 +8,19 @@ import * as _m0 from 'protobufjs/minimal';
 import { Quaternion } from '@dcl/ecs-math';
 import { Vector3 } from '@dcl/ecs-math';
 
+// @public (undocumented)
+export function ArrayType<T>(type: EcsType<T>): EcsType<Array<T>>;
+
+// @public (undocumented)
+const Boolean_2: EcsType<boolean>;
+export { Boolean_2 as Boolean }
+
+// @public (undocumented)
+export type EcsType<T = any> = {
+    serialize(value: T, builder: ByteBuffer): void;
+    deserialize(reader: ByteBuffer): T;
+};
+
 // Warning: (ae-forgotten-export) The symbol "Transport" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
@@ -27,16 +40,63 @@ export type Engine = {
     baseComponents: ReturnType<typeof defineSdkComponents>;
 };
 
+// @public (undocumented)
+export function Enum<T>(type: EcsType<any>): EcsType<T>;
+
+// @public (undocumented)
+export const FlatString: EcsType<string>;
+
+// @public (undocumented)
+export const Float32: EcsType<number>;
+
+// @public (undocumented)
+export const Float64: EcsType<number>;
+
+// @public (undocumented)
+export const Int16: EcsType<number>;
+
+// @public (undocumented)
+export const Int32: EcsType<number>;
+
+// @public (undocumented)
+export const Int64: EcsType<number>;
+
+// @public (undocumented)
+export const Int8: EcsType<number>;
+
+// @public (undocumented)
+export function MapType<T extends Spec>(spec: T): EcsType<Result<T>>;
+
+// @public (undocumented)
+export function Optional<T>(spec: EcsType<T>): EcsType<T | undefined>;
+
 // Warning: (ae-forgotten-export) The symbol "preEngine" needs to be exported by the entry point index.d.ts
 //
 // @alpha (undocumented)
 export type PreEngine = ReturnType<typeof preEngine>;
 
+// Warning: (ae-forgotten-export) The symbol "ToOptional" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export type Result<T extends Spec> = ToOptional<{
+    [K in keyof T]: T[K] extends EcsType ? ReturnType<T[K]['deserialize']> : T[K] extends Spec ? Result<T[K]> : never;
+}>;
+
+// @public (undocumented)
+export interface Spec {
+    // (undocumented)
+    [key: string]: EcsType;
+}
+
+// @public (undocumented)
+const String_2: EcsType<string>;
+export { String_2 as String }
+
 // Warnings were encountered during analysis:
 //
+// src/built-in-types/EcsType.ts:4:3 - (ae-forgotten-export) The symbol "ByteBuffer" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:144:3 - (ae-forgotten-export) The symbol "Entity" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:147:3 - (ae-forgotten-export) The symbol "Update" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:148:3 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:148:3 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:152:3 - (ae-forgotten-export) The symbol "ComponentEcsType" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:155:3 - (ae-forgotten-export) The symbol "DeepReadonly" needs to be exported by the entry point index.d.ts
