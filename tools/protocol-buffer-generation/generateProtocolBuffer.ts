@@ -28,6 +28,10 @@ export async function generateProtocolBuffer(params: {
       args: [
         '--plugin=./node_modules/.bin/protoc-gen-ts_proto',
         '--ts_proto_opt=esModuleInterop=true',
+        `--ts_proto_opt=outputJsonMethods=false`,
+        `--ts_proto_opt=forceLong=false`,
+        `--ts_proto_opt=onlyTypes=true`,
+        `--ts_proto_opt=outputPartialMethods=false`,
         `--ts_proto_out=${pbGeneratedPath}`,
         `--proto_path=${definitionsPath}`,
         path.resolve(definitionsPath, '*.proto')

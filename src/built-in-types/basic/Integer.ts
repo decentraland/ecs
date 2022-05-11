@@ -1,14 +1,14 @@
 import { ByteBuffer } from '../../serialization/ByteBuffer'
 import { EcsType } from '../EcsType'
 
-export const BigInt64: EcsType<bigint> = {
-  serialize(value: bigint, builder: ByteBuffer): void {
-    builder.writeInt64(value)
-  },
-  deserialize(reader: ByteBuffer): bigint {
-    return reader.readInt64()
-  }
-}
+// export const BigInt64: EcsType<bigint> = {
+//   serialize(value: bigint, builder: ByteBuffer): void {
+//     builder.writeInt64(value)
+//   },
+//   deserialize(reader: ByteBuffer): bigint {
+//     return reader.readInt64()
+//   }
+// }
 
 export const Int64: EcsType<number> = {
   serialize(value: number, builder: ByteBuffer): void {

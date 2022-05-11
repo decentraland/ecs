@@ -1,8 +1,10 @@
-const isProd = () => false
+import { DeepReadonly } from './types'
 
-export function readonly<T extends Record<string, unknown>>(
+const isProd = () => !!process.env.PRODUCTION || false
+
+export function deepReadonly<T extends Record<string, unknown>>(
   val: T
-): Readonly<T> {
+): DeepReadonly<T> {
   // Fail only on development due to perf issues
   if (isProd()) {
     return val

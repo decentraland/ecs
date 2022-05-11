@@ -1,5 +1,6 @@
 import { Float32, MapType } from '../src/built-in-types'
 import { Engine } from '../src/engine'
+import { createByteBuffer } from '../src/serialization/ByteBuffer'
 
 const PositionType = MapType({
   x: Float32
@@ -82,6 +83,11 @@ describe('Engine tests', () => {
       position.x = 80
     }
     expect(Position.getFrom(entity)).toStrictEqual({ x: 80 })
+  })
+
+  it('should fail if we try to fetch a component not deifned', () => {
+    const engine = Engine()
+    expect(() => engine.getComponent(1238)).toThrowError()
   })
 
   it('iterate multiple components', () => {
@@ -298,24 +304,28 @@ describe('Engine tests', () => {
     expect(Array.from(Position.dirtyIterator())).toEqual([])
   })
 
-  // it("test flexbuffer", () => {
-  //   const fbb = builder()
-  //   fbb.startVector()
-  //   fbb.add
-  //   fbb.addInt(50)
-  //   fbb.addInt(51)
-  //   fbb.addInt(52)
-  //   fbb.addInt(53)
-  //   fbb.end()
+  it('should return isDirty if we mutate the component', () => {
+    const engine = Engine()
+    const entityA = engine.addEntity()
+    engine.baseComponents.BoxShape.create(entityA, {
+      withCollisions: false,
+      isPointerBlocker: true,
+      visible: false,
+      uvs: []
+    })
+    expect(engine.baseComponents.BoxShape.isDirty(entityA)).toBe(true)
+    engine.update(1)
+    expect(engine.baseComponents.BoxShape.isDirty(entityA)).toBe(false)
+    engine.baseComponents.BoxShape.mutable(entityA)
+    expect(engine.baseComponents.BoxShape.isDirty(entityA)).toBe(true)
+  })
 
-  //   const serializedBuffer = fbb.finish()
-  //   expect(serializedBuffer).toStrictEqual(new Uint8Array([50, 51, 52, 53, 4, 88, 1]))
-
-  //   const ref = toReference(serializedBuffer.buffer)
-  //   expect(ref.length()).toBe(4)
-  //   expect(ref.get(0).intValue()).toBe(50)
-  //   expect(ref.get(1).intValue()).toBe(51)
-  //   expect(ref.get(2).intValue()).toBe(52)
-  //   expect(ref.get(3).intValue()).toBe(53)
-  // })
+  it('should fail to write to byte buffer if the entity not exists', () => {
+    const engine = Engine()
+    const entityA = engine.addEntity()
+    const buf = createByteBuffer()
+    expect(() =>
+      engine.baseComponents.BoxShape.writeToByteBuffer(entityA, buf)
+    ).toThrowError('')
+  })
 })
