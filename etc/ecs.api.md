@@ -39,14 +39,8 @@ export type PreEngine = ReturnType<typeof preEngine>;
 // src/engine/index.ts:148:3 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:148:3 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:152:3 - (ae-forgotten-export) The symbol "ComponentEcsType" needs to be exported by the entry point index.d.ts
+// src/engine/index.ts:155:3 - (ae-forgotten-export) The symbol "DeepReadonly" needs to be exported by the entry point index.d.ts
 // src/engine/index.ts:160:3 - (ae-forgotten-export) The symbol "defineSdkComponents" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:143:3 - (ae-forgotten-export) The symbol "Entity" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:146:3 - (ae-forgotten-export) The symbol "Update" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:147:3 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:147:3 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:151:3 - (ae-forgotten-export) The symbol "ComponentEcsType" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:154:3 - (ae-forgotten-export) The symbol "DeepReadonly" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:159:3 - (ae-forgotten-export) The symbol "defineSdkComponents" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -7,12 +7,7 @@ import {
 } from './component'
 import { ComponentEcsType, Update, DeepReadonly } from './types'
 import { EcsType } from '../built-in-types'
-<<<<<<< HEAD
-import { defineSdkComponents } from '../components'
-import { crdtSceneSystem } from '../systems/crdt'
 import { Transport } from '../systems/crdt/transport'
-=======
->>>>>>> main
 
 /**
  * @alpha
