@@ -28,6 +28,7 @@ describe('Transform component', () => {
     ])
     expect(buffer.toBinary().length).toBe(TRANSFORM_LENGTH)
   })
+
   it('should serialize/deserialize Transform', () => {
     const newEngine = Engine()
     const { Transform } = newEngine.baseComponents
@@ -52,5 +53,34 @@ describe('Transform component', () => {
     Transform.updateFromBinary(entityB, buffer)
 
     expect(t1).toBeDeepCloseTo(Transform.getFrom(entityB) as any)
+  })
+
+  it('should serialize/deserialize Transform without parent', () => {
+    const newEngine = Engine()
+    const { Transform } = newEngine.baseComponents
+    const entity = newEngine.addEntity()
+    const entityB = newEngine.addEntity()
+
+    const t1 = Transform.create(entity, {
+      position: Vector3.create(Math.PI, Math.LN10, Math.SQRT1_2),
+      rotation: Quaternion.create(Math.PI, Math.E, 0.0, Math.SQRT1_2),
+      scale: Vector3.create(Math.PI, Math.E, Math.LN10)
+    })
+
+    Transform.create(entityB, {
+      position: Vector3.One(),
+      rotation: Quaternion.Identity(),
+      scale: Vector3.Zero(),
+      parent: 3333 as Entity
+    })
+
+    const buffer = Transform.toBinary(entity)
+    Transform.updateFromBinary(entityB, buffer)
+
+    expect({ ...t1, parent: 0 }).toBeDeepCloseTo(
+      Transform.getFrom(entityB) as any
+    )
+    // optional parent serialize as 0
+    expect(Transform.getFrom(entityB).parent).toBe(0)
   })
 })
