@@ -27,7 +27,7 @@ jobs:
         run:  make test
       - name: benchmark
         run:  make benchmark
-      - name: test
+      - name: linter
         run:  make lint
       - name: Publish
         uses: menduz/oddish-action@master
