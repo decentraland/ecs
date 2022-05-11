@@ -11,6 +11,8 @@ name: CI
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      dcl_ecs_s3_bucket_key: ${{ steps.publish_dcl_ecs.outputs.s3-bucket-key }}
     steps:
       - uses: actions/checkout@master
       - name: Use Node.js 16.x
@@ -27,12 +29,54 @@ jobs:
         run:  make test
       - name: benchmark
         run:  make benchmark
+        continue-on-error: true
       - name: linter
         run:  make lint
       - name: Publish
         uses: menduz/oddish-action@master
+        id: publish_dcl_ecs
         with:
           registry-url: "https://registry.npmjs.org"
           access: public
+
+          ## use action runId instead of current date to generate snapshot numbers
+          deterministic-snapshot: true
+
+          ## publish every package to s3
+          s3-bucket: ${{ secrets.SDK_TEAM_S3_BUCKET }}
+          s3-bucket-key-prefix: '@dcl/ecs/branch/${{ github.head_ref || github.ref }}'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.SDK_TEAM_AWS_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SDK_TEAM_AWS_SECRET }}
+
+  notify_deployment:
+    needs: [build]
+    if: ${{ github.event.pull_request.number }}
+    runs-on: ubuntu-latest
+    name: Deployment Notification
+    steps:
+      - name: Find Comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Test this pull request
+      - name: Generate S3 URL
+        id: url-generator
+        run: |
+          body="https://sdk-team-cdn.decentraland.org/${{ needs.build.outputs.dcl_ecs_s3_bucket_key }}"
+          echo ::set-output name=body::$body
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            # Test this pull request
+            - The `@dcl/ecs` package can be tested in scenes by running
+               ```bash
+               npm install "${{ steps.url-generator.outputs.body }}"
+               ```
+          edit-mode: replace

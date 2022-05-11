@@ -7,6 +7,7 @@ import {
 } from './component'
 import { ComponentEcsType, Update, DeepReadonly } from './types'
 import { EcsType } from '../built-in-types'
+import { Transport } from '../systems/crdt/transport'
 
 /**
  * @alpha
@@ -162,9 +163,9 @@ export type Engine = {
 /**
  * @public
  */
-export function Engine(): Engine {
+export function Engine(transport?: Transport): Engine {
   const engine = preEngine()
-  const crdtSystem = crdtSceneSystem(engine)
+  const crdtSystem = crdtSceneSystem(engine, transport)
   const baseComponents = defineSdkComponents(engine)
 
   function update(dt: number) {
