@@ -24,6 +24,7 @@ test-watch:
 	node_modules/.bin/jest --detectOpenHandles --colors --runInBand --watch $(TESTARGS)
 
 build:
+	make generate-components
 	rm -rf dist/
 	./node_modules/.bin/tsc -p tsconfig.json
 	rm -rf node_modules/@microsoft/api-extractor/node_modules/typescript || true
@@ -55,8 +56,7 @@ generate-components:
 	make build-tools
 	./tools/dist/protocol-buffer-generation/index.js --component-path ${PWD}/src/components
 
-test-generated-components:
+test-components-compatibility:
 	./tools/dist/check-proto-compatibility/index.js --definitions-path ${PWD}/src/components/definitions
-	./tools/dist/protocol-buffer-generation/index.js test --component-path ${PWD}/src/components
 
 .PHONY: build test

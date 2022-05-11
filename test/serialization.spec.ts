@@ -16,7 +16,6 @@ import {
 import { Engine } from '../src/engine'
 
 const Vector3 = MapType({ x: Float32, y: Float32, z: Float32 })
-const Quaternion = MapType({ x: Float32, y: Float32, z: Float32, w: Float32 })
 
 describe('Serialization Types', () => {
   it('should serialize Ints', () => {

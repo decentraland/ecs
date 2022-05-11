@@ -19,17 +19,15 @@ jobs:
           node-version: 16.x
       - name: install
         run: make install
-      - name: build tools
-        run:  make build-tools
-      - name: test-generated-components
-        run:  make test-generated-components
       - name: build
         run:  make build
+      - name: test-components-compatibility
+        run:  make test-components-compatibility
       - name: test
         run:  make test
       - name: benchmark
         run:  make benchmark
-      - name: test
+      - name: linter
         run:  make lint
       - name: Publish
         uses: menduz/oddish-action@master
