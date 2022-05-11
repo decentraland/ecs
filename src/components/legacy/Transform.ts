@@ -1,16 +1,21 @@
 import { Quaternion, Vector3 } from '@dcl/ecs-math'
 import { EcsType } from '../../built-in-types/EcsType'
+import { Entity } from '../../engine/entity'
 import { ByteBuffer } from '../../serialization/ByteBuffer'
 
 type Transform = {
   position: Vector3.MutableVector3
   rotation: Quaternion.MutableQuaternion
   scale: Vector3.MutableVector3
+  parent?: Entity
 }
+
+export const TRANSFORM_LENGTH = 44
+
 // This transform can be optimized with Float32Array for example
 export const Transform: EcsType<Transform> = {
   serialize(value: Transform, builder: ByteBuffer): void {
-    const ptr = builder.incrementWriteOffset(40)
+    const ptr = builder.incrementWriteOffset(TRANSFORM_LENGTH)
     builder.setFloat32(ptr, value.position.x)
     builder.setFloat32(ptr + 4, value.position.y)
     builder.setFloat32(ptr + 8, value.position.z)
@@ -21,9 +26,10 @@ export const Transform: EcsType<Transform> = {
     builder.setFloat32(ptr + 28, value.scale.x)
     builder.setFloat32(ptr + 32, value.scale.y)
     builder.setFloat32(ptr + 36, value.scale.z)
+    builder.setUint32(ptr + 40, value.parent || 0)
   },
   deserialize(reader: ByteBuffer): Transform {
-    const ptr = reader.incrementReadOffset(40)
+    const ptr = reader.incrementReadOffset(TRANSFORM_LENGTH)
     return {
       position: Vector3.create(
         reader.getFloat32(ptr),
@@ -40,7 +46,8 @@ export const Transform: EcsType<Transform> = {
         reader.getFloat32(ptr + 28),
         reader.getFloat32(ptr + 32),
         reader.getFloat32(ptr + 36)
-      )
+      ),
+      parent: reader.getUint32(ptr + 40) as Entity
     }
   }
 }
