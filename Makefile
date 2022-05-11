@@ -56,8 +56,7 @@ generate-components:
 	make build-tools
 	./tools/dist/protocol-buffer-generation/index.js --component-path ${PWD}/src/components
 
-test-generated-components:
+test-components-compatibility:
 	./tools/dist/check-proto-compatibility/index.js --definitions-path ${PWD}/src/components/definitions
-	./tools/dist/protocol-buffer-generation/index.js test --component-path ${PWD}/src/components
 
 .PHONY: build test
