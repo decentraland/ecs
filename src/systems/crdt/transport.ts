@@ -1,10 +1,25 @@
-type OnData = (id: string) => (data: MessageEvent<Uint8Array>) => void
-type Transport = WebSocket & { id: string }
-type Params = { onData: OnData; id: string }
+import { TransportMessage } from './types'
 
-export function createTransport({ onData, id }: Params): Transport {
-  const ws: Transport = new WebSocket('ws://localhost:8000') as any as Transport
+type Transport = {
+  id: string
+  send: WebSocket['send']
+  filter: Params['filter']
+}
+
+type Params = {
+  onData: (id: string) => (data: MessageEvent<Uint8Array>) => void
+  id: string
+  filter(message: TransportMessage): boolean
+}
+
+export function createTransport({ filter, onData, id }: Params): Transport {
+  const ws = new WebSocket('ws://localhost:8000')
   ws.onmessage = onData(id)
-  ;(ws as Transport).id = id
-  return ws
+  ;(ws as any).id = id
+
+  return {
+    id,
+    filter,
+    send: ws.send
+  }
 }

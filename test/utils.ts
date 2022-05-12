@@ -29,7 +29,11 @@ export namespace SandBox {
   export function create({ length }: { length: number }) {
     const clients = Array.from({ length }).map((_, index) => {
       const ws = new globalThis.WebSocket(`ws://url-${index}`)
-      jest.spyOn(transport, 'createTransport').mockReturnValue(ws)
+      jest.spyOn(transport, 'createTransport').mockReturnValue({
+        send: ws.send,
+        id: 'some-id',
+        filter: () => true
+      })
       const engine = Engine()
 
       const Position = engine.defineComponent(

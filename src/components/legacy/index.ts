@@ -1,4 +1,4 @@
-import { Engine } from '../../engine'
+import type { Engine } from '../../engine/types'
 import { defineProtocolBufferComponents } from '../generated'
 import { Transform as LegacyTransform } from './Transform'
 import { LEGACY_COMPONENT_ID as ID } from './types'

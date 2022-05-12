@@ -142,7 +142,7 @@ export function Engine(): Engine {
   const baseComponents = defineSdkComponents(engine)
 
   function update(dt: number) {
-    crdtSystem.processMessages()
+    crdtSystem.receiveMessages()
 
     for (const system of engine.systems) {
       system(dt)

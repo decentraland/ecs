@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 const indexTemplate = `$componentImports
-import { Engine } from '../../engine'
+import type { Engine } from '../../engine/types'
 
 export function defineProtocolBufferComponents({
   defineComponent

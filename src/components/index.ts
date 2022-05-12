@@ -1,5 +1,5 @@
 import { defineLegacyComponents } from './legacy'
-import type { Engine } from '../engine'
+import type { Engine } from '../engine/types'
 
 export * from './types'
 

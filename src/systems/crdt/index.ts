@@ -1,4 +1,4 @@
-import { Message, crdtProtocol } from '@dcl/crdt'
+import { crdtProtocol, Message } from '@dcl/crdt'
 
 import type { PreEngine } from '../../engine'
 import { Entity } from '../../engine/entity'
@@ -7,35 +7,42 @@ import { createByteBuffer } from '../../serialization/ByteBuffer'
 import { PutComponentOperation } from '../../serialization/crdt/componentOperation'
 import WireMessage from '../../serialization/wireMessage'
 import { createTransport } from './transport'
+import { ReceiveMessage, TransportMessage } from './types'
 import CrdtUtils from './utils'
 
-type TransportMessage = Message<Uint8Array> & { transportId: string }
-/**
- * TODO:
- * What about when we remove the SyncComponent ? Should we notify all the clients? How ?
- * Where do we create the transport and process the received messages?
- */
 export function crdtSceneSystem(engine: PreEngine) {
   // CRDT Client
   const crdtClient = crdtProtocol<Uint8Array>()
   // Messages that we received at transport.onMessage waiting to be processed
-  const pendingTransportMessages: TransportMessage[] = []
-  // Messages already processed but that we need to broadcast to other transports.
-  const transportMessages: TransportMessage[] = []
+  const receivedMessages: ReceiveMessage[] = []
+  // Messages already processed by the engine but that we need to broadcast to other transports.
+  const transportMessages: Set<TransportMessage> = new Set()
   // Map of entities already processed at least once
   const crdtEntities = new Map<Entity, boolean>()
 
-  const transport = createTransport({
-    onData: parseChunkMessage,
-    id: 'some-id'
-  })
+  const TRANSPORT_ID = 'some-id'
+  const transports = [
+    createTransport({
+      onData: parseChunkMessage,
+      id: TRANSPORT_ID,
+      filter: (message: TransportMessage): boolean => {
+        // TODO: filter component id for renderer.
+        return message.transportId !== TRANSPORT_ID && !!message.componentId
+      }
+    })
+  ]
 
   /**
-   * Receives a chunk of binary messages and stores all the valid
-   * Component Operation Messages at messages queue
-   * @param chunkMessage A chunk of binary messages
+   *
+   * @param transportId tranport id to identiy messages
+   * @returns a function to process received messages
    */
   function parseChunkMessage(transportId: string) {
+    /**
+     * Receives a chunk of binary messages and stores all the valid
+     * Component Operation Messages at messages queue
+     * @param chunkMessage A chunk of binary messages
+     */
     return function parseChunkMessage(chunkMessage: MessageEvent<Uint8Array>) {
       if (!chunkMessage.data?.length) return
       const buffer = createByteBuffer({
@@ -46,11 +53,13 @@ export function crdtSceneSystem(engine: PreEngine) {
         const message = PutComponentOperation.read(buffer)!
 
         const { entityId, componentId, data, timestamp } = message
-        pendingTransportMessages.push({
-          key: CrdtUtils.getKey(entityId, componentId),
+        receivedMessages.push({
+          entity: entityId,
+          componentId,
           data,
           timestamp,
-          transportId
+          transportId,
+          messageBuffer: new Uint8Array()
         })
       }
     }
@@ -60,9 +69,13 @@ export function crdtSceneSystem(engine: PreEngine) {
    * Return and clear the messaes queue
    * @returns messages recieved by the transport to process on the next tick
    */
-  function getMessages() {
-    const messagesToProcess = Array.from(pendingTransportMessages)
-    pendingTransportMessages.length = 0
+  function getMessages<T = unknown>(value: T[] | Set<T>) {
+    const messagesToProcess = Array.from(value)
+    if (Array.isArray(value)) {
+      value.length = 0
+    } else {
+      value.clear()
+    }
     return messagesToProcess
   }
 
@@ -70,36 +83,46 @@ export function crdtSceneSystem(engine: PreEngine) {
    * This fn will be called on every tick.
    * Process all the messages queue received by the transport
    */
-  function processMessages() {
-    const buffer = createByteBuffer()
-    const messagesToProcess = getMessages()
+  function receiveMessages() {
+    const messagesToProcess = getMessages(receivedMessages)
 
-    for (const message of messagesToProcess) {
-      const [entity, componentId] = CrdtUtils.parseKey(message.key)
-      const component = engine.getComponent(componentId)
-      const msg = crdtClient.processMessage(message)
+    for (const transport of transports) {
+      const buffer = createByteBuffer()
+      for (const message of messagesToProcess) {
+        const crdtMessage: Message<Uint8Array> = {
+          key: CrdtUtils.getKey(message.entity, message.componentId),
+          data: message.data,
+          timestamp: message.timestamp
+        }
+        const component = engine.getComponent(message.componentId)
+        const currentMessage = crdtClient.processMessage(crdtMessage)
 
-      // CRDT outdated message. Resend this message through the wire
-      // TODO: perf transactor
-      if (msg !== message) {
         // CRDT outdated message. Resend this message through the wire
-        PutComponentOperation.write(entity, msg.timestamp, component, buffer)
-      } else {
-        const bb = createByteBuffer({
-          reading: {
-            buffer: message.data,
-            currentOffset: 0
-          }
-        })
+        // TODO: perf transactor
+        if (crdtMessage !== currentMessage) {
+          // CRDT outdated message. Resend this message through the wire
+          PutComponentOperation.write(
+            message.entity,
+            currentMessage.timestamp,
+            component,
+            buffer
+          )
+        } else {
+          const opts = { reading: { buffer: message.data, currentOffset: 0 } }
+          const bb = createByteBuffer(opts)
 
-        component.upsertFromBinary(entity, bb)
-        component.clearDirty()
-        transportMessages.push(message)
+          // Update engine component
+          component.upsertFromBinary(message.entity, bb)
+          component.clearDirty()
+
+          // Add message to transport queue to be processed by others transports
+          transportMessages.add(message)
+        }
       }
-    }
 
-    if (buffer.size()) {
-      transport.send(buffer.toBinary())
+      if (buffer.size()) {
+        transport.send(buffer.toBinary())
+      }
     }
   }
 
@@ -108,17 +131,11 @@ export function crdtSceneSystem(engine: PreEngine) {
    * @param dirtyMap a map of { entities: [componentId] }
    */
   function createMessages(dirtyMap: Map<Entity, Set<number>>) {
+    // CRDT Messages will be the merge between the recieved transport messages
+    // and the new crdt messages
+    const crdtMessages = getMessages(transportMessages)
     const buffer = createByteBuffer()
 
-    // Broadcast messages from other transports.
-    for (const message of transportMessages) {
-      if (transport.id === message.transportId) continue
-      const [entityId, componentId] = CrdtUtils.parseKey(message.key)
-      const comp = engine.getComponent(componentId)
-      PutComponentOperation.write(entityId, message.timestamp, comp, buffer)
-    }
-
-    // Process dirty entities, and create crdt messages
     for (const [entity, componentsId] of dirtyMap) {
       for (const componentId of componentsId) {
         const component = engine.getComponent(componentId)
@@ -127,6 +144,10 @@ export function crdtSceneSystem(engine: PreEngine) {
           key,
           component.toBinary(entity).toBinary()
         )
+        const offset = buffer.currentWriteOffset()
+
+        // There is no need to create messages for the static entities the first time they are created
+        // They are part of the scene loading. Send only updates.
         if (!EntityUtils.isStaticEntity(entity) || crdtEntities.has(entity)) {
           PutComponentOperation.write(
             entity,
@@ -134,18 +155,34 @@ export function crdtSceneSystem(engine: PreEngine) {
             component,
             buffer
           )
+          crdtMessages.push({
+            componentId,
+            entity,
+            timestamp: event.timestamp,
+            messageBuffer: buffer
+              .buffer()
+              .subarray(offset, buffer.currentWriteOffset())
+          })
         }
       }
       crdtEntities.set(entity, true)
     }
-
-    if (buffer.size()) {
-      transport.send(buffer.toBinary())
+    const transportBuffer = createByteBuffer()
+    for (const transport of transports) {
+      transportBuffer.resetBuffer()
+      for (const message of crdtMessages) {
+        if (transport.filter(message)) {
+          transportBuffer.writeBuffer(message.messageBuffer, false)
+        }
+      }
+      if (transportBuffer.size()) {
+        transport.send(transportBuffer.toBinary())
+      }
     }
   }
 
   return {
     createMessages,
-    processMessages
+    receiveMessages
   }
 }

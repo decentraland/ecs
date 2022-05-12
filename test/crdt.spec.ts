@@ -1,5 +1,4 @@
 import { Vector3 } from '@dcl/ecs-math'
-import { Engine } from '../src/engine'
 import { Entity } from '../src/engine/entity'
 import EntityUtils from '../src/engine/entity-utils'
 import { createByteBuffer } from '../src/serialization/ByteBuffer'
@@ -91,10 +90,6 @@ describe('CRDT tests', () => {
     const CLIENT_LENGTH = 6
     const UPDATE_MS = 100
     const DOOR_VALUE = 8
-
-    function getDoorComponent(engine: Engine) {
-      return engine.getComponent<typeof SandBox.Door.type>(SandBox.Door.id)
-    }
     const clients = SandBox.create({ length: CLIENT_LENGTH })
 
     const interval = setInterval(() => {
@@ -117,7 +112,7 @@ describe('CRDT tests', () => {
      */
     const [clientA, ...otherClients] = clients
     const { Transform } = clientA.engine.baseComponents
-    const DoorComponent = getDoorComponent(clientA.engine)
+    const DoorComponent = clientA.components.Door
     // Upate Transform from static entity
     const entity = (clientA.engine.addEntity() - 1) as Entity
     Transform.mutable(entity).position.x = 10
@@ -126,8 +121,8 @@ describe('CRDT tests', () => {
     const dynamicEntity = clientA.engine.addDynamicEntity()
     DoorComponent.create(dynamicEntity, { open: 1 })
     const randomGuyWin = (Math.random() * CLIENT_LENGTH - 1) | 0
-    otherClients.forEach(({ engine }, index) => {
-      const DoorComponent = getDoorComponent(engine)
+    otherClients.forEach(({ engine, components }, index) => {
+      const DoorComponent = components.Door
       const isRandomGuy = randomGuyWin === index
 
       function doorSystem(_dt: number) {
@@ -146,8 +141,8 @@ describe('CRDT tests', () => {
     clearInterval(interval)
     await wait(UPDATE_MS)
 
-    clients.forEach(({ engine }) => {
-      const doorValue = getDoorComponent(engine).getFrom(dynamicEntity).open
+    clients.forEach(({ components }) => {
+      const doorValue = components.Door.getFrom(dynamicEntity).open
       expect(doorValue).toBe(DOOR_VALUE)
     })
   })
