@@ -8,37 +8,15 @@ import * as _m0 from 'protobufjs/minimal';
 import { Quaternion } from '@dcl/ecs-math';
 import { Vector3 } from '@dcl/ecs-math';
 
+// Warning: (ae-forgotten-export) The symbol "Engine" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export function Engine(): Engine;
-
-// @public (undocumented)
-export type Engine = {
-    addEntity(dynamic?: boolean): Entity;
-    addDynamicEntity(): Entity;
-    removeEntity(entity: Entity): void;
-    addSystem(system: Update): void;
-    defineComponent<T extends EcsType>(componentId: number, spec: T): ComponentDefinition<T>;
-    mutableGroupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(...components: T): Iterable<[Entity, ...ComponentEcsType<T>]>;
-    groupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(...components: T): Iterable<[Entity, ...DeepReadonly<ComponentEcsType<T>>]>;
-    getComponent<T extends EcsType>(componentId: number): ComponentDefinition<T>;
-    update(dt: number): void;
-    baseComponents: ReturnType<typeof defineSdkComponents>;
-};
+export function Engine(): Engine_2;
 
 // Warning: (ae-forgotten-export) The symbol "preEngine" needs to be exported by the entry point index.d.ts
 //
 // @alpha (undocumented)
 export type PreEngine = ReturnType<typeof preEngine>;
-
-// Warnings were encountered during analysis:
-//
-// src/engine/index.ts:143:3 - (ae-forgotten-export) The symbol "Entity" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:146:3 - (ae-forgotten-export) The symbol "Update" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:147:3 - (ae-forgotten-export) The symbol "EcsType" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:147:3 - (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:151:3 - (ae-forgotten-export) The symbol "ComponentEcsType" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:154:3 - (ae-forgotten-export) The symbol "DeepReadonly" needs to be exported by the entry point index.d.ts
-// src/engine/index.ts:159:3 - (ae-forgotten-export) The symbol "defineSdkComponents" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
