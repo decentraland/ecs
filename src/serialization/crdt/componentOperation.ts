@@ -5,13 +5,13 @@ import WireMessage from '../wireMessage'
 
 export namespace PutComponentOperation {
   /**
-   * @param entityId - Uint32 number of the entity
+   * @param entity - Uint32 number of the entity
    * @param componentId - Uint32 number of id
    * @param timestamp - Uint64 Lamport timestamp
    * @param data - Uint8[] data of component
    */
   export type Type = {
-    entityId: Entity
+    entity: Entity
     componentId: number
     timestamp: number
     data: Uint8Array
@@ -23,7 +23,7 @@ export namespace PutComponentOperation {
    *  already allocated
    */
   export function write(
-    entityId: Entity,
+    entity: Entity,
     timestamp: number,
     componentDefinition: ComponentDefinition,
     buf: ByteBuffer
@@ -34,7 +34,7 @@ export namespace PutComponentOperation {
     )
 
     // write body
-    componentDefinition.writeToByteBuffer(entityId, buf)
+    componentDefinition.writeToByteBuffer(entity, buf)
     const messageLength = buf.size() - startMessageOffset
 
     // Write WireMessage header
@@ -42,7 +42,7 @@ export namespace PutComponentOperation {
     buf.setUint32(startMessageOffset + 4, WireMessage.Enum.PUT_COMPONENT)
 
     // Write ComponentOperation header
-    buf.setUint32(startMessageOffset + 8, entityId)
+    buf.setUint32(startMessageOffset + 8, entity)
     buf.setUint32(startMessageOffset + 12, componentDefinition._id)
     buf.setUint64(startMessageOffset + 16, BigInt(timestamp))
     buf.setUint32(
@@ -60,7 +60,7 @@ export namespace PutComponentOperation {
 
     return {
       ...header,
-      entityId: buf.readUint32() as Entity,
+      entity: buf.readUint32() as Entity,
       componentId: buf.readInt32(),
       timestamp: Number(buf.readUint64()),
       data: buf.readBuffer()
