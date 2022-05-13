@@ -6,7 +6,7 @@ import EntityUtils from '../../engine/entity-utils'
 import { createByteBuffer } from '../../serialization/ByteBuffer'
 import { PutComponentOperation as Message } from '../../serialization/crdt/componentOperation'
 import WireMessage from '../../serialization/wireMessage'
-import { createTransport } from './transport'
+import { getTransports } from './transport'
 import { ReceiveMessage, TransportMessage } from './types'
 import CrdtUtils from './utils'
 
@@ -20,17 +20,10 @@ export function crdtSceneSystem(engine: PreEngine) {
   // Map of entities already processed at least once
   const crdtEntities = new Map<Entity, boolean>()
 
-  const TRANSPORT_ID = 'some-id'
-  const transports = [
-    createTransport({
-      onData: parseChunkMessage,
-      id: TRANSPORT_ID,
-      filter: (message: TransportMessage): boolean => {
-        // TODO: filter component id for renderer.
-        return message.transportId !== TRANSPORT_ID && !!message.componentId
-      }
-    })
-  ]
+  const transports = getTransports()
+  transports.forEach(
+    (transport) => (transport.onmessage = parseChunkMessage(transport.type))
+  )
 
   /**
    *
@@ -84,7 +77,6 @@ export function crdtSceneSystem(engine: PreEngine) {
    */
   function receiveMessages() {
     const messagesToProcess = getMessages(receivedMessages)
-
     for (const transport of transports) {
       const buffer = createByteBuffer()
       for (const message of messagesToProcess) {

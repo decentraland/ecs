@@ -1,25 +1,27 @@
 import { TransportMessage } from './types'
 
-type Transport = {
-  id: string
-  send: WebSocket['send']
-  filter: Params['filter']
-}
-
-type Params = {
-  onData: (id: string) => (data: MessageEvent<Uint8Array>) => void
-  id: string
+export type Transport = {
+  type: string
+  send(message: Uint8Array): void
+  onmessage(message: MessageEvent<Uint8Array>): void
   filter(message: TransportMessage): boolean
 }
 
-export function createTransport({ filter, onData, id }: Params): Transport {
-  const ws = new WebSocket('ws://localhost:8000')
-  ws.onmessage = onData(id)
-  ;(ws as any).id = id
-
+function networkTransport(): Transport {
+  const type = 'network-transport'
   return {
-    id,
-    filter,
-    send: ws.send
+    type,
+    filter: (message) => {
+      // TODO: filter component id for renderer.
+      return message.transportId !== type && !!message.componentId
+    },
+
+    // TODO: implemnet transport rpc
+    send: () => {},
+    onmessage: () => {}
   }
+}
+
+export function getTransports() {
+  return [networkTransport()]
 }

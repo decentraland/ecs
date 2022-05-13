@@ -4,13 +4,14 @@ import { Entity } from '../../engine/entity'
 export namespace CrdtUtils {
   export type ComponentID = ComponentDefinition['_id']
 
-  export function parseKey(key: string): [Entity, ComponentID] {
-    const [entity, componentId] = key.split('.').map(Number) as [
-      Entity,
-      ComponentID
-    ]
-    return [entity, componentId]
-  }
+  // TODO: use this again
+  // export function parseKey(key: string): [Entity, ComponentID] {
+  //   const [entity, componentId] = key.split('.').map(Number) as [
+  //     Entity,
+  //     ComponentID
+  //   ]
+  //   return [entity, componentId]
+  // }
 
   export function getKey(entity: Entity, componentId: ComponentID): string {
     return `${entity}.${componentId}`
@@ -22,12 +23,6 @@ export namespace CrdtUtils {
     // synchronizes entities needed by the renderer
     RENDERER
   }
-
-  export function rendererStream() {}
-
-  export function allStream() {}
-
-  export function syncSream() {}
 }
 
 export default CrdtUtils

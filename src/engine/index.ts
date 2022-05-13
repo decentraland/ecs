@@ -8,8 +8,9 @@ import {
 import { ComponentEcsType, Update, DeepReadonly } from './types'
 import { EcsType } from '../built-in-types'
 import { Engine } from './types'
-
+let id = 0
 function preEngine() {
+  id++
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
   // TODO: find a way to make this work.
@@ -114,6 +115,7 @@ function preEngine() {
   }
 
   return {
+    id,
     entitiesComponent,
     componentsDefinition,
     systems,
@@ -168,6 +170,7 @@ export function Engine(): Engine {
   }
 
   return {
+    id: engine.id,
     addEntity: engine.addEntity,
     addDynamicEntity: engine.addDynamicEntity,
     removeEntity: engine.removeEntity,
