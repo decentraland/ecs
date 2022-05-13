@@ -3,22 +3,28 @@ import { TransportMessage } from './types'
 export type Transport = {
   type: string
   send(message: Uint8Array): void
-  onmessage(message: MessageEvent<Uint8Array>): void
+  onmessage?(message: MessageEvent<Uint8Array>): void
   filter(message: TransportMessage): boolean
 }
 
 function networkTransport(): Transport {
+  // const rpc = new RpcTransport()
+  const rpc = {
+    send: () => {}
+  }
+
   const type = 'network-transport'
   return {
+    ...rpc,
     type,
-    filter: (message) => {
-      // TODO: filter component id for renderer.
-      return message.transportId !== type && !!message.componentId
-    },
+    filter(message: TransportMessage): boolean {
+      // Echo message, ignore them
+      if (message.transportType === type) {
+        return false
+      }
 
-    // TODO: implemnet transport rpc
-    send: () => {},
-    onmessage: () => {}
+      return !!message // validComponents.includes(componentId)
+    }
   }
 }
 

@@ -4,7 +4,7 @@ export type ReceiveMessage = {
   entity: Entity
   componentId: number
   timestamp: number
-  transportId?: string
+  transportType?: string
   data: Uint8Array
   messageBuffer: Uint8Array
 }

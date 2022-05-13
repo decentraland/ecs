@@ -27,10 +27,10 @@ export function crdtSceneSystem(engine: PreEngine) {
 
   /**
    *
-   * @param transportId tranport id to identiy messages
+   * @param transportType tranport id to identiy messages
    * @returns a function to process received messages
    */
-  function parseChunkMessage(transportId: string) {
+  function parseChunkMessage(transportType: string) {
     /**
      * Receives a chunk of binary messages and stores all the valid
      * Component Operation Messages at messages queue
@@ -52,7 +52,7 @@ export function crdtSceneSystem(engine: PreEngine) {
           componentId,
           data,
           timestamp,
-          transportId,
+          transportType,
           messageBuffer: buffer
             .buffer()
             .subarray(offset, buffer.currentReadOffset())

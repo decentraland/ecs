@@ -18,7 +18,6 @@ export type DeepReadonly<T> = {
  * @public
  */
 export type Engine = {
-  id: number
   addEntity(dynamic?: boolean): Entity
   addDynamicEntity(): Entity
   removeEntity(entity: Entity): void
