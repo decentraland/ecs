@@ -1,9 +1,9 @@
 import { defineLegacyComponents } from './legacy'
-import type { Engine } from '../engine'
+import type { IEngine } from '../engine/types'
 
 export * from './types'
 
-export function defineSdkComponents(engine: Pick<Engine, 'defineComponent'>) {
+export function defineSdkComponents(engine: Pick<IEngine, 'defineComponent'>) {
   return {
     ...defineLegacyComponents(engine)
   }

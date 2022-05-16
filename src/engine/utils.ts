@@ -9,6 +9,7 @@ export function deepReadonly<T extends Record<string, unknown>>(
   if (isProd()) {
     return val
   }
+
   return Object.freeze({ ...val })
 }
 

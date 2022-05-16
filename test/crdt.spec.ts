@@ -4,9 +4,15 @@ import { Entity } from '../src/engine/entity'
 import EntityUtils from '../src/engine/entity-utils'
 import { createByteBuffer } from '../src/serialization/ByteBuffer'
 import { PutComponentOperation } from '../src/serialization/crdt/componentOperation'
+import * as transport from '../src/systems/crdt/transport'
 import { wait, SandBox } from './utils'
 
 describe('CRDT tests', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.restoreAllMocks()
+  })
+
   it('should not send static entities, only updates', () => {
     const { engine, spySend } = SandBox.create({ length: 1 })[0]
     const entityA = engine.addEntity()
@@ -61,28 +67,29 @@ describe('CRDT tests', () => {
   })
 
   it('should sent new entity through the wire and process it in the other engine', async () => {
-    const [clientA, clientB] = SandBox.create({ length: 12 })
+    const [clientA, clientB] = SandBox.create({ length: 2 })
 
     const entityA = clientA.engine.addDynamicEntity()
     const { Transform } = clientA.engine.baseComponents
     const TransformB = clientB.engine.baseComponents.Transform
-    const TestA = clientA.engine.getComponent(SandBox.Position.id)
-    const TestB = clientB.engine.getComponent(SandBox.Position.id)
+    const PositionA = clientA.components.Position
+    const PositionB = clientB.components.Position
 
+    // Create two components for a dynamic entity.
     Transform.create(entityA, SandBox.DEFAULT_POSITION)
-    const DEFAULT_TEST = { x: 10.231231, y: 0.12321321312 }
-    TestA.create(entityA, DEFAULT_TEST)
+    const posA = PositionA.create(entityA, { x: 10.231231, y: 0.12321321312 })
 
     clientA.engine.update(1 / 30)
-    expect(TestB.has(entityA)).toBe(false)
+    expect(PositionB.has(entityA)).toBe(false)
 
     // Update engine, process crdt messages.
     await wait(SandBox.WS_SEND_DELAY)
     clientB.engine.update(1 / 30)
+
     expect(SandBox.DEFAULT_POSITION).toBeDeepCloseTo(
       TransformB.getFrom(entityA)
     )
-    expect(DEFAULT_TEST).toBeDeepCloseTo(TestB.getFrom(entityA))
+    expect(posA).toBeDeepCloseTo(PositionB.getFrom(entityA))
     expect(clientA.spySend).toBeCalledTimes(1)
     expect(clientB.spySend).toBeCalledTimes(0)
   })
@@ -91,10 +98,6 @@ describe('CRDT tests', () => {
     const CLIENT_LENGTH = 6
     const UPDATE_MS = 100
     const DOOR_VALUE = 8
-
-    function getDoorComponent(engine: Engine) {
-      return engine.getComponent<typeof SandBox.Door.type>(SandBox.Door.id)
-    }
     const clients = SandBox.create({ length: CLIENT_LENGTH })
 
     const interval = setInterval(() => {
@@ -117,7 +120,7 @@ describe('CRDT tests', () => {
      */
     const [clientA, ...otherClients] = clients
     const { Transform } = clientA.engine.baseComponents
-    const DoorComponent = getDoorComponent(clientA.engine)
+    const DoorComponent = clientA.components.Door
     // Upate Transform from static entity
     const entity = (clientA.engine.addEntity() - 1) as Entity
     Transform.mutable(entity).position.x = 10
@@ -126,8 +129,8 @@ describe('CRDT tests', () => {
     const dynamicEntity = clientA.engine.addDynamicEntity()
     DoorComponent.create(dynamicEntity, { open: 1 })
     const randomGuyWin = (Math.random() * CLIENT_LENGTH - 1) | 0
-    otherClients.forEach(({ engine }, index) => {
-      const DoorComponent = getDoorComponent(engine)
+    otherClients.forEach(({ engine, components }, index) => {
+      const DoorComponent = components.Door
       const isRandomGuy = randomGuyWin === index
 
       function doorSystem(_dt: number) {
@@ -146,13 +149,13 @@ describe('CRDT tests', () => {
     clearInterval(interval)
     await wait(UPDATE_MS)
 
-    clients.forEach(({ engine }) => {
-      const doorValue = getDoorComponent(engine).getFrom(dynamicEntity).open
+    clients.forEach(({ components }) => {
+      const doorValue = components.Door.getFrom(dynamicEntity).open
       expect(doorValue).toBe(DOOR_VALUE)
     })
   })
   it('should resend a crdt message if its outdated', () => {
-    const [{ engine, ws, spySend }] = SandBox.create({ length: 1 })
+    const [{ engine, transports, spySend }] = SandBox.create({ length: 1 })
     const entity = engine.addEntity()
     engine.baseComponents.Transform.create(entity, SandBox.DEFAULT_POSITION)
     engine.update(1)
@@ -167,14 +170,27 @@ describe('CRDT tests', () => {
     )
     jest.resetAllMocks()
     const spyWrite = jest.spyOn(PutComponentOperation, 'write')
-    ws.onmessage!({ data: buffer.toBinary() } as MessageEvent<any>)
+    transports[0].onmessage!({ data: buffer.toBinary() } as MessageEvent<any>)
     engine.update(1)
 
     expect(spySend).toBeCalledTimes(1)
     expect(spyWrite).toBeCalledTimes(1)
 
     jest.resetAllMocks()
-    ws.onmessage!({} as MessageEvent<any>)
+    transports[0].onmessage!({} as MessageEvent<any>)
     expect(spySend).toBeCalledTimes(0)
+  })
+
+  it('should test transports', () => {
+    const transports = transport.getTransports()
+    jest.spyOn(transport, 'getTransports').mockReturnValue(transports)
+    const sendSpy = jest.spyOn(transports[0], 'send')
+
+    const engine = Engine()
+    const entity = engine.addDynamicEntity()
+    engine.baseComponents.Transform.create(entity, SandBox.DEFAULT_POSITION)
+    engine.update(1)
+
+    expect(sendSpy).toBeCalledTimes(1)
   })
 })

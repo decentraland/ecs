@@ -27,11 +27,14 @@ export namespace SandBox {
    * between two engines. WebSocket A <-> WebSocket B
    */
   export function create({ length }: { length: number }) {
+    const transports = transport
+      .getTransports()
+      .map((transport) => ({ ...transport }))
     const clients = Array.from({ length }).map((_, index) => {
-      const ws = new globalThis.WebSocket(`ws://url-${index}`)
-      jest.spyOn(transport, 'createTransport').mockReturnValue(ws)
-      const engine = Engine()
+      const clientTransport = transports.map((t) => ({ ...t }))
+      jest.spyOn(transport, 'getTransports').mockReturnValue(clientTransport)
 
+      const engine = Engine()
       const Position = engine.defineComponent(
         SandBox.Position.id,
         SandBox.Position.type
@@ -41,21 +44,29 @@ export namespace SandBox {
       return {
         id: index,
         engine,
-        ws,
-        components: { Door, Position }
+        transports: clientTransport,
+        components: { Door, Position },
+        spySend: jest.spyOn(clientTransport[0], 'send')
       }
     })
 
-    // Broadcast between clients
-    clients.forEach((client) => {
-      client.ws.send = (data) => {
-        clients.forEach(async (c) => {
-          await wait(WS_SEND_DELAY)
-          c.id !== client.id && c.ws.onmessage!({ data } as MessageEvent)
-        })
+    for (const client of clients) {
+      for (const transport of client.transports) {
+        transport.send = (data) => {
+          clients
+            .filter((c) => c.id !== client.id)
+            .map((c) => c.transports.find((t) => t.type === transport.type))
+            .forEach(async (clientTransport) => {
+              await wait(WS_SEND_DELAY)
+              clientTransport?.onmessage!({ data } as MessageEvent)
+            })
+        }
       }
-    })
+    }
 
-    return clients.map((c) => ({ ...c, spySend: jest.spyOn(c.ws, 'send') }))
+    return clients.map((c) => ({
+      ...c,
+      spySend: jest.spyOn(c.transports[0], 'send')
+    }))
   }
 }

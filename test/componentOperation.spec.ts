@@ -23,12 +23,12 @@ describe('Component operation tests', () => {
   it('serialize and process two PutComenentOperation message', () => {
     const newEngine = Engine()
     const sdk = newEngine.baseComponents
-    const entityId = newEngine.addEntity()
-    const entityId2 = newEngine.addEntity()
+    const entityA = newEngine.addEntity()
+    const entityB = newEngine.addEntity()
 
     let timestamp = 1
 
-    const mutableTransform = sdk.Transform.create(entityId, {
+    const mutableTransform = sdk.Transform.create(entityA, {
       position: Vector3.create(1, 1, 1),
       scale: Vector3.create(1, 1, 1),
       rotation: Quaternion.create(1, 1, 1, 1),
@@ -37,12 +37,12 @@ describe('Component operation tests', () => {
 
     const bb = createByteBuffer()
 
-    PutComponentOperation.write(entityId, timestamp, sdk.Transform, bb)
+    PutComponentOperation.write(entityA, timestamp, sdk.Transform, bb)
 
     mutableTransform.position.x = 31.3
     timestamp++
 
-    PutComponentOperation.write(entityId, timestamp, sdk.Transform, bb)
+    PutComponentOperation.write(entityA, timestamp, sdk.Transform, bb)
 
     while (WireMessage.validate(bb)) {
       const msgOne = PutComponentOperation.read(bb)!
@@ -52,7 +52,7 @@ describe('Component operation tests', () => {
           WireMessage.HEADER_LENGTH
       )
       expect(msgOne.type).toBe(WireMessage.Enum.PUT_COMPONENT)
-      sdk.Transform.upsertFromBinary(entityId2, bb)
+      sdk.Transform.upsertFromBinary(entityB, bb)
     }
   })
 

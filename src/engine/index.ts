@@ -7,10 +7,7 @@ import {
 } from './component'
 import { ComponentEcsType, Update, DeepReadonly } from './types'
 import { EcsType } from '../built-in-types'
-
-/**
- * @alpha
- */
+import { IEngine } from './types'
 function preEngine() {
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
@@ -135,40 +132,17 @@ function preEngine() {
  */
 export type PreEngine = ReturnType<typeof preEngine>
 
-// TODO Fix this type
 /**
  * @public
  */
-export type Engine = {
-  addEntity(dynamic?: boolean): Entity
-  addDynamicEntity(): Entity
-  removeEntity(entity: Entity): void
-  addSystem(system: Update): void
-  defineComponent<T extends EcsType>(
-    componentId: number,
-    spec: T
-  ): ComponentDefinition<T>
-  mutableGroupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(
-    ...components: T
-  ): Iterable<[Entity, ...ComponentEcsType<T>]>
-  groupOf<T extends [ComponentDefinition, ...ComponentDefinition[]]>(
-    ...components: T
-  ): Iterable<[Entity, ...DeepReadonly<ComponentEcsType<T>>]>
-  getComponent<T extends EcsType>(componentId: number): ComponentDefinition<T>
-  update(dt: number): void
-  baseComponents: ReturnType<typeof defineSdkComponents>
-}
-
-/**
- * @public
- */
-export function Engine(): Engine {
+export function Engine(): IEngine {
   const engine = preEngine()
   const crdtSystem = crdtSceneSystem(engine)
   const baseComponents = defineSdkComponents(engine)
 
   function update(dt: number) {
-    crdtSystem.processMessages()
+    crdtSystem.receiveMessages()
+
     for (const system of engine.systems) {
       system(dt)
     }
@@ -185,7 +159,7 @@ export function Engine(): Engine {
         dirtySet.get(entity)!.add(componentId)
       }
     }
-    crdtSystem.send(dirtySet)
+    crdtSystem.createMessages(dirtySet)
 
     for (const [_componentId, definition] of engine.componentsDefinition) {
       definition.clearDirty()

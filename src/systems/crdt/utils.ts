@@ -1,31 +1,30 @@
-// import { getComponentIds } from '../../components'
 import { ComponentDefinition } from '../../engine/component'
 import { Entity } from '../../engine/entity'
 
 export namespace CrdtUtils {
   export type ComponentID = ComponentDefinition['_id']
 
-  export function parseKey(key: string): [Entity, ComponentID] {
-    const [entity, componentId] = key.split('.').map(Number) as [
-      Entity,
-      ComponentID
-    ]
-    return [entity, componentId]
-  }
+  // TODO: use this again
+  // export function parseKey(key: string): [Entity, ComponentID] {
+  //   const [entity, componentId] = key.split('.').map(Number) as [
+  //     Entity,
+  //     ComponentID
+  //   ]
+  //   return [entity, componentId]
+  // }
 
   export function getKey(entity: Entity, componentId: ComponentID): string {
     return `${entity}.${componentId}`
   }
 
   export enum SynchronizedEntityType {
-    // synchronizes all entities without filter. used for renderers
-    ALL,
     // synchronizes entities with the NetworkSynchronized component only, used for networked games
     NETWORKED,
     // synchronizes entities needed by the renderer
     RENDERER
   }
 }
+
 export default CrdtUtils
 
 // TODO: next version split between diff types of transports/crdts.

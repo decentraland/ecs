@@ -2,11 +2,11 @@ import fs from 'fs'
 import path from 'path'
 
 const indexTemplate = `$componentImports
-import { Engine } from '../../engine'
+import type { IEngine } from '../../engine/types'
 
 export function defineProtocolBufferComponents({
   defineComponent
-}: Pick<Engine, 'defineComponent'>) {
+}: Pick<IEngine, 'defineComponent'>) {
 
   return {
     $componentReturns
