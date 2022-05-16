@@ -8,10 +8,10 @@ import * as _m0 from 'protobufjs/minimal';
 import { Quaternion } from '@dcl/ecs-math';
 import { Vector3 } from '@dcl/ecs-math';
 
-// Warning: (ae-forgotten-export) The symbol "Engine" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "IEngine" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function Engine(): Engine_2;
+export function Engine(): IEngine;
 
 // Warning: (ae-forgotten-export) The symbol "preEngine" needs to be exported by the entry point index.d.ts
 //

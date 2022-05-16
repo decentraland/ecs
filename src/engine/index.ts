@@ -7,7 +7,7 @@ import {
 } from './component'
 import { ComponentEcsType, Update, DeepReadonly } from './types'
 import { EcsType } from '../built-in-types'
-import { Engine } from './types'
+import { IEngine } from './types'
 function preEngine() {
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
@@ -135,7 +135,7 @@ export type PreEngine = ReturnType<typeof preEngine>
 /**
  * @public
  */
-export function Engine(): Engine {
+export function Engine(): IEngine {
   const engine = preEngine()
   const crdtSystem = crdtSceneSystem(engine)
   const baseComponents = defineSdkComponents(engine)

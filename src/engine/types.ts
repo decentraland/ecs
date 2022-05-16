@@ -17,7 +17,7 @@ export type DeepReadonly<T> = {
 /**
  * @public
  */
-export type Engine = {
+export type IEngine = {
   addEntity(dynamic?: boolean): Entity
   addDynamicEntity(): Entity
   removeEntity(entity: Entity): void
