@@ -4,11 +4,9 @@
  *
  * Each wire message has three primitive property that it'll never change
  *   ---> length        uint32 (message size up to 4,294,967,295)
- *   ---> version       uint32 (for now just a number which is zero)
  *   ---> message type  uint32
- * The length indicates how many bytes are above self, the version in
- * combination with message type defines the set of handlers that will be
- * available to process the message
+ * The length indicates how many bytes are above self, the message type 
+ * defines the set of handlers that will be available to process the message
  *
  */
 
