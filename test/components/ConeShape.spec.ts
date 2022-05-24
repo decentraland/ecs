@@ -1,5 +1,4 @@
 import { Engine } from '../../src/engine'
-import { ConeShape } from '../../src/components/generated/ConeShape'
 
 describe('Generated ConeShape ProtoBuf', () => {
   it('should serialize/deserialize BoxShape', () => {

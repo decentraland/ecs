@@ -1,5 +1,4 @@
 import { Engine } from '../../src/engine'
-import { CylinderShape } from '../../src/components/generated/CylinderShape'
 
 describe('Generated Cylinder ProtoBuf', () => {
   it('should serialize/deserialize BoxShape', () => {
