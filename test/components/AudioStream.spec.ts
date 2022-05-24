@@ -1,13 +1,13 @@
 ﻿import { Engine } from '../../src/engine'
 
-describe('Generated PlaneShape ProtoBuf', () => {
+describe('Generated AudioStream ProtoBuf', () => {
   it('should serialize/deserialize BoxShape', () => {
     const newEngine = Engine()
     const { AudioStream } = newEngine.baseComponents
     const entity = newEngine.addEntity()
     const entityB = newEngine.addEntity()
 
-    const _sphereShape = AudioStream.create(entity, {
+    const _audioStream = AudioStream.create(entity, {
       playing: true,
       volume: 1,
       url: 'FakeUrl'
@@ -21,6 +21,6 @@ describe('Generated PlaneShape ProtoBuf', () => {
     const buffer = AudioStream.toBinary(entity)
     AudioStream.updateFromBinary(entityB, buffer)
 
-    expect(_sphereShape).toBeDeepCloseTo({ ...AudioStream.mutable(entityB) })
+    expect(_audioStream).toBeDeepCloseTo({ ...AudioStream.mutable(entityB) })
   })
 })

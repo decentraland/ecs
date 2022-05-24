@@ -1,6 +1,6 @@
 ﻿import { Engine } from '../../src/engine'
 
-describe('Generated PlaneShape ProtoBuf', () => {
+describe('Generated SphereShape ProtoBuf', () => {
   it('should serialize/deserialize BoxShape', () => {
     const newEngine = Engine()
     const { SphereShape } = newEngine.baseComponents
