@@ -14,9 +14,11 @@
     "declaration": true,
     "declarationDir": "./types",
     "declarationMap": true,
+    "stripInternal": true
   },
   "include": [
     "src",
     "temp-protocolbuffers"
-  ]
+  ],
+  "files": ["node_modules/protobufjs/minimal.d.ts"]
 }

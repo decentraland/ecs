@@ -4,8 +4,6 @@
 
 ```ts
 
-import * as _m0 from 'protobufjs/minimal';
-
 // @public (undocumented)
 export function ArrayType<T>(type: EcsType<T>): EcsType<Array<T>>;
 
@@ -122,12 +120,6 @@ export enum Orientation {
     CCW = 1,
     CW = 0
 }
-
-// Warning: (ae-forgotten-export) The symbol "preEngine" needs to be exported by the entry point index.d.ts
-// Warning: (ae-internal-missing-underscore) The name "PreEngine" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export type PreEngine = ReturnType<typeof preEngine>;
 
 // @public (undocumented)
 export namespace Quaternion {
