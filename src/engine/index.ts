@@ -1,7 +1,8 @@
-import { defineSdkComponents } from '../components'
+import { defineSdkComponents, SdkComponetns } from '../components'
 import { crdtSceneSystem } from '../systems/crdt'
 import { Entity, EntityContainer } from './entity'
 import {
+  ComponentType,
   ComponentDefinition,
   defineComponent as defComponent
 } from './component'
@@ -9,7 +10,9 @@ import type { ComponentEcsType, Update } from './types'
 import type { DeepReadonly } from '../Math'
 import type { EcsType } from '../built-in-types/EcsType'
 import { IEngine } from './types'
+import { ByteBuffer } from '../serialization/ByteBuffer'
 
+export { ComponentType, Entity, ByteBuffer, SdkComponetns }
 export * from './types'
 
 function preEngine() {

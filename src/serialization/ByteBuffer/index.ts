@@ -319,4 +319,7 @@ export function createByteBuffer(options: CreateByteBufferOptions = {}) {
   }
 }
 
+/**
+ * @public
+ */
 export type ByteBuffer = ReturnType<typeof createByteBuffer>

@@ -26,7 +26,8 @@ test-watch:
 build:
 	make generate-components
 	make build-ecs
-	cp -r src/components/definitions dist/components/definitions
+	cp -r src/components/definitions dist/proto-definitions
+	rm -rf dist/types
 
 build-ecs:
 	./node_modules/.bin/rollup -c rollup.config.js

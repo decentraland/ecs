@@ -1,6 +1,9 @@
 import { EntityUtils } from './entity-utils'
 
 declare const entitySymbol: unique symbol
+/**
+ * @public
+ */
 export type Entity = number & { [entitySymbol]: true }
 
 export function EntityContainer() {

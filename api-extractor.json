@@ -41,7 +41,7 @@
    *
    * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
    */
-  "mainEntryPointFilePath": "<projectFolder>/dist/dist/index.d.ts",
+  "mainEntryPointFilePath": "<projectFolder>/dist/types/index.d.ts",
   /**
    * A list of NPM package names whose exports should be treated as part of this package.
    *
@@ -55,7 +55,7 @@
    * This would direct API Extractor to embed those types directly in the .d.ts rollup, as if they had been
    * local files for library1.
    */
-  "bundledPackages": [],
+  "bundledPackages": ["@dcl/ecs-math"],
   /**
    * Determines how the TypeScript compiler engine will be invoked by API Extractor.
    */
