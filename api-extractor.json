@@ -30,7 +30,6 @@
    * SUPPORTED TOKENS: <lookup>
    * DEFAULT VALUE: "<lookup>"
    */
-  "projectFolder": ".",
   /**
    * (REQUIRED) Specifies the .d.ts file to be used as the starting point for analysis.  API Extractor
    * analyzes the symbols exported by this module.
@@ -42,7 +41,21 @@
    *
    * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
    */
-  "mainEntryPointFilePath": "dist/index.d.ts",
+  "mainEntryPointFilePath": "<projectFolder>/dist/dist/index.d.ts",
+  /**
+   * A list of NPM package names whose exports should be treated as part of this package.
+   *
+   * For example, suppose that Webpack is used to generate a distributed bundle for the project "library1",
+   * and another NPM package "library2" is embedded in this bundle.  Some types from library2 may become part
+   * of the exported API for library1, but by default API Extractor would generate a .d.ts rollup that explicitly
+   * imports library2.  To avoid this, we can specify:
+   *
+   *   "bundledPackages": [ "library2" ],
+   *
+   * This would direct API Extractor to embed those types directly in the .d.ts rollup, as if they had been
+   * local files for library1.
+   */
+  "bundledPackages": [],
   /**
    * Determines how the TypeScript compiler engine will be invoked by API Extractor.
    */
@@ -58,7 +71,20 @@
      * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: "<projectFolder>/tsconfig.json"
      */
-    "tsconfigFilePath": "tsconfig.json",
+    "tsconfigFilePath": "<projectFolder>/tsconfig.json"
+    /**
+     * Provides a compiler configuration that will be used instead of reading the tsconfig.json file from disk.
+     * The object must conform to the TypeScript tsconfig schema:
+     *
+     * http://json.schemastore.org/tsconfig
+     *
+     * If omitted, then the tsconfig.json file will be read from the "projectFolder".
+     *
+     * DEFAULT VALUE: no overrideTsconfig section
+     */
+    // "overrideTsconfig": {
+    //   . . .
+    // }
     /**
      * This option causes the compiler to be invoked with the --skipLibCheck option. This option is not recommended
      * and may cause API Extractor to produce incomplete or incorrect declarations, but it may be required when
@@ -67,7 +93,7 @@
      *
      * DEFAULT VALUE: false
      */
-    "skipLibCheck": false
+    // "skipLibCheck": true,
   },
   /**
    * Configures how the API report file (*.api.md) will be generated.
@@ -76,7 +102,7 @@
     /**
      * (REQUIRED) Whether to generate an API report.
      */
-    "enabled": true,
+    "enabled": true
     /**
      * The filename for the API report files.  It will be combined with "reportFolder" or "reportTempFolder" to produce
      * a full file path.
@@ -86,7 +112,7 @@
      * SUPPORTED TOKENS: <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: "<unscopedPackageName>.api.md"
      */
-    "reportFileName": "decentraland-ecs.api.md",
+    // "reportFileName": "<unscopedPackageName>.api.md",
     /**
      * Specifies the folder where the API report file is written.  The file name portion is determined by
      * the "reportFileName" setting.
@@ -100,6 +126,7 @@
      * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: "<projectFolder>/etc/"
      */
+    // "reportFolder": "<projectFolder>/etc/",
     /**
      * Specifies the folder where the temporary report file is written.  The file name portion is determined by
      * the "reportFileName" setting.
@@ -122,7 +149,7 @@
     /**
      * (REQUIRED) Whether to generate a doc model file.
      */
-    "enabled": true,
+    "enabled": true
     /**
      * The output path for the doc model file.  The file extension should be ".api.json".
      *
@@ -132,7 +159,7 @@
      * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: "<projectFolder>/temp/<unscopedPackageName>.api.json"
      */
-    "apiJsonFilePath": "./etc/decentraland-ecs.api.json"
+    // "apiJsonFilePath": "<projectFolder>/temp/<unscopedPackageName>.api.json"
   },
   /**
    * Configures how the .d.ts rollup file will be generated.
@@ -154,9 +181,19 @@
      * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: "<projectFolder>/dist/<unscopedPackageName>.d.ts"
      */
-    "untrimmedFilePath": "<projectFolder>/dist/<unscopedPackageName>.d.ts",
+    "untrimmedFilePath": "<projectFolder>/dist/index.d.ts",
     /**
-    // "untrimmedFilePath": "<projectFolder>/dist/<unscopedPackageName>.d.ts",
+     * Specifies the output path for a .d.ts rollup file to be generated with trimming for an "alpha" release.
+     * This file will include only declarations that are marked as "@public", "@beta", or "@alpha".
+     *
+     * The path is resolved relative to the folder of the config file that contains the setting; to change this,
+     * prepend a folder token such as "<projectFolder>".
+     *
+     * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
+     * DEFAULT VALUE: ""
+     */
+    // "alphaTrimmedFilePath": "<projectFolder>/dist/<unscopedPackageName>-alpha.d.ts",
+    /**
      * Specifies the output path for a .d.ts rollup file to be generated with trimming for a "beta" release.
      * This file will include only declarations that are marked as "@public" or "@beta".
      *
@@ -166,7 +203,7 @@
      * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: ""
      */
-    "betaTrimmedFilePath": "<projectFolder>/dist/<unscopedPackageName>-beta.d.ts",
+    // "betaTrimmedFilePath": "<projectFolder>/dist/<unscopedPackageName>-beta.d.ts",
     /**
      * Specifies the output path for a .d.ts rollup file to be generated with trimming for a "public" release.
      * This file will include only declarations that are marked as "@public".
@@ -179,7 +216,7 @@
      * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: ""
      */
-    "publicTrimmedFilePath": "<projectFolder>/dist/index.d.ts",
+    // "publicTrimmedFilePath": "<projectFolder>/dist/<unscopedPackageName>-public.d.ts",
     /**
      * When a declaration is trimmed, by default it will be replaced by a code comment such as
      * "Excluded from this release type: exampleMember".  Set "omitTrimmingComments" to true to remove the
@@ -198,7 +235,7 @@
      *
      * DEFAULT VALUE: true
      */
-    "enabled": true,
+    "enabled": true
     /**
      * Specifies where the TSDoc metadata file should be written.
      *
@@ -212,8 +249,16 @@
      * SUPPORTED TOKENS: <projectFolder>, <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: "<lookup>"
      */
-    "tsdocMetadataFilePath": "<projectFolder>/etc/tsdoc-metadata.json"
+    // "tsdocMetadataFilePath": "<projectFolder>/dist/tsdoc-metadata.json"
   },
+  /**
+   * Specifies what type of newlines API Extractor should use when writing output files.  By default, the output files
+   * will be written with Windows-style newlines.  To use POSIX-style newlines, specify "lf" instead.
+   * To use the OS's default newline kind, specify "os".
+   *
+   * DEFAULT VALUE: "crlf"
+   */
+  // "newlineKind": "crlf",
   /**
    * Configures how API Extractor reports error and warning messages produced during analysis.
    *
@@ -245,7 +290,7 @@
          *
          * DEFAULT VALUE: "warning"
          */
-        "logLevel": "warning",
+        "logLevel": "warning"
         /**
          * When addToApiReportFile is true:  If API Extractor is configured to write an API report file (.api.md),
          * then the message will be written inside that file; otherwise, the message is instead logged according to
@@ -254,7 +299,7 @@
          * DEFAULT VALUE: false
          */
         // "addToApiReportFile": false
-      },
+      }
       // "TS2551": {
       //   "logLevel": "warning",
       //   "addToApiReportFile": true
@@ -271,9 +316,9 @@
      */
     "extractorMessageReporting": {
       "default": {
-        "logLevel": "warning",
+        "logLevel": "warning"
         // "addToApiReportFile": false
-      },
+      }
       // "ae-extra-release-tag": {
       //   "logLevel": "warning",
       //   "addToApiReportFile": true
@@ -290,7 +335,7 @@
      */
     "tsdocMessageReporting": {
       "default": {
-        "logLevel": "warning",
+        "logLevel": "warning"
         // "addToApiReportFile": false
       }
       // "tsdoc-link-tag-unescaped-text": {
@@ -300,9 +345,5 @@
       //
       // . . .
     }
-  },
-  "bundledPackages": [
-    "@dcl/ecs-math",
-    // "protobufjs"
-  ]
+  }
 }

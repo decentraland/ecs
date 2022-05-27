@@ -5,8 +5,6 @@
 ```ts
 
 import * as _m0 from 'protobufjs/minimal';
-import { Quaternion } from '@dcl/ecs-math';
-import { Vector3 } from '@dcl/ecs-math';
 
 // Warning: (ae-forgotten-export) The symbol "IEngine" needs to be exported by the entry point index.d.ts
 //

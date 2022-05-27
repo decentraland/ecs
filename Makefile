@@ -25,13 +25,12 @@ test-watch:
 
 build:
 	make generate-components
-	./node_modules/.bin/tsc -p tsconfig.json
-	rm -rf node_modules/@microsoft/api-extractor/node_modules/typescript || true
-	./node_modules/.bin/api-extractor run $(LOCAL_ARG) --typescript-compiler-folder ./node_modules/typescript
+	make build-ecs
 	cp -r src/components/definitions dist/components/definitions
 
 build-ecs:
-	./node_modules/.bin/rollup -c ./node_modules/@dcl/dcl-rollup/ecs.config.js
+	./node_modules/.bin/rollup -c rollup.config.js
+# ./node_modules/@dcl/dcl-rollup/ecs.config.js
 
 watch:
 	./node_modules/.bin/tsc -p tsconfig.json -w
