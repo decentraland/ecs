@@ -11,5 +11,8 @@ type ExcludeUndefined<T> = {
 type OnlyOptionalUndefinedTypes<T> = { [K in IncludeUndefined<T>]?: T[K] }
 type OnlyNonUndefinedTypes<T> = { [K in ExcludeUndefined<T>]: T[K] }
 
+/**
+ * @internal
+ */
 export type ToOptional<T> = OnlyOptionalUndefinedTypes<T> &
   OnlyNonUndefinedTypes<T>

@@ -1,15 +1,23 @@
-import { EcsType } from '../built-in-types'
+import type { EcsType } from '../built-in-types/EcsType'
 import { ByteBuffer, createByteBuffer } from '../serialization/ByteBuffer'
 import { Entity } from './entity'
-import { deepReadonly } from './utils'
-import { DeepReadonly } from './types'
+import { deepReadonly, DeepReadonly } from './utils'
 
+/**
+ * @public
+ */
 export type EcsResult<T extends EcsType> = T extends EcsType
   ? ReturnType<T['deserialize']>
   : never
 
+/**
+ * @public
+ */
 export type ComponentType<T extends EcsType> = EcsResult<T>
 
+/**
+ * @public
+ */
 export type ComponentDefinition<T extends EcsType = EcsType<any>> = {
   _id: number
   has(entity: Entity): boolean

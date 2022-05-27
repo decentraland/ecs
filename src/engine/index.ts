@@ -5,9 +5,13 @@ import {
   ComponentDefinition,
   defineComponent as defComponent
 } from './component'
-import { ComponentEcsType, Update, DeepReadonly } from './types'
-import { EcsType } from '../built-in-types'
+import type { ComponentEcsType, Update } from './types'
+import type { DeepReadonly } from '../Math'
+import type { EcsType } from '../built-in-types/EcsType'
 import { IEngine } from './types'
+
+export * from './types'
+
 function preEngine() {
   const entityContainer = EntityContainer()
   const componentsDefinition = new Map<number, ComponentDefinition<any>>()
@@ -128,7 +132,7 @@ function preEngine() {
 }
 
 /**
- * @alpha
+ * @internal
  */
 export type PreEngine = ReturnType<typeof preEngine>
 

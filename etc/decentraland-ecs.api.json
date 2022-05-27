@@ -1,0 +1,5284 @@
+{
+  "metadata": {
+    "toolPackage": "@microsoft/api-extractor",
+    "toolVersion": "7.23.1",
+    "schemaVersion": 1005,
+    "oldestForwardsCompatibleVersion": 1001,
+    "tsdocConfig": {
+      "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
+      "noStandardTags": true,
+      "tagDefinitions": [
+        {
+          "tagName": "@alpha",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@beta",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@defaultValue",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@decorator",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@deprecated",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@eventProperty",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@example",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@experimental",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@inheritDoc",
+          "syntaxKind": "inline"
+        },
+        {
+          "tagName": "@internal",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@label",
+          "syntaxKind": "inline"
+        },
+        {
+          "tagName": "@link",
+          "syntaxKind": "inline",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@override",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@packageDocumentation",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@param",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@privateRemarks",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@public",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@readonly",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@remarks",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@returns",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@sealed",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@see",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@throws",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@typeParam",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@virtual",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@betaDocumentation",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@internalRemarks",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@preapproved",
+          "syntaxKind": "modifier"
+        }
+      ],
+      "supportForTags": {
+        "@alpha": true,
+        "@beta": true,
+        "@defaultValue": true,
+        "@decorator": true,
+        "@deprecated": true,
+        "@eventProperty": true,
+        "@example": true,
+        "@experimental": true,
+        "@inheritDoc": true,
+        "@internal": true,
+        "@label": true,
+        "@link": true,
+        "@override": true,
+        "@packageDocumentation": true,
+        "@param": true,
+        "@privateRemarks": true,
+        "@public": true,
+        "@readonly": true,
+        "@remarks": true,
+        "@returns": true,
+        "@sealed": true,
+        "@see": true,
+        "@throws": true,
+        "@typeParam": true,
+        "@virtual": true,
+        "@betaDocumentation": true,
+        "@internalRemarks": true,
+        "@preapproved": true
+      },
+      "reportUnsupportedHtmlElements": false
+    }
+  },
+  "kind": "Package",
+  "canonicalReference": "@dcl/ecs!",
+  "docComment": "",
+  "name": "@dcl/ecs",
+  "members": [
+    {
+      "kind": "EntryPoint",
+      "canonicalReference": "@dcl/ecs!",
+      "name": "",
+      "members": [
+        {
+          "kind": "Function",
+          "canonicalReference": "@dcl/ecs!ArrayType:function(1)",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function ArrayType<T>(type: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "Array",
+              "canonicalReference": "!Array:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 4,
+            "endIndex": 8
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "type",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isOptional": false
+            }
+          ],
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "name": "ArrayType"
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!Boolean_2:var",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "Boolean: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<boolean>"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Boolean_2",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@dcl/ecs!CompDef:type",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type ComponentDefinition<T extends "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": " "
+            },
+            {
+              "kind": "Content",
+              "text": "= "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<any>"
+            },
+            {
+              "kind": "Content",
+              "text": "> = "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    _id: number;\n    has(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): boolean;\n    getFrom(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "DeepReadonly",
+              "canonicalReference": "@dcl/ecs!DeepReadonly:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentType",
+              "canonicalReference": "@dcl/ecs!ComponentType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>>;\n    getOrNull(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "DeepReadonly",
+              "canonicalReference": "@dcl/ecs!DeepReadonly:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentType",
+              "canonicalReference": "@dcl/ecs!ComponentType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>> | null;\n    create(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", val: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentType",
+              "canonicalReference": "@dcl/ecs!ComponentType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>): "
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentType",
+              "canonicalReference": "@dcl/ecs!ComponentType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>;\n    mutable(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentType",
+              "canonicalReference": "@dcl/ecs!ComponentType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>;\n    createOrReplace(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", val: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentType",
+              "canonicalReference": "@dcl/ecs!ComponentType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>): "
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentType",
+              "canonicalReference": "@dcl/ecs!ComponentType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>;\n    deleteFrom(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentType",
+              "canonicalReference": "@dcl/ecs!ComponentType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T> | null;\n    upsertFromBinary(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", data: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ByteBuffer",
+              "canonicalReference": "@dcl/ecs!ByteBuffer:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentType",
+              "canonicalReference": "@dcl/ecs!ComponentType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T> | null;\n    updateFromBinary(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", data: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ByteBuffer",
+              "canonicalReference": "@dcl/ecs!ByteBuffer:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentType",
+              "canonicalReference": "@dcl/ecs!ComponentType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T> | null;\n    toBinary(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "ByteBuffer",
+              "canonicalReference": "@dcl/ecs!ByteBuffer:type"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    writeToByteBuffer(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", buffer: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ByteBuffer",
+              "canonicalReference": "@dcl/ecs!ByteBuffer:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): void;\n    iterator(): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Iterable",
+              "canonicalReference": "!Iterable:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<["
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", "
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentType",
+              "canonicalReference": "@dcl/ecs!ComponentType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>]>;\n    dirtyIterator(): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Iterable",
+              "canonicalReference": "!Iterable:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": ">;\n    clearDirty(): void;\n    isDirty(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): boolean;\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "CompDef",
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 4,
+                "endIndex": 6
+              }
+            }
+          ],
+          "typeTokenRange": {
+            "startIndex": 7,
+            "endIndex": 74
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@dcl/ecs!ComponentEcsType:type",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type ComponentEcsType<T extends "
+            },
+            {
+              "kind": "Content",
+              "text": "["
+            },
+            {
+              "kind": "Reference",
+              "text": "CompDef",
+              "canonicalReference": "@dcl/ecs!ComponentDefinition:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", ..."
+            },
+            {
+              "kind": "Reference",
+              "text": "CompDef",
+              "canonicalReference": "@dcl/ecs!ComponentDefinition:type"
+            },
+            {
+              "kind": "Content",
+              "text": "[]]"
+            },
+            {
+              "kind": "Content",
+              "text": "> = "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    [K in keyof T]: T[K] extends "
+            },
+            {
+              "kind": "Reference",
+              "text": "CompDef",
+              "canonicalReference": "@dcl/ecs!ComponentDefinition:type"
+            },
+            {
+              "kind": "Content",
+              "text": " ? "
+            },
+            {
+              "kind": "Reference",
+              "text": "ReturnType",
+              "canonicalReference": "!ReturnType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T[K]['mutable']> : never;\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "ComponentEcsType",
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 1,
+                "endIndex": 6
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "typeTokenRange": {
+            "startIndex": 7,
+            "endIndex": 12
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@dcl/ecs!DeepReadonly:type",
+          "docComment": "/**\n * Make each field readonly deeply\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type DeepReadonly<T> = "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    readonly [P in keyof T]: "
+            },
+            {
+              "kind": "Reference",
+              "text": "DeepReadonly",
+              "canonicalReference": "@dcl/ecs!DeepReadonly:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T[P]>;\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "DeepReadonly",
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 4
+          }
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!DEG2RAD:var",
+          "docComment": "/**\n * Constant used to convert from Euler degrees to radians\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "DEG2RAD: "
+            },
+            {
+              "kind": "Content",
+              "text": "number"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "DEG2RAD",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@dcl/ecs!double:type",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type double = "
+            },
+            {
+              "kind": "Content",
+              "text": "number"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "double",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@dcl/ecs!EcsType:type",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type EcsType<T = "
+            },
+            {
+              "kind": "Content",
+              "text": "any"
+            },
+            {
+              "kind": "Content",
+              "text": "> = "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    serialize(value: T, builder: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ByteBuffer",
+              "canonicalReference": "@dcl/ecs!ByteBuffer:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): void;\n    deserialize(reader: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ByteBuffer",
+              "canonicalReference": "@dcl/ecs!ByteBuffer:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): T;\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "EcsType",
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "typeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 8
+          }
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "@dcl/ecs!Engine:function(1)",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function Engine(): "
+            },
+            {
+              "kind": "Reference",
+              "text": "IEngine",
+              "canonicalReference": "@dcl/ecs!IEngine:type"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [],
+          "name": "Engine"
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "@dcl/ecs!Enum:function(1)",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function Enum<T>(type: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<any>"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 4,
+            "endIndex": 6
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "type",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isOptional": false
+            }
+          ],
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "name": "Enum"
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!Epsilon:var",
+          "docComment": "/**\n * Constant used to define the minimal number value in Babylon.js\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "Epsilon = 0.000001"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Epsilon",
+          "variableTypeTokenRange": {
+            "startIndex": 0,
+            "endIndex": 0
+          }
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!FlatString:var",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "FlatString: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<string>"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "FlatString",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@dcl/ecs!float:type",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type float = "
+            },
+            {
+              "kind": "Content",
+              "text": "number"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "float",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!Float32:var",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "Float32: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<number>"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Float32",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!Float64:var",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "Float64: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<number>"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Float64",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@dcl/ecs!FloatArray:type",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type FloatArray = "
+            },
+            {
+              "kind": "Content",
+              "text": "number[]"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "FloatArray",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@dcl/ecs!IEngine:type",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type IEngine = "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    addEntity(dynamic?: boolean): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    addDynamicEntity(): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    removeEntity(entity: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): void;\n    addSystem(system: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Update",
+              "canonicalReference": "@dcl/ecs!Update:type"
+            },
+            {
+              "kind": "Content",
+              "text": "): void;\n    defineComponent<T extends "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": ">(componentId: number, spec: T): "
+            },
+            {
+              "kind": "Reference",
+              "text": "CompDef",
+              "canonicalReference": "@dcl/ecs!ComponentDefinition:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>;\n    mutableGroupOf<T extends ["
+            },
+            {
+              "kind": "Reference",
+              "text": "CompDef",
+              "canonicalReference": "@dcl/ecs!ComponentDefinition:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", ..."
+            },
+            {
+              "kind": "Reference",
+              "text": "CompDef",
+              "canonicalReference": "@dcl/ecs!ComponentDefinition:type"
+            },
+            {
+              "kind": "Content",
+              "text": "[]]>(...components: T): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Iterable",
+              "canonicalReference": "!Iterable:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<["
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", ..."
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentEcsType",
+              "canonicalReference": "@dcl/ecs!ComponentEcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>]>;\n    groupOf<T extends ["
+            },
+            {
+              "kind": "Reference",
+              "text": "CompDef",
+              "canonicalReference": "@dcl/ecs!ComponentDefinition:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", ..."
+            },
+            {
+              "kind": "Reference",
+              "text": "CompDef",
+              "canonicalReference": "@dcl/ecs!ComponentDefinition:type"
+            },
+            {
+              "kind": "Content",
+              "text": "[]]>(...components: T): "
+            },
+            {
+              "kind": "Reference",
+              "text": "Iterable",
+              "canonicalReference": "!Iterable:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "<["
+            },
+            {
+              "kind": "Reference",
+              "text": "Entity",
+              "canonicalReference": "@dcl/ecs!Entity:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", ..."
+            },
+            {
+              "kind": "Reference",
+              "text": "DeepReadonly",
+              "canonicalReference": "@dcl/ecs!DeepReadonly:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "ComponentEcsType",
+              "canonicalReference": "@dcl/ecs!ComponentEcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>>]>;\n    getComponent<T extends "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": ">(componentId: number): "
+            },
+            {
+              "kind": "Reference",
+              "text": "CompDef",
+              "canonicalReference": "@dcl/ecs!ComponentDefinition:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>;\n    update(dt: number): void;\n    baseComponents: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ReturnType",
+              "canonicalReference": "!ReturnType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<typeof "
+            },
+            {
+              "kind": "Reference",
+              "text": "defineSdkComponents",
+              "canonicalReference": "@dcl/ecs!defineSdkComponents:function"
+            },
+            {
+              "kind": "Content",
+              "text": ">;\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "IEngine",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 44
+          }
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!Int16:var",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "Int16: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<number>"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Int16",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!Int32:var",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "Int32: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<number>"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Int32",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!Int64:var",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "Int64: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<number>"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Int64",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!Int8:var",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "Int8: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<number>"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Int8",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
+          "kind": "Interface",
+          "canonicalReference": "@dcl/ecs!ISize:interface",
+          "docComment": "/**\n * Interface for the size containing width and height\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface ISize "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "ISize",
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@dcl/ecs!ISize#height:member",
+              "docComment": "/**\n * Heighht\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "height: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "height",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@dcl/ecs!ISize#width:member",
+              "docComment": "/**\n * Width\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "width: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "width",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "@dcl/ecs!MapType:function(1)",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function MapType<T extends "
+            },
+            {
+              "kind": "Reference",
+              "text": "Spec",
+              "canonicalReference": "@dcl/ecs!Spec:interface"
+            },
+            {
+              "kind": "Content",
+              "text": ">(spec: "
+            },
+            {
+              "kind": "Content",
+              "text": "T"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "Result",
+              "canonicalReference": "@dcl/ecs!Result:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 5,
+            "endIndex": 9
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "spec",
+              "parameterTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "isOptional": false
+            }
+          ],
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "name": "MapType"
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@dcl/ecs!Nullable:type",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type Nullable<T> = "
+            },
+            {
+              "kind": "Content",
+              "text": "T | null"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Nullable",
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "Function",
+          "canonicalReference": "@dcl/ecs!Optional:function(1)",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare function Optional<T>(spec: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T>"
+            },
+            {
+              "kind": "Content",
+              "text": "): "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T | undefined>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "returnTypeTokenRange": {
+            "startIndex": 4,
+            "endIndex": 6
+          },
+          "releaseTag": "Public",
+          "overloadIndex": 1,
+          "parameters": [
+            {
+              "parameterName": "spec",
+              "parameterTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isOptional": false
+            }
+          ],
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "name": "Optional"
+        },
+        {
+          "kind": "Enum",
+          "canonicalReference": "@dcl/ecs!Orientation:enum",
+          "docComment": "/**\n * Defines potential orientation for back face culling\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare enum Orientation "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Orientation",
+          "members": [
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@dcl/ecs!Orientation.CCW:member",
+              "docComment": "/**\n * Counter clockwise\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "CCW = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "1"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "CCW",
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@dcl/ecs!Orientation.CW:member",
+              "docComment": "/**\n * Clockwise\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "CW = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "0"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "CW",
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ]
+        },
+        {
+          "kind": "Namespace",
+          "canonicalReference": "@dcl/ecs!Quaternion:namespace",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare namespace Quaternion "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Quaternion",
+          "members": [
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.add:function(1)",
+              "docComment": "/**\n * Returns a new Quaternion as the result of the addition of the two given quaternions.\n *\n * @param q1 - the first quaternion\n *\n * @param q2 - the second quaternion\n *\n * @returns the resulting quaternion\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function add(q1: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", q2: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "q1",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "q2",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "add"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.angle:function(1)",
+              "docComment": "/**\n * Returns the angle in degrees between two rotations a and b.\n *\n * @param quat1 - defines the first quaternion\n *\n * @param quat2 - defines the second quaternion\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function angle(quat1: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", quat2: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "quat1",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "quat2",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "angle"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.angleAxis:function(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function angleAxis(degress: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", axis: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Vector3.ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "degress",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "axis",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "angleAxis"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.create:function(1)",
+              "docComment": "/**\n * Creates a new Quaternion from the given floats\n *\n * @param x - defines the first component (0 by default)\n *\n * @param y - defines the second component (0 by default)\n *\n * @param z - defines the third component (0 by default)\n *\n * @param w - defines the fourth component (1.0 by default)\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function create(\n    x?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", \n    y?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", \n    z?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", \n    w?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 9,
+                "endIndex": 10
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "x",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "y",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "z",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "w",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 7,
+                    "endIndex": 8
+                  },
+                  "isOptional": true
+                }
+              ],
+              "name": "create"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.dot:function(1)",
+              "docComment": "/**\n * Returns the dot product (float) between the quaternions \"left\" and \"right\"\n *\n * @param left - defines the left operand\n *\n * @param right - defines the right operand\n *\n * @returns the dot product\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function dot(left: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", right: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "left",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "right",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "dot"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.euler:function(1)",
+              "docComment": "/**\n * Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis.\n *\n * @param x - the rotation on the x axis in euler degrees\n *\n * @param y - the rotation on the y axis in euler degrees\n *\n * @param z - the rotation on the z axis in euler degrees\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function euler(x: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", y: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", z: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "x",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "y",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "z",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "euler"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.eulerAngles:function(1)",
+              "docComment": "/**\n * Gets or sets the euler angle representation of the rotation. Implemented unity-based calculations from: https://stackoverflow.com/a/56055813\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function eulerAngles(q: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Vector3.MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "q",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "eulerAngles"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.fromRotationMatrixToRef:function(1)",
+              "docComment": "/**\n * Updates the given quaternion with the given rotation matrix values\n *\n * @param matrix - defines the source matrix\n *\n * @param result - defines the target quaternion\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function fromRotationMatrixToRef(matrix: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Matrix.ReadonlyMatrix",
+                  "canonicalReference": "@dcl/ecs!Matrix.ReadonlyMatrix:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", result: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Quaternion.MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "matrix",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "result",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "fromRotationMatrixToRef"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.fromToRotation:function(1)",
+              "docComment": "/**\n * Creates a rotation which rotates from fromDirection to toDirection.\n *\n * @param from - defines the first direction Vector\n *\n * @param to - defines the target direction Vector\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function fromToRotation(from: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Vector3.ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", to: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Vector3.ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", up?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Vector3.ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "from",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "to",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "up",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": true
+                }
+              ],
+              "name": "fromToRotation"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.Identity:function(1)",
+              "docComment": "/**\n * Creates an identity quaternion\n *\n * @returns - the identity quaternion\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function Identity(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "Identity"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.length:function(1)",
+              "docComment": "/**\n * Gets length of current quaternion\n *\n * @returns the quaternion length (float)\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function length(q: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "q",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "length"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.lengthSquared:function(1)",
+              "docComment": "/**\n * Gets length of current quaternion\n *\n * @returns the quaternion length (float)\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function lengthSquared(q: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "q",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "lengthSquared"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.lookRotation:function(1)",
+              "docComment": "/**\n * Creates a rotation with the specified forward and upwards directions.\n *\n * @param forward - the direction to look in\n *\n * @param up - the vector that defines in which direction up is\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function lookRotation(forward: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Vector3.ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", up?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Vector3.ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "forward",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "up",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "name": "lookRotation"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.multiply:function(1)",
+              "docComment": "/**\n * Multiplies two quaternions\n *\n * @param self - defines the first operand\n *\n * @param q1 - defines the second operand\n *\n * @returns a new quaternion set as the multiplication result of the self one with the given one \"q1\"\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function multiply(self: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", q1: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "self",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "q1",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "multiply"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.multiplyToRef:function(1)",
+              "docComment": "/**\n * Sets the given \"result\" as the the multiplication result of the self one with the given one \"q1\"\n *\n * @param self - defines the first operand\n *\n * @param q1 - defines the second operand\n *\n * @param result - defines the target quaternion\n *\n * @returns the current quaternion\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function multiplyToRef(self: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", q1: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", result: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "self",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "q1",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "result",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "multiplyToRef"
+            },
+            {
+              "kind": "TypeAlias",
+              "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type",
+              "docComment": "/**\n * @public\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "type MutableQuaternion = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "{\n        y: number;\n        x: number;\n        z: number;\n        w: number;\n    }"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "MutableQuaternion",
+              "typeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.normalize:function(1)",
+              "docComment": "/**\n * Normalize in place the current quaternion\n *\n * @returns the current updated quaternion\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function normalize(q: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "q",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "normalize"
+            },
+            {
+              "kind": "TypeAlias",
+              "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type",
+              "docComment": "/**\n * @public\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "type ReadonlyQuaternion = "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "DeepReadonly",
+                  "canonicalReference": "@dcl/ecs!DeepReadonly:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "ReadonlyQuaternion",
+              "typeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 5
+              }
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.rotateTowards:function(1)",
+              "docComment": "/**\n * The from quaternion is rotated towards to by an angular step of maxDegreesDelta.\n *\n * @param from - defines the first quaternion\n *\n * @param to - defines the second quaternion\n *\n * @param maxDegreesDelta - the interval step\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function rotateTowards(from: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", to: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", maxDegreesDelta: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "from",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "to",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "maxDegreesDelta",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "rotateTowards"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.rotationYawPitchRoll:function(1)",
+              "docComment": "/**\n * Creates a new rotation from the given Euler float angles (y, x, z) and stores it in the target quaternion\n *\n * @param yaw - defines the rotation around Y axis\n *\n * @param pitch - defines the rotation around X axis\n *\n * @param roll - defines the rotation around Z axis\n *\n * @param result - defines the target quaternion\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function rotationYawPitchRoll(yaw: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", pitch: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", roll: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "yaw",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "pitch",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "roll",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "rotationYawPitchRoll"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.rotationYawPitchRollToRef:function(1)",
+              "docComment": "/**\n * Creates a new rotation from the given Euler float angles (y, x, z) and stores it in the target quaternion\n *\n * @param yaw - defines the rotation around Y axis\n *\n * @param pitch - defines the rotation around X axis\n *\n * @param roll - defines the rotation around Z axis\n *\n * @param result - defines the target quaternion\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function rotationYawPitchRollToRef(yaw: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", pitch: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", roll: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", result: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Quaternion.MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 9,
+                "endIndex": 10
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "yaw",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "pitch",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "roll",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "result",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 7,
+                    "endIndex": 8
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "rotationYawPitchRollToRef"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.slerp:function(1)",
+              "docComment": "/**\n * Interpolates between two quaternions\n *\n * @param left - defines first quaternion\n *\n * @param right - defines second quaternion\n *\n * @param amount - defines the gradient to use\n *\n * @returns the new interpolated quaternion\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function slerp(left: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", right: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", amount: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "left",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "right",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "amount",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "slerp"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.slerpToRef:function(1)",
+              "docComment": "/**\n * Interpolates between two quaternions and stores it into a target quaternion\n *\n * @param left - defines first quaternion\n *\n * @param right - defines second quaternion\n *\n * @param amount - defines the gradient to use\n *\n * @param result - defines the target quaternion\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function slerpToRef(left: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", right: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", amount: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", result: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 9,
+                "endIndex": 10
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "left",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "right",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "amount",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "result",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 7,
+                    "endIndex": 8
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "slerpToRef"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Quaternion.Zero:function(1)",
+              "docComment": "/**\n * Returns a zero filled quaternion\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function Zero(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.MutableQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "Zero"
+            }
+          ]
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!RAD2DEG:var",
+          "docComment": "/**\n * Constant used to convert from radians to Euler degrees\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "RAD2DEG: "
+            },
+            {
+              "kind": "Content",
+              "text": "number"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "RAD2DEG",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@dcl/ecs!Result:type",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type Result<T extends "
+            },
+            {
+              "kind": "Reference",
+              "text": "Spec",
+              "canonicalReference": "@dcl/ecs!Spec:interface"
+            },
+            {
+              "kind": "Content",
+              "text": "> = "
+            },
+            {
+              "kind": "Reference",
+              "text": "ToOptional",
+              "canonicalReference": "@dcl/ecs!ToOptional:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<{\n    [K in keyof T]: T[K] extends "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": " ? "
+            },
+            {
+              "kind": "Reference",
+              "text": "ReturnType",
+              "canonicalReference": "!ReturnType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T[K]['deserialize']> : T[K] extends "
+            },
+            {
+              "kind": "Reference",
+              "text": "Spec",
+              "canonicalReference": "@dcl/ecs!Spec:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " ? "
+            },
+            {
+              "kind": "Reference",
+              "text": "Result",
+              "canonicalReference": "@dcl/ecs!Result:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<T[K]> : never;\n}>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Result",
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "typeTokenRange": {
+            "startIndex": 3,
+            "endIndex": 13
+          }
+        },
+        {
+          "kind": "Enum",
+          "canonicalReference": "@dcl/ecs!Space:enum",
+          "docComment": "/**\n * Defines supported spaces\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare enum Space "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Space",
+          "members": [
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@dcl/ecs!Space.BONE:member",
+              "docComment": "/**\n * Bone space\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "BONE = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "2"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "BONE",
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@dcl/ecs!Space.LOCAL:member",
+              "docComment": "/**\n * Local (object) space\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "LOCAL = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "0"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "LOCAL",
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@dcl/ecs!Space.WORLD:member",
+              "docComment": "/**\n * World space\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "WORLD = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "1"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "WORLD",
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ]
+        },
+        {
+          "kind": "Interface",
+          "canonicalReference": "@dcl/ecs!Spec:interface",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export interface Spec "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Spec",
+          "members": [
+            {
+              "kind": "IndexSignature",
+              "canonicalReference": "@dcl/ecs!Spec:index(1)",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "[key: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": "]: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "EcsType",
+                  "canonicalReference": "@dcl/ecs!EcsType:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "key",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ]
+            }
+          ],
+          "extendsTokenRanges": []
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!String_2:var",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "String: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EcsType",
+              "canonicalReference": "@dcl/ecs!EcsType:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<string>"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "String_2",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!ToGammaSpace:var",
+          "docComment": "/**\n * Constant used to convert a value to gamma space\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "ToGammaSpace: "
+            },
+            {
+              "kind": "Content",
+              "text": "number"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "ToGammaSpace",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@dcl/ecs!ToLinearSpace:var",
+          "docComment": "/**\n * Constant used to convert a value to linear space\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "ToLinearSpace = 2.2"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "ToLinearSpace",
+          "variableTypeTokenRange": {
+            "startIndex": 0,
+            "endIndex": 0
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@dcl/ecs!Unpacked:type",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type Unpacked<T> = "
+            },
+            {
+              "kind": "Content",
+              "text": "T extends (infer U)[] ? U : T"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Unpacked",
+          "typeParameters": [
+            {
+              "typeParameterName": "T",
+              "constraintTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              },
+              "defaultTypeTokenRange": {
+                "startIndex": 0,
+                "endIndex": 0
+              }
+            }
+          ],
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@dcl/ecs!Update:type",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare type Update = "
+            },
+            {
+              "kind": "Content",
+              "text": "(dt: number) => void"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Update",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "Namespace",
+          "canonicalReference": "@dcl/ecs!Vector3:namespace",
+          "docComment": "/**\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare namespace Vector3 "
+            }
+          ],
+          "releaseTag": "Public",
+          "name": "Vector3",
+          "members": [
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.add:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 as the result of the addition of the two given vectors.\n *\n * @param vector1 - the first vector\n *\n * @param vector2 - the second vector\n *\n * @returns the resulting vector\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function add(vector1: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", vector2: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "vector1",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "vector2",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "add"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.Backward:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 set to (0.0, 0.0, -1.0)\n *\n * @returns a new forward Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function Backward(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "Backward"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.clone:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 with the same value\n *\n * @returns the resulting vector\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function clone(source: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "source",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "clone"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.copy:function(1)",
+              "docComment": "/**\n * Copy source into dest\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function copy(source: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", dest: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "source",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "dest",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "copy"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.create:function(1)",
+              "docComment": "/**\n * Creates a new Vector3 object from the given x, y, z (floats) coordinates.\n *\n * @param x - defines the first coordinates (on X axis)\n *\n * @param y - defines the second coordinates (on Y axis)\n *\n * @param z - defines the third coordinates (on Z axis)\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function create(\n    x?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", \n    y?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", \n    z?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "x",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "y",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "z",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": true
+                }
+              ],
+              "name": "create"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.cross:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 as the cross product of the vectors \"left\" and \"right\" The cross product is then orthogonal to both \"left\" and \"right\"\n *\n * @param left - defines the left operand\n *\n * @param right - defines the right operand\n *\n * @returns the cross product\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function cross(left: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", right: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "left",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "right",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "cross"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.crossToRef:function(1)",
+              "docComment": "/**\n * Sets the given vector \"result\" with the cross product of \"left\" and \"right\" The cross product is then orthogonal to both \"left\" and \"right\"\n *\n * @param left - defines the left operand\n *\n * @param right - defines the right operand\n *\n * @param result - defines the Vector3 where to store the result\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function crossToRef(left: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", right: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", result: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "left",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "right",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "result",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "crossToRef"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.dot:function(1)",
+              "docComment": "/**\n * Returns the dot product (float) between the vectors \"left\" and \"right\"\n *\n * @param left - defines the left operand\n *\n * @param right - defines the right operand\n *\n * @returns the dot product\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function dot(left: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", right: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "left",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "right",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "dot"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.Down:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 set to (0.0, -1.0, 0.0)\n *\n * @returns a new down Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function Down(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "Down"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.Forward:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 set to (0.0, 0.0, 1.0)\n *\n * @returns a new forward Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function Forward(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "Forward"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.Left:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 set to (-1.0, 0.0, 0.0)\n *\n * @returns a new left Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function Left(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "Left"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.length:function(1)",
+              "docComment": "/**\n * Gets the length of the Vector3\n *\n * @returns the length of the Vecto3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function length(vector: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "vector",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "length"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.lengthSquared:function(1)",
+              "docComment": "/**\n * Gets the squared length of the Vector3\n *\n * @returns squared length of the Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function lengthSquared(vector: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "vector",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "lengthSquared"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.lerp:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 located for \"amount\" (float) on the linear interpolation between the vectors \"start\" and \"end\"\n *\n * @param start - defines the start value\n *\n * @param end - defines the end value\n *\n * @param amount - max defines amount between both (between 0 and 1)\n *\n * @returns the new Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function lerp(start: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", end: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", amount: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "start",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "end",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "amount",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "lerp"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.lerpToRef:function(1)",
+              "docComment": "/**\n * Sets the given vector \"result\" with the result of the linear interpolation from the vector \"start\" for \"amount\" to the vector \"end\"\n *\n * @param start - defines the start value\n *\n * @param end - defines the end value\n *\n * @param amount - max defines amount between both (between 0 and 1)\n *\n * @param result - defines the Vector3 where to store the result\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function lerpToRef(start: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", end: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", amount: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", result: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 9,
+                "endIndex": 10
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "start",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "end",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "amount",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "result",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 7,
+                    "endIndex": 8
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "lerpToRef"
+            },
+            {
+              "kind": "TypeAlias",
+              "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type",
+              "docComment": "/**\n * @public\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "type MutableVector3 = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "{\n        y: number;\n        x: number;\n        z: number;\n    }"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "MutableVector3",
+              "typeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.normalize:function(1)",
+              "docComment": "/**\n * Normalize the current Vector3. Please note that this is an in place operation.\n *\n * @returns the current updated Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function normalize(vector: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "vector",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "normalize"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.normalizeFromLength:function(1)",
+              "docComment": "/**\n * Normalize the current Vector3 with the given input length. Please note that this is an in place operation.\n *\n * @param len - the length of the vector\n *\n * @returns the current updated Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function normalizeFromLength(vector: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", len: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "vector",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "len",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "normalizeFromLength"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.normalizeFromLengthToRef:function(1)",
+              "docComment": "/**\n * Normalize the current Vector3 with the given input length. Please note that this is an in place operation.\n *\n * @param len - the length of the vector\n *\n * @returns the current updated Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function normalizeFromLengthToRef(vector: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", len: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", result: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "vector",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "len",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "result",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "normalizeFromLengthToRef"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.normalizeToRef:function(1)",
+              "docComment": "/**\n * Normalize the current Vector3. Please note that this is an in place operation.\n *\n * @returns the current updated Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function normalizeToRef(vector: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", result: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "vector",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "result",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "normalizeToRef"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.One:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 set to (1.0, 1.0, 1.0)\n *\n * @returns a new unit Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function One(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "One"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.opposite:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 with the other sign\n *\n * @returns the resulting vector\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function opposite(value: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "value",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "opposite"
+            },
+            {
+              "kind": "TypeAlias",
+              "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type",
+              "docComment": "/**\n * @public\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "type ReadonlyVector3 = "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "DeepReadonly",
+                  "canonicalReference": "@dcl/ecs!DeepReadonly:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "releaseTag": "Public",
+              "name": "ReadonlyVector3",
+              "typeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 5
+              }
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.Right:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 set to (1.0, 0.0, 0.0)\n *\n * @returns a new right Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function Right(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "Right"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.rotate:function(1)",
+              "docComment": "/**\n * Rotates current Vector3 based on the given quaternion, but applies the rotation to target Vector3.\n *\n * @param q - defines the Quaternion\n *\n * @param result - defines the target Vector3\n *\n * @returns the current Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function rotate(vector: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", q: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "Quaternion.ReadonlyQuaternion",
+                  "canonicalReference": "@dcl/ecs!Quaternion.ReadonlyQuaternion:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "vector",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "q",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "rotate"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.scale:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 set with the current Vector3 coordinates multiplied by the float \"scale\"\n *\n * @param scale - defines the multiplier factor\n *\n * @returns a new Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function scale(vector: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", scale: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "vector",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "scale",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "scale"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.scaleToRef:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 set with the current Vector3 coordinates multiplied by the float \"scale\"\n *\n * @param scale - defines the multiplier factor\n *\n * @returns a new Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function scaleToRef(vector: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", scale: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "number"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", result: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "vector",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "scale",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "result",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "scaleToRef"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.subtract:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 as the result of the substraction of the two given vectors.\n *\n * @returns the resulting vector\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function subtract(minuend: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", subtrahend: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "minuend",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "subtrahend",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "subtract"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.subtractToRef:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 as the result of the substraction of the two given vectors.\n *\n * @returns the resulting vector\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function subtractToRef(minuend: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", subtrahend: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.ReadonlyVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", result: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "minuend",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "subtrahend",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "result",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": false
+                }
+              ],
+              "name": "subtractToRef"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.Up:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 set tolengthSquared (0.0, 1.0, 0.0)\n *\n * @returns a new up Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function Up(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "Up"
+            },
+            {
+              "kind": "Function",
+              "canonicalReference": "@dcl/ecs!Vector3.Zero:function(1)",
+              "docComment": "/**\n * Returns a new Vector3 set to (0.0, 0.0, 0.0)\n *\n * @returns a new empty Vector3\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "function Zero(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "MutableVector3",
+                  "canonicalReference": "@dcl/ecs!Vector3.MutableVector3:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "overloadIndex": 1,
+              "parameters": [],
+              "name": "Zero"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

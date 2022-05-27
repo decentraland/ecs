@@ -1,9 +1,12 @@
-import { Quaternion, Vector3 } from '@dcl/ecs-math'
-import { EcsType } from '../../built-in-types/EcsType'
+import { Quaternion, Vector3 } from '../../Math'
+import type { EcsType } from '../../built-in-types/EcsType'
 import { Entity } from '../../engine/entity'
 import { ByteBuffer } from '../../serialization/ByteBuffer'
 
-type Transform = {
+/**
+ * @public
+ */
+export type Transform = {
   position: Vector3.MutableVector3
   rotation: Quaternion.MutableQuaternion
   scale: Vector3.MutableVector3

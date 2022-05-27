@@ -2,10 +2,16 @@ import { ByteBuffer } from '../serialization/ByteBuffer'
 import { EcsType } from './EcsType'
 import { ToOptional } from './typing'
 
+/**
+ * @public
+ */
 export interface Spec {
   [key: string]: EcsType
 }
 
+/**
+ * @public
+ */
 export type Result<T extends Spec> = ToOptional<{
   [K in keyof T]: T[K] extends EcsType
     ? ReturnType<T[K]['deserialize']>
@@ -14,6 +20,9 @@ export type Result<T extends Spec> = ToOptional<{
     : never
 }>
 
+/**
+ * @public
+ */
 export function MapType<T extends Spec>(spec: T): EcsType<Result<T>> {
   return {
     serialize(value: Result<T>, builder: ByteBuffer): void {

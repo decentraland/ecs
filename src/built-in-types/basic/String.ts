@@ -1,6 +1,9 @@
 import { ByteBuffer } from '../../serialization/ByteBuffer'
 import { EcsType } from '../EcsType'
 
+/**
+ * @public
+ */
 export const FlatString: EcsType<string> = {
   serialize(value: string, builder: ByteBuffer): void {
     builder.writeBuffer(new TextEncoder().encode(value))
@@ -10,4 +13,7 @@ export const FlatString: EcsType<string> = {
   }
 }
 
+/**
+ * @public
+ */
 export const String = FlatString
