@@ -38,9 +38,7 @@ export default {
       tsconfig: './tsconfig.json',
       sourceMap: false,
       compilerOptions: {
-        sourceMap: false,
-        inlineSourceMap: false,
-        inlineSources: false
+        declarationDir: '.'
       },
     }),
     commonjs({

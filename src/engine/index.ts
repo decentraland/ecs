@@ -12,7 +12,7 @@ import type { EcsType } from '../built-in-types/EcsType'
 import { IEngine } from './types'
 import { ByteBuffer } from '../serialization/ByteBuffer'
 
-export { ComponentType, Entity, ByteBuffer, SdkComponetns }
+export { ComponentType, Entity, ByteBuffer, SdkComponetns, ComponentDefinition }
 export * from './types'
 
 function preEngine() {

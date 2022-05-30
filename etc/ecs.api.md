@@ -16,8 +16,26 @@ export { Boolean_2 as Boolean }
 // @public (undocumented)
 export type ByteBuffer = ReturnType<typeof createByteBuffer>;
 
-// Warning: (ae-forgotten-export) The symbol "ComponentDefinition" needs to be exported by the entry point index.d.ts
-//
+// @public (undocumented)
+export type ComponentDefinition<T extends EcsType = EcsType<any>> = {
+    _id: number;
+    has(entity: Entity): boolean;
+    getFrom(entity: Entity): DeepReadonly<ComponentType<T>>;
+    getOrNull(entity: Entity): DeepReadonly<ComponentType<T>> | null;
+    create(entity: Entity, val: ComponentType<T>): ComponentType<T>;
+    mutable(entity: Entity): ComponentType<T>;
+    createOrReplace(entity: Entity, val: ComponentType<T>): ComponentType<T>;
+    deleteFrom(entity: Entity): ComponentType<T> | null;
+    upsertFromBinary(entity: Entity, data: ByteBuffer): ComponentType<T> | null;
+    updateFromBinary(entity: Entity, data: ByteBuffer): ComponentType<T> | null;
+    toBinary(entity: Entity): ByteBuffer;
+    writeToByteBuffer(entity: Entity, buffer: ByteBuffer): void;
+    iterator(): Iterable<[Entity, ComponentType<T>]>;
+    dirtyIterator(): Iterable<Entity>;
+    clearDirty(): void;
+    isDirty(entity: Entity): boolean;
+};
+
 // @public (undocumented)
 export type ComponentEcsType<T extends [ComponentDefinition, ...ComponentDefinition[]]> = {
     [K in keyof T]: T[K] extends ComponentDefinition ? ReturnType<T[K]['mutable']> : never;
