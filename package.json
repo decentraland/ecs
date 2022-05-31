@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/decentraland/ecs#readme",
   "devDependencies": {
+    "@dcl/dcl-rollup": "^6.11.0",
     "@dcl/eslint-config": "^1.0.3",
     "@microsoft/api-extractor": "^7.23.1",
     "@types/fs-extra": "^9.0.13",
@@ -32,17 +33,10 @@
     "proto-compatibility-tool": "^1.0.0",
     "ts-jest": "^27.1.4",
     "ts-proto": "^1.112.0",
-    "typescript": "^4.6.4",
-    "@rollup/plugin-commonjs": "^22.0.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-typescript": "^8.3.2",
-    "rollup": "^2.75.0",
-    "rollup-plugin-api-extractor": "^0.2.5",
-    "rollup-plugin-terser": "^7.0.2"
+    "typescript": "^4.6.4"
   },
   "dependencies": {
     "@dcl/crdt": "^1.0.0-20220412150438.commit-965dc72",
-    "@dcl/dcl-rollup": "^6.11.0",
     "@dcl/ecs-math": "^2.0.1-20220526123120.commit-dab2aff"
   },
   "files": [

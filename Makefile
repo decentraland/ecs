@@ -30,8 +30,7 @@ build:
 	rm -rf dist/types
 
 build-ecs:
-	./node_modules/.bin/rollup -c rollup.config.js
-# ./node_modules/@dcl/dcl-rollup/ecs.config.js
+	./node_modules/.bin/rollup -c ./node_modules/@dcl/dcl-rollup/dist/ecs.config.js
 
 watch:
 	./node_modules/.bin/tsc -p tsconfig.json -w
