@@ -24,13 +24,14 @@ test-watch:
 	./node_modules/.bin/jest --detectOpenHandles --colors --runInBand --watch $(TESTARGS)
 
 build:
+	rm -rf dist/
 	make generate-components
 	make build-ecs
 	cp -r src/components/definitions dist/proto-definitions
-	rm -rf dist/types
 
 build-ecs:
-	./node_modules/.bin/rollup -c ./node_modules/@dcl/dcl-rollup/dist/ecs.config.js
+	../js-sdk-toolchain/packages/\@dcl/dcl-rollup/node_modules/.bin/rollup -c ../js-sdk-toolchain/packages/\@dcl/dcl-rollup/dist/ecs.config.js
+# ./node_modules/.bin/rollup -c ./node_modules/@dcl/dcl-rollup/dist/ecs.config.js
 
 watch:
 	./node_modules/.bin/tsc -p tsconfig.json -w
