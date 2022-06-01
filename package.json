@@ -40,10 +40,6 @@
     "@dcl/ecs-math": "^2.0.1-20220526123120.commit-dab2aff"
   },
   "files": [
-    "dist/index.js",
-    "dist/index.d.ts",
-    "dist/index.min.js",
-    "dist/index.min.js.map",
-    "dist/proto-definitions"
+    "dist/"
   ]
 }
