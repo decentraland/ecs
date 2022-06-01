@@ -1,22 +1,22 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "types": [
-      "node"
-    ],
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "node",
     "strict": true,
-    "outDir": "./dist",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "stripInternal": true,
+    "downlevelIteration": true,
+    "outDir": "dist"
   },
   "include": [
     "src",
     "temp-protocolbuffers"
-  ]
+  ],
+  "exclude": ["dist"],
+  "files": ["node_modules/protobufjs/minimal.d.ts"]
 }

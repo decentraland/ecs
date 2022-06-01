@@ -1,17 +1,23 @@
-import { EcsType } from '../built-in-types'
-import { defineSdkComponents } from '../components'
+import type { EcsType } from '../built-in-types/EcsType'
+import { SdkComponetns } from '../components'
 import { ComponentDefinition as CompDef } from './component'
 import { Entity } from './entity'
+import type { DeepReadonly } from './utils'
 
+/**
+ * @public
+ */
 export type Unpacked<T> = T extends (infer U)[] ? U : T
+/**
+ * @public
+ */
 export type Update = (dt: number) => void
 
+/**
+ * @public
+ */
 export type ComponentEcsType<T extends [CompDef, ...CompDef[]]> = {
   [K in keyof T]: T[K] extends CompDef ? ReturnType<T[K]['mutable']> : never
-}
-
-export type DeepReadonly<T> = {
-  readonly [K in keyof T]: DeepReadonly<T[K]>
 }
 
 /**
@@ -31,5 +37,5 @@ export type IEngine = {
   ): Iterable<[Entity, ...DeepReadonly<ComponentEcsType<T>>]>
   getComponent<T extends EcsType>(componentId: number): CompDef<T>
   update(dt: number): void
-  baseComponents: ReturnType<typeof defineSdkComponents>
+  baseComponents: SdkComponetns
 }

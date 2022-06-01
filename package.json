@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/decentraland/ecs#readme",
   "devDependencies": {
+    "@dcl/dcl-rollup": "^6.11.0",
     "@dcl/eslint-config": "^1.0.3",
     "@microsoft/api-extractor": "^7.23.1",
     "@types/fs-extra": "^9.0.13",
@@ -36,9 +37,9 @@
   },
   "dependencies": {
     "@dcl/crdt": "^1.0.0-20220412150438.commit-965dc72",
-    "@dcl/ecs-math": "^2.0.0-20220323170902.commit-c4f0d91"
+    "@dcl/ecs-math": "^2.0.1-20220526123120.commit-dab2aff"
   },
   "files": [
-    "dist"
+    "dist/"
   ]
 }

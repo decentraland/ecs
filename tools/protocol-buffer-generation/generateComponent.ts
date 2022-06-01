@@ -19,6 +19,22 @@ export async function generateComponent(params: {
   const componentContent = componentEcsTypeTemplate
     .replace(/Component/g, component)
     .replace('INVALID_COMPONENT_ID', componentId.toString())
-
   fs.writeFileSync(componentFilePath, componentContent)
+
+  /**
+   * Read the generated pb component and add @internal comments to exported methods
+   * So we dont add this types to the final .d.ts build
+   */
+  const generatedPbPath = path.resolve(generatedPath, 'pb', `${component}.ts`)
+  const generatedPbContent = fs
+    .readFileSync(generatedPbPath, 'utf8')
+    .replace(/export const/g, internalComment)
+
+  fs.writeFileSync(generatedPbPath, generatedPbContent)
 }
+
+const internalComment = `
+/**
+ * @internal
+ */
+export const`

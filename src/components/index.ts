@@ -8,3 +8,8 @@ export function defineSdkComponents(engine: Pick<IEngine, 'defineComponent'>) {
     ...defineLegacyComponents(engine)
   }
 }
+
+/**
+ * @public
+ */
+export type SdkComponetns = ReturnType<typeof defineSdkComponents>

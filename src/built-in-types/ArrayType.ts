@@ -1,6 +1,9 @@
 import { ByteBuffer } from '../serialization/ByteBuffer'
 import { EcsType } from './EcsType'
 
+/**
+ * @public
+ */
 export function ArrayType<T>(type: EcsType<T>): EcsType<Array<T>> {
   return {
     serialize(value: Array<T>, builder: ByteBuffer): void {

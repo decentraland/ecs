@@ -15,21 +15,24 @@ install:
 	make install_protobuffer_compiler
 
 test:
-	node_modules/.bin/jest --testPathIgnorePatterns test/performance.spec.ts --detectOpenHandles --coverage --silent=false --verbose --colors --runInBand $(TESTARGS)
+	./node_modules/.bin/jest --testPathIgnorePatterns test/performance.spec.ts --detectOpenHandles --coverage --silent=false --verbose --colors --runInBand $(TESTARGS)
 
 benchmark:
-	node_modules/.bin/jest --detectOpenHandles --silent=false --verbose --colors --runInBand test/performance.spec.ts
+	./node_modules/.bin/jest --detectOpenHandles --silent=false --verbose --colors --runInBand test/performance.spec.ts
 
 test-watch:
-	node_modules/.bin/jest --detectOpenHandles --colors --runInBand --watch $(TESTARGS)
+	./node_modules/.bin/jest --detectOpenHandles --colors --runInBand --watch $(TESTARGS)
 
 build:
-	make generate-components
 	rm -rf dist/
+	make generate-components
+	make build-ecs
+	cp -r src/components/definitions dist/proto-definitions
+
+build-ecs:
 	./node_modules/.bin/tsc -p tsconfig.json
-	rm -rf node_modules/@microsoft/api-extractor/node_modules/typescript || true
-	./node_modules/.bin/api-extractor run $(LOCAL_ARG) --typescript-compiler-folder ./node_modules/typescript
-	cp -r src/components/definitions dist/components/definitions
+# ../js-sdk-toolchain/packages/\@dcl/dcl-rollup/node_modules/.bin/rollup -c ../js-sdk-toolchain/packages/\@dcl/dcl-rollup/dist/ecs.config.js
+# ./node_modules/.bin/rollup -c ./node_modules/@dcl/dcl-rollup/dist/ecs.config.js
 
 watch:
 	./node_modules/.bin/tsc -p tsconfig.json -w

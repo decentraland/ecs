@@ -1,6 +1,9 @@
 import { ByteBuffer } from '../serialization/ByteBuffer'
 import { EcsType } from './EcsType'
 
+/**
+ * @public
+ */
 export function Optional<T>(spec: EcsType<T>): EcsType<T | undefined> {
   return {
     serialize(value: T | undefined, builder: ByteBuffer): void {

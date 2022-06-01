@@ -1,4 +1,5 @@
-import { DeepReadonly } from './types'
+import type { DeepReadonly } from '../Math'
+export type { DeepReadonly }
 
 const isProd = () => !!process.env.PRODUCTION || false
 
