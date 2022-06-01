@@ -17,6 +17,6 @@
     "src",
     "temp-protocolbuffers"
   ],
-  "exclude": ["dist"],
-  "files": ["node_modules/protobufjs/minimal.d.ts"]
+  "files": ["node_modules/protobufjs/minimal.d.ts"],
+  "exclude": ["dist"]
 }

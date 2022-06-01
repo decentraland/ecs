@@ -44,6 +44,6 @@
     "dist/index.d.ts",
     "dist/index.min.js",
     "dist/index.min.js.map",
-    "dist/proto-definitions"
+    "proto-definitions"
   ]
 }

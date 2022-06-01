@@ -32,6 +32,7 @@ build:
 build-ecs:
 	./node_modules/.bin/rollup -c ./node_modules/@dcl/dcl-rollup/ecs.config.js
 
+
 watch:
 	./node_modules/.bin/tsc -p tsconfig.json -w
 
