@@ -30,9 +30,8 @@ build:
 	cp -r src/components/definitions dist/proto-definitions
 
 build-ecs:
-	./node_modules/.bin/tsc -p tsconfig.json
-# ../js-sdk-toolchain/packages/\@dcl/dcl-rollup/node_modules/.bin/rollup -c ../js-sdk-toolchain/packages/\@dcl/dcl-rollup/dist/ecs.config.js
-# ./node_modules/.bin/rollup -c ./node_modules/@dcl/dcl-rollup/dist/ecs.config.js
+	./node_modules/.bin/rollup -c ./node_modules/@dcl/dcl-rollup/ecs.config.js
+
 
 watch:
 	./node_modules/.bin/tsc -p tsconfig.json -w
