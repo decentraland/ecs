@@ -1,5 +1,7 @@
 # ECS 7
 
+## Deprecated - Moved to https://github.com/decentraland/js-sdk-toolchain/
+
 ## Installing dependencies
 Run `make install`, this will run the `npm install` and other dependencies
 
